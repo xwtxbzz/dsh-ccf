@@ -1,0 +1,61 @@
+{
+  "name": "dsh-ccf",
+  "version": "0.1.0",
+  "description": "CCF conference deadlines inside DeepSeek Harness: sync once, then ask for what is closing, with real dates instead of recalled ones.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./core": "./lib/core.js",
+    "./sync": "./lib/sync.js",
+    "./yaml": "./lib/yaml.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "docs"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "test": "node test/yaml.test.mjs && node test/core.test.mjs && node test/sync.test.mjs && node test/plugin.test.mjs && node test/sdk-smoke.mjs",
+    "test:yaml": "node test/yaml.test.mjs",
+    "test:core": "node test/core.test.mjs",
+    "test:sync": "node test/sync.test.mjs",
+    "test:plugin": "node test/plugin.test.mjs",
+    "test:sdk": "node test/sdk-smoke.mjs",
+    "check": "node --check lib/yaml.js && node --check lib/core.js && node --check lib/sync.js && node --check lib/create.js && node --check lib/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.6"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "ccf",
+    "conference",
+    "deadline",
+    "academic",
+    "cordis"
+  ],
+  "author": "xwtxbzz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xwtxbzz/dsh-ccf.git"
+  },
+  "homepage": "https://github.com/xwtxbzz/dsh-ccf#readme",
+  "bugs": {
+    "url": "https://github.com/xwtxbzz/dsh-ccf/issues"
+  },
+  "license": "MIT"
+}

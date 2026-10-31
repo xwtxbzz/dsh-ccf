@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  node:
+    name: node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: 语法检查
+        run: npm run check
+      - name: 单元测试（离线，不访问网络）
+        run: |
+          node test/yaml.test.mjs
+          node test/core.test.mjs
+          node test/sync.test.mjs
+          node test/plugin.test.mjs
+      - name: SDK 冒烟（无 SDK 时自动 SKIP）
+        run: node test/sdk-smoke.mjs
+
+  package:
+    name: 包结构自检
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: package.json 可解析且带 dsh.bundle
+        run: |
+          node -e "
+          const p = require('./package.json');
+          if (!p.dsh || !p.dsh.bundle || !p.dsh.bundle.patch) { console.error('缺少 dsh.bundle.patch'); process.exit(1) }
+          if (p.type !== 'module') { console.error('应为 ESM'); process.exit(1) }
+          if (!p.files.includes('cordis.patch.yml')) { console.error('files 必须包含 cordis.patch.yml'); process.exit(1) }
+          console.log('ok', p.name, p.version);
+          "
+      - name: bundle patch 存在且含 insert row
+        run: |
+          test -f cordis.patch.yml || exit 1
+          grep -q "id: ccf" cordis.patch.yml || exit 1
+          grep -q "name: 'dsh-ccf'" cordis.patch.yml || exit 1
+      - name: 插件入口可加载
+        run: |
+          node -e "
+          import('./lib/index.js').then((m) => {
+            if (typeof m.default !== 'function') { console.error('default export 必须是 class'); process.exit(1) }
+            console.log('entry ok');
+          });
+          "

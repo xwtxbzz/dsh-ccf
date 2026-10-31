@@ -1,0 +1,12 @@
+# dsh-ccf bundle patch
+#
+# 一行 insert 把插件挂到宿主平面：模型工具 ccf_deadlines / ccf_venue、/ccf 命令、
+# 以及一段"会议截稿"的 system-prompt 摘要会同时生效。
+#
+# 不写 config 也能跑：第一次用要先 /ccf sync 把数据抓到本地缓存
+# （默认源是 paper-deadlines 的 data.json；也可以指向本地 ccfddl clone）。
+# 要改窗口/时区/数据源，在 profile 的 cordis.patch.yml 里写同 id 的 row 覆盖（见 README）。
+- insert:
+    - id: ccf
+      name: 'dsh-ccf'
+      config: {}
