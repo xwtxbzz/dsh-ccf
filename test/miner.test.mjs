@@ -11,6 +11,7 @@ import {
   isModelAvailable,
   mergeRecords,
   mineVenue,
+  modelState,
   parseMinedJson,
   pickOfficialCandidates,
   planUpdate,
@@ -206,6 +207,27 @@ function fakeCtx({ withModel = true } = {}) {
 
 assert.equal(isModelAvailable(fakeCtx().ctx), true)
 assert.equal(isModelAvailable(fakeCtx({ withModel: false }).ctx), false)
+
+// 「模型：不可用」是个结论，得说得出依据：是没读到服务、还是服务里没 stream()。
+{
+  const ready = modelState(fakeCtx().ctx)
+  assert.equal(ready.ready, true)
+  assert.equal(ready.reason, '')
+  assert.equal(ready.selection, 'p/m', '要能说出当前选中的 provider/model')
+
+  const missing = modelState(fakeCtx({ withModel: false }).ctx)
+  assert.equal(missing.ready, false)
+  assert.match(missing.reason, /没读到 llm 服务/, '缺服务时要说清是服务没接进来')
+
+  const noStream = modelState({ get: (name) => (name === 'llm' ? { chat() {} } : undefined) })
+  assert.equal(noStream.ready, false)
+  assert.match(noStream.reason, /没有 stream\(\)/, '服务在但没有 stream() 时要说清是接口不匹配')
+
+  const noGet = modelState({})
+  assert.equal(noGet.ready, false)
+  assert.equal(noGet.hasGet, false)
+  assert.match(noGet.reason, /ctx\.get/, '连 ctx.get 都没有时要说是上下文的问题')
+}
 
 const { ctx: modelCtx, calls } = fakeCtx()
 const text = await callModel(modelCtx, { system: 's', user: 'u' })

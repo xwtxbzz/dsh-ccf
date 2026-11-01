@@ -2782,3 +2782,75 @@ ACL 2027 | COLT 2027 | CVPR 2027 | ECAI 2027 | IJCAI 2027 | NAACL 2027 | RSS 202
 **顺带**：这一轮是用真机数据做端到端巡检（`/ccf status`、`/ccf review`、`/ccf marks`、`/ccf list --conflicts 30` 一起跑），
 其余三条输出与面板口径一致：`覆盖 109/253`、`名单外 63 个会（64 条记录）`、`卫星会 8 个（9 条记录）`、
 `来源 17 条 + 另有 9 条已过截止`。
+
+## 79. 第 77 轮：「模型：不可用」是个结论，说不出原因就等于让人猜
+
+### 看到的现象
+
+真机 `/ccf status` 印的是：
+
+```
+模型：不可用（只能回退到 ccfddl）
+```
+
+可是 0.65.0 那次真实补数据（`POST /dsh-ccf/api/v1/update {"focus":"CVPR","limit":1}`）的回执明明是 `model=True`。同一套代码，同一个宿主，两处判断打架，而界面上只有一句「不可用」——用户既不知道是自己没选模型，还是插件根本没拿到服务，也不知道该改哪里。
+
+### 根因
+
+`lib/miner.js` 的 `isModelAvailable(ctx)` 只回一个布尔值：
+
+```js
+export function isModelAvailable(ctx) {
+  const llm = serviceOf(ctx, 'llm')
+  return typeof llm?.stream === 'function'
+}
+```
+
+而 `serviceOf` 为了不崩，把两条取服务的路径的异常全吞了（cordis 里 `ctx.llm` 在没声明 `inject` 时会抛 `cannot get property "llm" without inject`）。于是「没 inject」「服务没注册」「服务在但没有 `stream()`」「上下文压根没有 `ctx.get`」四种完全不同的处境，在界面上长成同一句话。
+
+这也是这个插件反复出现的毛病：**结论印出来了，依据没有**。前面「待核对 8 条」没有入口（0.75.0 修）、「不一致 26」看不见冲突在哪（0.53.0 修）都是同一类。
+
+### 改法
+
+`lib/miner.js` 新增 `modelState(ctx)`，返回 `{ ready, reason, selection, hasGet }`，`isModelAvailable` 变成 `modelState(ctx).ready`（旧调用点不用动）：
+
+| 处境 | reason |
+| --- | --- |
+| 没有 `ctx.get()` | 这个上下文没有 `ctx.get()`，读不到任何服务 |
+| 读不到 llm | 没读到 llm 服务：宿主没把模型接给这个插件（或它比插件更晚注册） |
+| 有 llm 没 `stream()` | 读到 llm 服务，但它没有 `stream()`（版本不匹配？） |
+| 都正常 | 空字符串，并带上 `agentDefaultModel.currentSelection()` 的 `provider/model` |
+
+配合三处出口：
+
+1. `/ccf status` 的模型行：
+
+```
+模型：不可用 —— 没读到 llm 服务：宿主没把模型接给这个插件（或它比插件更晚注册）；补数据会退回 ccfddl 数据；上次补数据 11-01 15:20：用了模型
+```
+
+可用时是 `模型：可用（deepseek-account/deepseek-flash）`。**「上次补数据用没用模型」也接在同一行**——`cache.meta.modelUsed` 是 runUpdate 真实写下的结果，比任何探测都可信；两个说法再打架，一眼就能看出是"当时能用、现在读不到"。
+
+2. 新命令 `/ccf model`，把依据摊开：
+
+```
+模型：可用
+依据：读到 llm.stream()，当前选择 deepseek-account/deepseek-flash
+上下文：有 ctx.get()
+上次补数据：11-01 15:20，用了模型
+```
+
+不可用时多一段：`补数据仍能跑，但新会议只能用 CCFDDL / paper-deadlines 的现成数据；要让模型参与，先确认 DSH 里选好了默认模型，再重启一次桌面端。`
+
+3. 面板：`lib/ui.js` 的 `meta` 增 `modelReason` / `modelSelection`（走 `api.modelState()`，每次请求重算），状态行从「· 无可用模型（只能同步）」变成带原因的写法。
+
+### 验证
+
+`test/miner.test.mjs` 四种处境各一条断言（含 `noGet.hasGet === false`）；`test/plugin.test.mjs` 新用例「/ccf model：模型不可用要说得清是哪种不可用」——假上下文没有 llm 时 status 必须出现 `模型：不可用 —— 没读到 llm 服务`、且**不得**再出现旧文案「不可用（只能回退到 ccfddl）」；注入 `{ async *stream() {} }` + `currentSelection` 后 `/ccf model` 必须写出 `deepseek-account/deepseek-flash`。
+
+基线：package ok / yaml 5 / core 33 / sync 9 / catalog 29 / dedupe 3 / miner ok / plugin 39 / ui 33 / client 43 / `SMOKE OK` / `PANEL RENDER OK` / `INTEGRATION OK`。
+
+### 这一轮学到的
+
+- 「不可用」不是一个可行动的信息。**凡是"不可用/失败/为空"，都要在同一行给出依据和下一步**，否则用户只能重启、重装、或者来问我。
+- 探测要落到**实际发生过的事实**上：`meta.modelUsed` 是 runUpdate 写的，`modelState` 是现在探测的，两者并排印出来，才解释得清「当时能用、现在读不到」这种矛盾。

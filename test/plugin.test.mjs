@@ -331,6 +331,39 @@ await test('/ccf status 与 /ccf config', async () => {
   }
 })
 
+await test('/ccf model：模型不可用要说得清是哪种不可用', async () => {
+  const dir = await seeded()
+  try {
+    // 这个假上下文没有 llm 服务：本插件最常见的一种"不可用"。
+    const plain = fakeContext()
+    createCcf(plain.ctx, { dataDir: dir }, fakeDefineTool)
+    const plainCommand = plain.registered.commands[0]
+
+    const status = await plainCommand.handler({ rawInput: 'status' })
+    assert.match(status.text, /模型：不可用 —— 没读到 llm 服务/, '不能只写「不可用」，要说清是服务没接进来')
+    assert.doesNotMatch(status.text, /模型：不可用（只能回退到 ccfddl）/, '旧文案不再使用')
+
+    const model = await plainCommand.handler({ rawInput: 'model' })
+    assert.equal(model.kind, 'success')
+    assert.match(model.text, /模型：不可用/)
+    assert.match(model.text, /依据：没读到 llm 服务/)
+    assert.match(model.text, /上下文：有 ctx\.get\(\)/)
+    assert.match(model.text, /补数据仍能跑/, '要告诉用户不可用时还能做什么')
+
+    // 有 llm 也有 stream()：要顺便说出当前选中的 provider/model。
+    const withModel = fakeContext()
+    withModel.ctx.services.llm = { async *stream() {} }
+    withModel.ctx.services.agentDefaultModel = { currentSelection: () => ({ provider: 'deepseek-account', model: 'deepseek-flash' }) }
+    createCcf(withModel.ctx, { dataDir: dir }, fakeDefineTool)
+    const ready = await withModel.registered.commands[0].handler({ rawInput: 'model' })
+    assert.match(ready.text, /模型：可用/)
+    assert.match(ready.text, /deepseek-account\/deepseek-flash/, '可用时要指名道姓，别只说"可用"')
+  } finally {
+    await rm(dir, { recursive: true, force: true }).catch(() => {})
+  }
+})
+
+
 await test('/ccf status：磁盘上的版本比进程新时要说"重启桌面端才会生效"', async () => {
   // 真机上撞到过：进程里跑的是 0.62.0，磁盘已经 0.63.1，而界面上只印「v0.62.0」，
   // 用户完全不知道"改了没生效"是因为没重启。这条提示就是为此存在的。
