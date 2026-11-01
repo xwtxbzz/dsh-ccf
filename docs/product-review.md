@@ -2734,3 +2734,51 @@ ACL 2027 | COLT 2027 | CVPR 2027 | ECAI 2027 | IJCAI 2027 | NAACL 2027 | RSS 202
 测试：`test/ui.test.mjs` 加「`counts.conflicts` 不数已经过了截止的冲突」（一条未来的 + 一条 2025 年到期的 → `conflicts 1 / conflictsPast 1`）；
 `test/plugin.test.mjs` 加「过了截止的冲突不算进来源，但要单独说一句」（只有一条过期冲突 → status 出现「没有还没到截止的冲突」与「1 条已经过了截止」）。
 各自 stash 掉 lib 印证：`AssertionError: 只数还没到截止的那条`、`AssertionError: 没有未来的冲突时要明说，别让人去点空视图`。
+
+## 第 78 轮：`/ccf review` 给的下一步命令，落到哪一届看运气
+
+上一轮做了 `/ccf review`，真机上跑一遍发现命令本身有歧义：
+
+```
+  - SEC 2026：数据里的全称「ACM/IEEE Symposium on Edge Computing」更像名单里的 SEC
+    对就 /ccf confirm SEC；不对就 /ccf ignore SEC
+  - ACM SIGGRAPH 2026：…更像名单里的 SIGGRAPH
+    对就 /ccf confirm ACM SIGGRAPH；…
+  - SIGGRAPH 2027：…更像名单里的 SIGGRAPH
+    对就 /ccf confirm SIGGRAPH；…
+```
+
+问题在于 `confirm`/`ignore` 是按**名字**解析记录的（`resolveRecordKey`），而同一个系列会有好几届同时留在缓存里。
+`/ccf confirm SIGGRAPH` 到底改的是 2026 还是 2027，取决于记录的排序——确认完一届，另一届还得再确认一次，
+两次命令长得还几乎一样，很容易以为已经处理过了。
+
+**改法**：review 输出的命令改用 **key**（形如 `siggraph|2027`），key 里带年份，天然精确到届；
+同系列还有其它届时，句尾补一句「命令里的 key 已经指定到这一届，同系列其它届要单独处理」。
+
+```
+  - SEC 2026：数据里的全称「ACM/IEEE Symposium on Edge Computing」更像名单里的 SEC
+    对就 /ccf confirm sec|2026；不对就 /ccf ignore sec|2026
+```
+
+`writeMark`/`resolveRecordKey` 本来就支持带 `|` 的 key（`/ccf ignore "sec|2026"` 一直在文档里），
+这次只是让 review 主动给出这种写法。
+
+**验证**（真机 8 条全部变成 key 形式）：
+
+```
+对就 /ccf confirm ijcb|2027；不对就 /ccf ignore ijcb|2027
+对就 /ccf confirm acm siggraph|2026；不对就 /ccf ignore acm siggraph|2026
+对就 /ccf confirm siggraph|2027；不对就 /ccf ignore siggraph|2027
+```
+
+`test/plugin.test.mjs` 的 review 用例改成断言 `/\/ccf confirm sec\|2027/`、`/\/ccf ignore sec\|2027/`，
+并用 `/ccf confirm sec|2027` 实际确认；另加同系列两届的场景（`siggraph|2026` + `siggraph|2027`）：
+
+- review 必须同时给出两条命令；
+- `/ccf confirm siggraph|2027` 之后，2026 届仍在清单里、2027 届消失。
+
+`git stash push -- lib/create.js` 复跑 → `AssertionError: 下一步命令要精确到届（key），名字写「SEC」时分不清哪一届`。
+
+**顺带**：这一轮是用真机数据做端到端巡检（`/ccf status`、`/ccf review`、`/ccf marks`、`/ccf list --conflicts 30` 一起跑），
+其余三条输出与面板口径一致：`覆盖 109/253`、`名单外 63 个会（64 条记录）`、`卫星会 8 个（9 条记录）`、
+`来源 17 条 + 另有 9 条已过截止`。

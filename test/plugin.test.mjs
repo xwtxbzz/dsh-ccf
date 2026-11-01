@@ -842,15 +842,42 @@ await test('/ccf review：待核对的不只是个数，还要能给下一步', 
     assert.equal(open.kind, 'success', open.text)
     assert.match(open.text, /待核对：1 条记录/, '要说清有几条在等裁决')
     assert.match(open.text, /SEC 2027/, '要点名是哪条记录')
-    assert.match(open.text, /\/ccf confirm SEC/, '要给出"对"的下一步命令')
-    assert.match(open.text, /\/ccf ignore SEC/, '要给出"不对"的下一步命令')
+    assert.match(open.text, /\/ccf confirm sec\|2027/, '下一步命令要精确到届（key），名字写「SEC」时分不清哪一届')
+    assert.match(open.text, /\/ccf ignore sec\|2027/, '要给出"不对"的下一步命令')
 
     // 裁决过的会不该再出现在待核对里（否则这个清单永远清不掉）
-    const agreed = await plugin.command.handler({ rawInput: 'confirm SEC' })
+    const agreed = await plugin.command.handler({ rawInput: 'confirm sec|2027' })
     assert.equal(agreed.kind, 'success', agreed.text)
     const after = await plugin.command.handler({ rawInput: 'review' })
     assert.match(after.text, /没有需要核对的记录/, '确认过之后就该从待核对里消失')
-    assert.doesNotMatch(after.text, /\/ccf confirm SEC/)
+    assert.doesNotMatch(after.text, /\/ccf confirm sec\|2027/)
+
+    // 同系列两届：key 精确到届，确认一届不会把另一届也认了
+    const dir2 = await seeded({
+      records: [
+        {
+          key: 'siggraph|2026', venue: 'ACM SIGGRAPH', year: 2026, name: 'ACM SIGGRAPH 2026',
+          fullName: 'ACM SIGGRAPH Annual Conference', rank: 'CCF-A', area: '图形',
+          deadline: NOW + 20 * 86400e3, notification: null, abstractDeadline: null,
+          confDate: '2026-08', place: 'TBD', link: '', source: 'ccfddl-api',
+        },
+        {
+          key: 'siggraph|2027', venue: 'SIGGRAPH', year: 2027, name: 'SIGGRAPH 2027',
+          fullName: 'ACM SIGGRAPH Annual Conference', rank: 'CCF-A', area: '图形',
+          deadline: NOW + 90 * 86400e3, notification: null, abstractDeadline: null,
+          confDate: '2027-08', place: 'TBD', link: '', source: 'ccfddl-api',
+        },
+      ],
+    })
+    const plugin2 = createCcf(fakeContext().ctx, { dataDir: dir2, autoUpdate: false, prompt: false, sources: [] }, fakeDefineTool)
+    const both = await plugin2.command.handler({ rawInput: 'review' })
+    assert.match(both.text, /siggraph\|2026/, '2026 届要有自己的命令')
+    assert.match(both.text, /siggraph\|2027/, '2027 届也要有自己的命令')
+    const one = await plugin2.command.handler({ rawInput: 'confirm siggraph|2027' })
+    assert.equal(one.kind, 'success', one.text)
+    const rest = await plugin2.command.handler({ rawInput: 'review' })
+    assert.match(rest.text, /siggraph\|2026/, '只确认了 2027，2026 届还在待核对里')
+    assert.doesNotMatch(rest.text, /siggraph\|2027/, '确认过的那一届要消失')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
