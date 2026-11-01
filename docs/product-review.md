@@ -2187,3 +2187,62 @@ force 无 focus -> I3D/new,IPSN/new,LISA/new
 ```
 
 **仍然悬着的**：真机上跑的还是 0.62.0，所以这次的“点名必挖”还没有在真机上点过一次；下一次重启后，点「重挖这个会」应该看到 `本轮处理 1 个会`。另外，拼错名字时仍会拿那串字去挖一次（权衡：不让合法但缓存里没有的名单外会被挡在门外），这条写进 README 的已知限制。
+
+## 第 67 轮：注入段说「标了来源冲突的 1 个会」，窗口里其实有 5 个
+
+**问题（N112）**。0.59.0 让注入给模型的截稿行也带「来源冲突」标记，但那句话的数字是从
+`rows`（已经被 `maxPromptItems` 截到前 3 条）里数出来的：
+
+```js
+const query = queryDeadlinesWithMeta(cache.records, { now, windowDays: leadDays, limit: maxItems })
+const conflicted = rows.filter((record) => isBigConflict(record))
+if (conflicted.length > 0) {
+  lines.push(`标了「来源冲突」的 ${conflicted.length} 个会，…`)
+}
+```
+
+真机 30 天窗口里有 5 个冲突，其中只有 VLDB 排进前 3 条，于是模型每轮读到的都是
+「标了「来源冲突」的 1 个会」——它会把这句话当事实转述给用户，而实际还有 4 个会的日期也不是唯一说法。
+这与 0.32.0 修过的「列了 8 条 ≠ 一共 8 个」是同一个病：**用被截断的集合去数总数**。
+
+**改法**。冲突数改成在整个窗口上数，列出来的那几条单独说：
+
+```js
+const conflictedAll = queryDeadlinesWithMeta(cache.records, { now, windowDays: leadDays, limit: null })
+  .rows.filter((record) => isBigConflict(record))
+const conflictKeys = new Set(conflictedAll.map((record) => record?.key).filter(Boolean))
+let shownConflicted = 0
+for (const record of rows) {
+  const flagged = conflictKeys.size > 0 ? conflictKeys.has(record?.key) : isBigConflict(record)
+  if (flagged) shownConflicted += 1
+  lines.push(`- ${formatRow(flagged ? { ...record, conflict: true } : record, { now, timeZone })}`)
+}
+if (conflictedAll.length > 0) {
+  const scope = total > rows.length ? `（这里列出的 ${rows.length} 个里有 ${shownConflicted} 个）` : ''
+  lines.push(`窗口内有 ${conflictedAll.length} 个会标了「来源冲突」${scope}：…`)
+}
+```
+
+注入了额外一次 `queryDeadlinesWithMeta`（`limit: null`）只为了数个数——这个开销可以接受：
+一次查询是纯内存过滤，而错报一个绝对数字会让模型替我们撒谎一整个对话。
+`conflictKeys` 仍然是按 key 认的，因为查询出来的行可能是拷贝。
+
+「近期没有急事、只留一行摘要」的分支也有同一个毛病：只看第一个会。
+补上 `otherConflicts`（同窗口里除 `first` 外的冲突数），首个不冲突但别的冲突时输出
+`（另有 N 个会的两个来源说法不一致）`。
+
+**验证**。
+
+- 新用例「冲突的会没排进前几条时，也要说清窗口里一共有几个」：A/B/C 在 11-10/11/12，D 在 11-20
+  且带差 10 天的 `alternatives`，`maxPromptItems: 3` → 断言输出不含 `D 2027 · 来源冲突`
+  （D 被上限截掉），且含 `窗口内有 1 个会标了「来源冲突」（这里列出的 3 个里有 0 个）`。
+  改前这段代码里 `conflicted.length` 是 0，连这句话都不会出现。
+- 旧用例的断言从 `/标了「来源冲突」的 1 个会/` 改成 `/窗口内有 1 个会标了「来源冲突」/`——
+  文案变了，语义没变。
+- 真机（`C:/Users/15961/.dsh/ccf/cache.json`，30 天窗口，前 3 条）：现在输出
+  `窗口内有 5 个会标了「来源冲突」（这里列出的 3 个里有 1 个）：两个来源给的截稿差了一天以上…`。
+  改前这里是「1 个会」。
+
+**为什么放在 core 而不是 create**。`promptText` 是纯函数，输入 cache 输出字符串；
+「窗口里总共有几个冲突」属于文本自身的事实，不该让调用方先算好再传进来——
+否则 create 层又要多一处和别人对不齐的口径（0.50.0、0.56.0 都是这么漏的）。

@@ -271,11 +271,28 @@ test('prompt 注入：两个源打架的会要标出来，别当定论转述', (
   ]
   const text = promptText({ records, updatedAt: NOW }, { now: NOW, leadDays: 60, promptSoonDays: 60 })
   assert.match(text, /AAAI 2027 · 来源冲突/, '注入的那一行要带标记')
-  assert.match(text, /标了「来源冲突」的 1 个会/, '还要说清这意味着什么')
+  assert.match(text, /窗口内有 1 个会标了「来源冲突」/, '还要说清这意味着什么')
   assert.ok(!/CVPR 2027 · 来源冲突/.test(text), '不冲突的会不能被误标')
   // 近期没有急事时只留一行摘要：那一行也得带上"来源冲突"，否则模型只看到最近那个日期
   const brief = promptText({ records, updatedAt: NOW }, { now: NOW, leadDays: 60, promptSoonDays: 7 })
   assert.match(brief, /来源冲突/, '摘要行也要说明这个日期不是唯一说法')
+})
+
+test('prompt 注入：冲突的会没排进前几条时，也要说清窗口里一共有几个', () => {
+  // 只按"列出来的那 3 条"计数，会说出「标了「来源冲突」的 1 个会」这种绝对数字，
+  // 而窗口里可能有二十几个——模型会当成"只有这一条不一致"转述出去。
+  const records = [
+    jsonRecord({ name: 'A 2027', deadline: '2026-11-10T23:59:59-12:00' }),
+    jsonRecord({ name: 'B 2027', deadline: '2026-11-11T23:59:59-12:00' }),
+    jsonRecord({ name: 'C 2027', deadline: '2026-11-12T23:59:59-12:00' }),
+    {
+      ...jsonRecord({ name: 'D 2027', deadline: '2026-11-20T23:59:59-12:00' }),
+      alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2026-11-30T23:59:59-12:00') }],
+    },
+  ]
+  const text = promptText({ records, updatedAt: NOW }, { now: NOW, leadDays: 60, maxPromptItems: 3, promptSoonDays: 60 })
+  assert.doesNotMatch(text, /D 2027 · 来源冲突/, 'D 已经被条数上限截掉了')
+  assert.match(text, /窗口内有 1 个会标了「来源冲突」（这里列出的 3 个里有 0 个）/, '要说明冲突不在列出的这几条里')
 })
 
 test('prompt 注入遵守条数上限', () => {
