@@ -419,6 +419,8 @@ globalThis.fetch = async (url, init) => {
     conflictPayload.records[1] = { ...conflictPayload.records[1] }
     if (body.undo === true) delete conflictPayload.records[1].preferredSource
     else conflictPayload.records[1].preferredSource = body.source
+    // 真实宿主会重算 counts：桩也得跟着算，否则"采信后状态行说几条已采信"测不到
+    conflictPayload.counts = { ...conflictPayload.counts, conflictsDecided: body.undo === true ? 0 : 1 }
   }
   return { ok: true, status: 200, text: async () => JSON.stringify(conflictPayload) }
 }
@@ -447,6 +449,8 @@ await act(async () => {
 const conflictText = document.body.textContent
 assert.match(conflictText, /ICLR 2027/, '冲突的那条要能在「不一致」视图里找到')
 assert.ok(!/CVPR 2027/.test(conflictText), '不冲突的会不该混进「不一致」视图')
+// 还没决定时说「N 条来源不一致」就够了，别凭空加"已采信 0 条"
+assert.doesNotMatch(conflictText, /条已采信/, '没采信过就别提这件事')
 // 26 条冲突逐张卡片点太碎：这张视图里要能一句「这些冲突统一采信 X」
 assert.match(conflictText, /这些冲突统一采信：/, '冲突视图要给批量入口')
 const bulkChip = [...document.querySelectorAll('button')].find((node) => /paper-deadlines\s*1/.test(node.textContent || ''))
@@ -463,6 +467,8 @@ assert.match(String(bulkPost.init?.body ?? ''), /"source":"paper-deadlines"/)
 // 批量点错了得能整体撤回：界面要给「撤销 <来源> N」，且真的发 undo:true
 const afterBulkText = document.body.textContent
 assert.match(afterBulkText, /已采信：/, '采信之后要把"当前采信了谁"摆出来')
+// 采信不减少"说法不一致"的条数（事实没变），但状态行要说清其中几条已经决定过了
+assert.match(afterBulkText, /1 条来源不一致（1 条已采信）/, '状态行要区分"还没决定"和"已经采信过"')
 const undoBulk = [...document.querySelectorAll('button')].find((node) => /撤销\s*paper-deadlines\s*1/.test(node.textContent || ''))
 assert.ok(undoBulk, '批量采信要有对应的撤销入口（命令侧有 --undo，界面不该没有）')
 await act(async () => {

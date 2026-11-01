@@ -300,6 +300,21 @@ test('counts.conflicts 只数默认视图里看得到的记录', () => {
   assert.equal(body.counts.conflicts, 1, '被否掉的会不再算来源不一致')
 })
 
+test('counts.conflictsDecided 区分「还没决定」和「你已经采信过了」', () => {
+  // 采信不改变"两个源说法不同"这个事实，所以 conflicts 不减；
+  // 但用户需要知道还剩几条要决定，否则「不一致 26」永远像个没做完的待办。
+  const cache = {
+    ...CACHE,
+    records: [
+      { ...CACHE.records[0], key: 'decided|2027', preferredSource: 'paper-deadlines', alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2026-11-14T07:59:59Z'), notification: null }] },
+      { ...CACHE.records[0], key: 'open|2027', venue: 'ICLR', name: 'ICLR 2027', alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2026-11-14T07:59:59Z'), notification: null }] },
+    ],
+  }
+  const body = panelPayload(cache, { now: Date.parse('2026-10-31T10:00:00Z') })
+  assert.equal(body.counts.conflicts, 2, '两个都还是「说法不一致」')
+  assert.equal(body.counts.conflictsDecided, 1, '其中一条已经采信过了')
+})
+
 test('panelPayload tells the panel whether a model is available', () => {
   // 没有模型时面板要能把「补数据」禁掉，不能让人点了半天什么也没发生。
   assert.equal(panelPayload(null, {}).meta.modelReady, true)

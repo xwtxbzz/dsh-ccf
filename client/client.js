@@ -798,7 +798,13 @@ const chipNew = {
       if (markedCount > 0) modes.push(['marks', '已裁决'])
       // 状态行报了「N 条来源不一致」，这里给个入口：点进去只剩这几条，才找得到是哪几条
       const conflictCount = Number.isFinite(totals.conflicts) ? totals.conflicts : 0
+      const conflictDecided = Number.isFinite(totals.conflictsDecided) ? totals.conflictsDecided : 0
       if (conflictCount > 0) modes.push(['conflicts', '不一致'])
+      const conflictTitle = conflictCount === 0
+        ? ''
+        : conflictDecided > 0
+          ? `${conflictCount} 条的两个来源说法不同，其中 ${conflictDecided} 条你已经采信了某个来源，还有 ${conflictCount - conflictDecided} 条没决定`
+          : `${conflictCount} 条的两个来源给的截稿差了一天以上，点进去可以逐个或整批采信`
       const canMine = modelReady !== false
       const areaOptions = [].concat([h('option', { key: '', value: '' }, '全方向')], (areas || []).map((name) => h('option', { key: name, value: name }, name)))
       return h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', padding: '8px 12px', borderBottom: `1px solid ${UI.colors.lineSoft}` } },
@@ -808,7 +814,7 @@ const chipNew = {
           placeholder: '搜会议名/地点/方向…',
           style: { flex: '1 1 120px', minWidth: '90px', padding: '3px 8px', border: `1px solid ${UI.colors.line}`, borderRadius: '8px', background: 'transparent', color: 'inherit', font: 'inherit' },
         }),
-        modes.map(([value, label]) => h('button', { key: value, onClick: () => onMode(value), style: chipStyle(mode === value) }, modeLabel(value, label))),
+        modes.map(([value, label]) => h('button', { key: value, onClick: () => onMode(value), title: value === 'conflicts' ? conflictTitle : undefined, style: chipStyle(mode === value) }, modeLabel(value, label))),
         // 卫星会（Workshop / 地区分会场）默认不列：有的话给个开关，标题里说清它们不算主会。
         // 已经打开时即使这个视图里一个都没有，也要留着开关——否则关不掉，下一屏它们又混进来了。
         // 「已裁决」视图本来就不过滤卫星会，那里放开关只是空按钮，不显示。
@@ -1321,7 +1327,7 @@ const chipNew = {
               || (busy
                 ? `${busy} 已 ${Math.max(0, Math.round((Date.now() - busySince.current) / 1000))} 秒`
                 : payload
-                  ? `${payload.updatedAt ? `${formatInstant(payload.updatedAt, timeZone)} 更新` : '未同步'}${isStale(payload, Date.now(), 6) ? '（已过期，建议同步）' : ''}${area ? ` · 方向 ${area}` : ''}${pins.length > 0 ? ` · 关注 ${pins.length}` : ''} · 当前 ${shownRows.length} 条${mode === 'all' ? `（窗口内 ${upcoming} 条 + 待补）` : ` · ${mode === 'pending' ? '待补视图' : mode === 'pins' ? '关注视图' : mode === 'marks' ? '已裁决视图' : mode === 'conflicts' ? '来源不一致' : '有数据视图'}`}${summary ? ` · ${summary}` : ''}${counts && counts.conflicts > 0 ? ` · ${counts.conflicts} 条来源不一致` : ''}${counts && counts.outside > 0 ? ` · 名单外 ${Number.isFinite(counts.outsideVenues) ? counts.outsideVenues : counts.outside} 个会` : ''}
+                  ? `${payload.updatedAt ? `${formatInstant(payload.updatedAt, timeZone)} 更新` : '未同步'}${isStale(payload, Date.now(), 6) ? '（已过期，建议同步）' : ''}${area ? ` · 方向 ${area}` : ''}${pins.length > 0 ? ` · 关注 ${pins.length}` : ''} · 当前 ${shownRows.length} 条${mode === 'all' ? `（窗口内 ${upcoming} 条 + 待补）` : ` · ${mode === 'pending' ? '待补视图' : mode === 'pins' ? '关注视图' : mode === 'marks' ? '已裁决视图' : mode === 'conflicts' ? '来源不一致' : '有数据视图'}`}${summary ? ` · ${summary}` : ''}${counts && counts.conflicts > 0 ? ` · ${counts.conflicts} 条来源不一致${Number.isFinite(counts.conflictsDecided) && counts.conflictsDecided > 0 ? `（${counts.conflictsDecided} 条已采信）` : ''}` : ''}${counts && counts.outside > 0 ? ` · 名单外 ${Number.isFinite(counts.outsideVenues) ? counts.outsideVenues : counts.outside} 个会` : ''}
               ${payload && payload.meta && payload.meta.marks && (payload.meta.marks.ignored + payload.meta.marks.confirmed) > 0 ? ` · 已裁决 ${payload.meta.marks.ignored + payload.meta.marks.confirmed}` : ''}${satelliteHidden > 0 ? ` · 另有 ${satelliteHidden} 个卫星会未显示（点「卫星会」看）` : ''}${payload.meta && payload.meta.modelReady === false ? ' · 无可用模型（只能同步）' : ''}${payload.meta && payload.meta.fallback ? ' · 回退数据' : ''}`
                   : '读取缓存中…')}`,
           ),

@@ -2246,3 +2246,40 @@ if (conflictedAll.length > 0) {
 **为什么放在 core 而不是 create**。`promptText` 是纯函数，输入 cache 输出字符串；
 「窗口里总共有几个冲突」属于文本自身的事实，不该让调用方先算好再传进来——
 否则 create 层又要多一处和别人对不齐的口径（0.50.0、0.56.0 都是这么漏的）。
+
+## 第 68 轮：「不一致 26」——采信完了还是 26，看着像没做完
+
+**问题（N113）**。0.55–0.60 给了批量采信、批量撤销、清单里标「按 <来源> 显示」，
+但面板那颗「不一致 26」的徽标始终是 26：采信不改变"两个源说法不同"这个事实（这是对的），
+可用户看不出"还剩几条要决定"。真实节奏是：点一次批量采信 → 26 条都定了 → 徽标还是 26 →
+下次进来又要点一遍确认，因为界面没有"已经做过"的痕迹。
+
+**改法**。把两个数分开，别混着报：
+
+```js
+// lib/ui.js
+conflicts: records.filter((row) => isBigConflict(row) && !ignoredKeys.has(row?.key) && !satelliteKeys.has(row?.key)).length,
+conflictsDecided: records.filter((row) => isBigConflict(row) && !ignoredKeys.has(row?.key) && !satelliteKeys.has(row?.key)
+  && typeof row?.preferredSource === 'string' && row.preferredSource.length > 0).length,
+```
+
+- 状态行：`· 26 条来源不一致（25 条已采信）`——没采信过时只印前者，不凭空写"已采信 0 条"。
+- 徽标悬停：`26 条的两个来源说法不同，其中 25 条你已经采信了某个来源，还有 1 条没决定`；
+  一条都没采信时换成"点进去可以逐个或整批采信"。
+
+**为什么不直接让 conflicts 减到 0**。"两个源给的日期差一天以上"是数据属性，不是你决定了就消失；
+把它减掉等于谎称"数据没问题了"。所以 total 保持不动，另给一个"已决定"的数，
+让"还剩几条"可以自己减出来——数字都给，别替用户下结论。
+
+**验证**。
+
+- `test/ui.test.mjs` 新增「counts.conflictsDecided 区分「还没决定」和「你已经采信过了」」：
+  两条冲突、其中一条带 `preferredSource` → `conflicts === 2`、`conflictsDecided === 1`。
+  写这条用例时踩了一个自己埋的坑：两条记录都从 `CACHE.records[0]` 复制，会同年被
+  `dedupeVenueYear` 合成一条，断言变成 1 ≠ 2——第二条改成 `venue: 'ICLR'` 才对。
+- `test/panel.render.test.mjs`：桩宿主在批量采信成功后同步 `counts.conflictsDecided`（真实宿主会重算），
+  断言点击后状态行出现 `1 条来源不一致（1 条已采信）`；点击前断言 `doesNotMatch(/条已采信/)`——
+  这条反向断言顺带证明文案是"根据数据出现/消失"，不是无条件印上去的。
+
+**顺带说明**。这轮只动了显示层（ui/client），没动 `lib/create.js` 的命令侧数字：
+`/ccf status` 的「来源」行 0.60.0 已经报过"其中 M 条你已经采信了某个来源"，口径一致。
