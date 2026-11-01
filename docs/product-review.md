@@ -2916,3 +2916,44 @@ export function isModelAvailable(ctx) {
 
 - **词表对齐要拿真数据验，不能靠直觉**：我第一版把 CV 归到图形学，测试用自己的夹具也绿（夹具里 CVPR 的 area 恰好是 'CV'），真机上却一条 CVPR 都查不到。真机缓存是最好的对照组。
 - 「0 条结果」与「参数写错」必须能区分开，否则用户/模型会把前者当成事实去汇报。
+
+## 81. 同一个方向词，`--pending` 和普通清单给两个答案
+
+### 看到的问题
+
+上一轮把 `--area CV` 接到名单的中文大类上（CV → 人工智能），普通清单从「2 条」变成「18 条」。但 `/ccf list --pending --area CV` 还是 0 条，而 `/ccf pending --area 人工智能` 有 21 个 —— 同一个词，两条路径两个答案。
+
+代码里这是两套过滤：
+
+```js
+// 主路径：走 areaResolved / AREA_ALIASES
+const catalogAreaAbbrs = ... areaResolved.some(({ needle, alias }) => area === alias || area.includes(alias))
+// 待补分支：只对名单的中文大类做子串匹配
+if (areaNeedles && !areaNeedles.some((needle) => String(item.area || '').includes(needle))) return false
+```
+
+顺着这条线还挖出两个更难看的：
+
+1. **条件写错时会说假话。** `--pending` 分支先过滤、再看 `filtered.length === 0`，于是 `/ccf list --pending --area 神经科学` 落到 `名单里的会都已有截稿数据（名单共 362 个会议）。` —— 明明是方向名不对，却告诉用户"都补完了"。
+2. **等级写错静默返回 0 条。** `--rank CCF-D`、`--rank A` 都会被 `toUpperCase()` 原样收下，然后和 `CCF-A/CCF-B/CCF-C` 一个都不相等，得到"窗口内 0 条"，看上去像"这个等级没有会要截稿"。
+
+### 改法
+
+- 抽 `areaMatchesCatalog(area)`（名单的中文大类 → 也认英文别名），`--pending` 分支改用它，两条路径同一个判定。
+- 抽 `filterNoteOf(unknownAreas, unknownRanks)`，一处生成"参数写错"的说明：
+  - `方向「神经科学」不在名单里，也认不出是常见英文写法。可选：…；也接受 ai / cv / db / security / se / systems / network / hci / theory 这类英文写法。`
+  - `等级「CCF-D」不是 CCF 的等级写法，可选：CCF-A / CCF-B / CCF-C。`
+- `--pending` 分支在过滤之前先看这个说明：有就说清楚"这一支只按名单里的等级与方向筛，条件对不上就什么都不列"，不再掉进"都已有截稿数据"。
+- 普通清单的说明改用同一个 `filterNoteOf`，`data` 里同时给 `unmatchedAreas` 与 `unmatchedRanks`。
+
+### 验证
+
+- 新增 `/ccf pending：条件写错时不能说"名单里的会都已有截稿数据"`：方向写错必须出现「方向「神经科学」不在名单里」且**不能**出现「都已有截稿数据」；等级写错必须出现「等级「CCF-D」不是 CCF 的等级写法」并列出可选等级。
+- 新增 `/ccf pending：方向用英文写法（CV）跟普通清单给同一个答案`：`--pending --area CV` 与 `--pending --area 人工智能` 第一行必须完全一致。
+- 反向验证：`git stash push -- lib/create.js` 后跑 → `AssertionError: 要说是方向名的问题`；恢复后 plugin **41 passed**。
+- 基线：package ok / yaml 5 / core 33 / sync 9 / catalog ok / dedupe 3 / miner ok / plugin 41 / ui 33 / client 43 / `PANEL RENDER OK` / `INTEGRATION OK`。
+
+### 这一轮的教训
+
+- **修完一处，要把同一个参数的所有分支都过一遍。** 上一轮只修了 `list` 那条路，`--pending` 是同一个过滤条件的第二个实现，一晚上就又长回来了。参数有几条路径，就有几个地方会漂。
+- 「筛不到」和「筛错了」必须分开：前者是事实（这个方向目前没有会），后者是输入问题（这个词根本不成立）。把两者混在一句「都已有截稿数据」里，比报错更坏 —— 用户会据此认为没有活要干。

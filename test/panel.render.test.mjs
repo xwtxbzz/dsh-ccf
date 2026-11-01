@@ -547,6 +547,9 @@ assert.match(satText, /卫星会/, '卫星会要有一句说明')
 assert.match(satText, /不计入名单里那个主会/, '要说清它不计入主会')
 const buttons = [...document.querySelectorAll('button')].map((node) => node.textContent)
 assert.ok(!buttons.includes('就是这个会'), '卫星会不该给「就是这个会」这种会把人引错的选择')
+// 但「其实是主会」要给：判定只看名字，名字会骗人，得留一条改回来的路。
+const satMain = [...document.querySelectorAll('button')].find((node) => node.textContent === '其实是主会')
+assert.ok(satMain, '卫星会要能标「其实是主会」')
 // 但「不是这个会」要给：workshop 数据也可能是错的，卡片不能是死的
 const satIgnore = [...document.querySelectorAll('button')].find((node) => node.textContent === '不是这个会')
 assert.ok(satIgnore, '卫星会也要能标「不是这个会」')
@@ -555,6 +558,13 @@ globalThis.fetch = async (url, init) => {
   if (init && init.method === 'POST') satPosts.push([url, String(init.body)])
   return { ok: true, status: 200, text: async () => JSON.stringify(satPayload) }
 }
+await act(async () => {
+  satMain.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }))
+})
+const satMainMark = satPosts.find(([url]) => String(url).includes('/confirm'))
+assert.ok(satMainMark, '点卫星会的「其实是主会」要发 POST /confirm')
+assert.match(satMainMark[1], /"mark":"confirm"/, '发出去的结论是 confirm')
+satPosts.length = 0
 await act(async () => {
   satIgnore.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }))
 })

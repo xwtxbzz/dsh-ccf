@@ -962,6 +962,41 @@ await test('/ccf pending：跟「比较日期」的旗标一起用时要说明�
   }
 })
 
+await test('/ccf pending：条件写错时不能说"名单里的会都已有截稿数据"', async () => {
+  const dir = await seeded()
+  try {
+    const plugin = createCcf(fakeContext().ctx, { dataDir: dir, autoUpdate: false, prompt: false, sources: [] }, fakeDefineTool)
+    // 方向名写错：以前会落进"都已有截稿数据"那句假话里
+    const bogusArea = await plugin.command.handler({ rawInput: 'list --pending --area 神经科学' })
+    assert.equal(bogusArea.kind, 'success', bogusArea.text)
+    assert.match(bogusArea.text, /方向「神经科学」不在名单里/, '要说是方向名的问题')
+    assert.doesNotMatch(bogusArea.text, /都已有截稿数据/, '不能把"筛不到"说成"都补完了"')
+    // 等级写法不存在：同样要说清可选值
+    const bogusRank = await plugin.command.handler({ rawInput: 'list --pending --rank CCF-D' })
+    assert.match(bogusRank.text, /等级「CCF-D」不是 CCF 的等级写法/, '等级写错也要说明')
+    assert.match(bogusRank.text, /CCF-A \/ CCF-B \/ CCF-C/, '要给出可选等级')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
+await test('/ccf pending：方向用英文写法（CV）跟普通清单给同一个答案', async () => {
+  const dir = await seeded()
+  try {
+    const plugin = createCcf(fakeContext().ctx, { dataDir: dir, autoUpdate: false, prompt: false, sources: [] }, fakeDefineTool)
+    const byAlias = await plugin.command.handler({ rawInput: 'list --pending --area CV' })
+    const byChinese = await plugin.command.handler({ rawInput: 'list --pending --area 人工智能' })
+    assert.equal(byAlias.kind, 'success', byAlias.text)
+    assert.equal(
+      byAlias.text.split('\n')[0],
+      byChinese.text.split('\n')[0],
+      '「CV」要归到「人工智能」，两条路给同一份清单',
+    )
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
 await test('/ccf ignore：标成「不是这个会」的记录不再算进覆盖度，能撤销', async () => {
   const dir = await seeded()
   try {

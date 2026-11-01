@@ -16,6 +16,7 @@ DSH 插件：把 CCF 会议的**截稿时间**变成 agent 真正知道的事实
 
 - **结构化数据与文本同步**：`ccf_deadlines` 的 `data.rows` 带 `satellite` / `conflict` 标；`ccf_venue` 的 `data.rows` 补齐 `abstractDeadline` / `notification` / `rebuttal`（没有就 `null`，不让模型以为字段不存在）。
 - **方向名两套写法都认**：名单里是中文大类，`--area` 也接受 ai / cv / db / security / se / systems / network / hci / theory 这类英文写法（归到对应大类）；认不出来的方向会当场说「不在名单里」并列出可选值，不会返回一个"成功"的 0 条。
+- **参数写错不装没事**：`--area` 认不出、`--rank` 不是 CCF-A/B/C 时，报告开头直接说明并列出可选值；`--pending` 这条路径也不再给出「名单里的会都已有截稿数据」这种假答案。
 - **「模型：不可用」会带上原因**：`/ccf status` 会写清是"没读到 llm 服务"还是"服务里没有 stream()"，并附上当前选中的 provider/model 与「上次补数据用没用模型」；`/ccf model` 把整套依据摊开，不用猜是不是自己没配模型。
 - **不再有 CR（camera-ready）**：上游本来就没有这个字段，面板上每行都写「上游未提供」只会占地方；数据、工具、面板、ICS、prompt 里都去掉了，`ccf_venue` 的 `data` 里也不会再出现 `cameraReady` 键。
 

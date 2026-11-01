@@ -253,6 +253,17 @@ assert.equal(confirmedRun.counts.future, 1, '但它仍然算这个会的数据')
   assert.equal(satCov.counts.future, 1, '主会仍算有数据，且只由主会自己那条喂')
   const ownWorkshop = { abbr: 'WOW', fullName: 'ACM Workshop on Something', publisher: 'ACM', dblp: '' }
   assert.equal(isSatelliteRecord({ fullName: 'ACM Workshop on Something' }, ownWorkshop), false, '名单里的 workshop 会是正经会议')
+
+  // 名字判断会错：用户核对过「其实是主会」的记录，不能再当卫星会——
+  // 否则这种记录只剩「不是这个会」一条路，一点就从统计里彻底消失。
+  const fixed = catalogCoverage([mainRow, asiaRow, workshopRow], satCatalog, {
+    now: Date.now(),
+    conferences: satConferences,
+    confirmedKeys: new Set(['acm siggraph asia|2026']),
+  })
+  assert.equal(fixed.counts.satellites, 1, '确认过「其实是主会」的那条不再算卫星会')
+  assert.ok(!fixed.satellites.some((row) => row.key === 'acm siggraph asia|2026'), '被确认的不该再出现在卫星会里')
+  assert.equal(fixed.counts.outside, 0, '它仍归到名字对得上的那个会，不该掉进名单外')
 }
 
 {

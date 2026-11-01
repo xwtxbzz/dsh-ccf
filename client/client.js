@@ -681,7 +681,7 @@ const chipNew = {
       if (conflict) details.push(['来源冲突', conflict])
       // 模型挖到的日期，出处是它当时读的网页：想核对就点回去（这也是"别信模型"的兜底）
       // 认领了但全称对不上：多半是同简称的另一个会（SEC = 边缘计算 vs 信息安全），值得核对
-      if (record.satellite === true) details.push(['卫星会', 'Workshop / 地区分会场：数据是真的，但它不计入名单里那个主会的截稿'])
+      if (record.satellite === true) details.push(['卫星会', 'Workshop / 地区分会场：数据是真的，但它不计入名单里那个主会的截稿。名字判断错了就点「其实是主会」'])
       if (record.weakMatch === true) details.push(['建议核对', '这条记录的全称和名单里同名会不一致，可能是另一个会（同简称）'])
       // 核对完要能给出结论，否则「建议核对」会永远挂在那里。两种结论都只写 meta，不动数据。
       // 卫星会也要给「不是这个会」：workshop 数据也可能是错的（或落到了错的系列上），
@@ -694,8 +694,11 @@ const chipNew = {
           marks = [h('button', { key: 'undo-confirm', style: markButton, onClick: (event) => { event.stopPropagation(); onMark(record.key, 'confirm', true) }, title: '取消「就是这个会」的确认' }, '取消确认')]
         } else {
           marks = []
-          // 「就是这个会」只对主会开放：点了等于承认 workshop 是主会，正是要避免的那个错
-          if (record.satellite !== true) {
+          // 「就是这个会」对主会是"确认同名"；对卫星会是"名字判断错了"——
+          // 判定只看名字（带 workshop / 地区词），会错，得留一条改回来的路。
+          if (record.satellite === true) {
+            marks.push(h('button', { key: 'confirm', style: markButton, onClick: (event) => { event.stopPropagation(); onMark(record.key, 'confirm', false) }, title: '名字里带 workshop / 地区名，但它其实就是名单里那个会本身（不是它的分会场）：确认后按主会统计' }, '其实是主会'))
+          } else {
             marks.push(h('button', { key: 'confirm', style: markButton, onClick: (event) => { event.stopPropagation(); onMark(record.key, 'confirm', false) }, title: '确认这条就是名单里那个会，不再提示核对' }, '就是这个会'))
           }
           marks.push(h('button', { key: 'ignore', style: markButton, onClick: (event) => { event.stopPropagation(); onMark(record.key, 'ignore', false) }, title: record.satellite === true ? '这条 workshop / 地区分会场不该出现（比如落到了错的系列上）：标了就不再计入卫星会统计' : '标成「不是这个会」：不再算进任何会的覆盖度' }, '不是这个会'))
