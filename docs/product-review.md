@@ -2582,3 +2582,55 @@ $ /ccf list 120 --pending --conflicts
 
 **这类问题的通用形态**：一个命令有多条互斥分支时，每条分支都会漏掉几条旗标。要么在分支入口统一认领并拒绝，
 要么把旗标解析和分支选择分开——本轮选前者（改动小、错误信息能说人话）。
+
+## 第 75 轮：`ccf_venue` 的 data 里，两个会长得一模一样
+
+**问题（N121）**。`ccf_venue` 的 `report` 里每一行都有会名和系列名：
+
+```
+SIGGRAPH 2027 · CCF-A · Graphics
+  - 2027: 截稿 2027-01-23 15:59 …
+卫星会：数据里另有 ACM SIGGRAPH ASIA 2026（截稿 …）；SIGGRAPH Asia 2027（截稿 …）
+```
+
+但 `data.rows` 的投影只有 `year / rank / area / deadline / abstractDeadline / notification / rebuttal / link`——
+**没有 `venue`、没有 `name`**。模型只读 `data` 时：
+
+- 查 `FSE` 这种"名单里两个会同简称"的情况，两行数据分不清哪一行是软工 FSE、哪一行是安全 FSE；
+- 查 `SIGGRAPH` 时，`report` 里那句"卫星会：数据里另有 …"在 `data` 里**一个字都没有**，
+  于是模型会认为这个系列只收了一个会，把地区版的截稿当成主会的——正是 0.41–0.48 那几轮在
+  命令行/面板/注入里反复修掉、却漏在工具结构化输出上的同一个毛病。
+
+**改法**。`lib/create.js` 的 `venueTool` 两处：
+
+```js
+rows: rows.map((row) => ({
+  venue: row.venue ?? null,
+  name: row.name ?? null,
+  …
+  ...(satelliteKeys.has(row?.key) ? { satellite: true } : {}),
+})),
+satellites: satellites.slice(0, 5).map((row) => ({ venue, name, year, deadline })),
+```
+
+`satelliteKeys` 来自 `catalogCoverage(...).satellites`：查的正好是卫星会本身（`CVPR Workshops`）时，
+`rows` 里那条也带上 `satellite: true`，模型才分得清「这条截稿算主会还是 workshop」。
+
+**验证**。真机探针（活缓存，只读）：
+
+```
+$ ccf_venue { venue: "CVPR Workshops" }
+rows [["CVPR Workshops", 2027, true]]    ← satellite 标记到位
+sats []
+
+$ ccf_venue { venue: "SIGGRAPH" }
+sig sat list [["ACM SIGGRAPH ASIA 2026", "2026-05-13T11:59:59.000Z"], ["SIGGRAPH Asia 2027", "2027-05-20T11:59:59.000Z"]]
+```
+
+`test/plugin.test.mjs` 两条断言（都写进已有用例）：`hit.data.rows[0].venue === 'CVPR'` / `.name === 'CVPR 2027'`、
+`Array.isArray(hit.data.satellites)`；卫星会用例加 `out.data.satellites.length === 1` 与
+`out.data.satellites[0].name === 'ACM SIGGRAPH ASIA 2026'`。
+`git stash push -- lib/create.js` 复跑 → `AssertionError: data 的行要说明是哪个会`。
+
+**教训**：这已经是同一根线上的第六次（N12 / N81 / N84 / N99 / N118 / N121）——**文本出口和结构化出口是两套，
+改了一边就一定会漂**。下次加字段时，先问"report 里有的，data 里有没有"。

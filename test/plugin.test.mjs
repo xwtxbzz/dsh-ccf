@@ -159,6 +159,10 @@ await test('ccf_venue：命中与未命中', async () => {
       assert.ok(Object.hasOwn(hit.data.rows[0], field), `ccf_venue 的 data 里要有 ${field}`)
     }
     assert.equal(Object.hasOwn(hit.data.rows[0], 'cameraReady'), false, 'CR 时间已去掉，data 里不该再有这个键')
+    // 只有 report 里有名字时，模型读到多行 data 就分不清哪行是哪个会
+    assert.equal(hit.data.rows[0].venue, 'CVPR', 'data 的行要说明是哪个会')
+    assert.equal(hit.data.rows[0].name, 'CVPR 2027', 'data 的行要有会名')
+    assert.ok(Array.isArray(hit.data.satellites), 'data 要给卫星会数组（没有就是空数组）')
 
     const missing = await tool.execute({ venue: 'NIPS' })
     assert.equal(missing.ok, false)
@@ -426,6 +430,11 @@ await test('ccf_venue：主会旁边说清卫星会（workshop / 地区分会场
   assert.match(out.report, /SIGGRAPH 2027/, '主会照常给')
   assert.match(out.report, /卫星会：数据里另有 ACM SIGGRAPH ASIA 2026/, '要点出卫星会')
   assert.match(out.report, /不计入|另算/, '要说明它不算主会')
+  // report 里写了「卫星会：数据里另有 …」，data 里也得有：模型只读 data 时，
+  // 否则会以为这个系列只收了一个会，把地区版的截稿当成主会的。
+  assert.equal(out.data.satellites.length, 1, '卫星会要给进 data')
+  assert.equal(out.data.satellites[0].name, 'ACM SIGGRAPH ASIA 2026')
+  assert.ok(Object.hasOwn(out.data.satellites[0], 'deadline'), '卫星会也要带截稿时间')
 })
 
 await test('ccf_deadlines / /ccf list：默认不混卫星会，加 --satellites 才列并打标', async () => {
