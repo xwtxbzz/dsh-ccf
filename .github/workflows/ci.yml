@@ -27,7 +27,11 @@ jobs:
           node test/yaml.test.mjs
           node test/core.test.mjs
           node test/sync.test.mjs
+          node test/catalog.test.mjs
+          node test/miner.test.mjs
           node test/plugin.test.mjs
+          node test/ui.test.mjs
+          node test/client.test.mjs
       - name: SDK 冒烟（无 SDK 时自动 SKIP）
         run: node test/sdk-smoke.mjs
 
@@ -44,8 +48,11 @@ jobs:
           node -e "
           const p = require('./package.json');
           if (!p.dsh || !p.dsh.bundle || !p.dsh.bundle.patch) { console.error('缺少 dsh.bundle.patch'); process.exit(1) }
+          if (!p.dsh.client || !p.dsh.client.platform) { console.error('缺少 dsh.client（右侧面板要靠它加载客户端产物）'); process.exit(1) }
           if (p.type !== 'module') { console.error('应为 ESM'); process.exit(1) }
           if (!p.files.includes('cordis.patch.yml')) { console.error('files 必须包含 cordis.patch.yml'); process.exit(1) }
+          if (!p.files.includes('client')) { console.error('files 必须包含 client'); process.exit(1) }
+          if (p.exports['./client'] !== './client/client.js') { console.error('exports[./client] 应指向 client/client.js'); process.exit(1) }
           console.log('ok', p.name, p.version);
           "
       - name: bundle patch 存在且含 insert row
@@ -60,3 +67,34 @@ jobs:
           grep -q "export default class" lib/index.js || exit 1
           grep -q "export const name = 'dsh-ccf'" lib/index.js || exit 1
           echo "entry ok"
+      - name: 客户端产物自检
+        run: |
+          test -f client/client.js || exit 1
+          node --check client/client.js
+          grep -q "__ModuleLoader__.load" client/client.js || exit 1
+          grep -q "shell.overlay" client/client.js || exit 1
+          grep -q "require('react')" client/client.js || exit 1
+          echo "client ok"
+      - name: 名单数据自检
+        run: |
+          test -f data/ccf-catalog.json || exit 1
+          node -e "
+          const c = require('./data/ccf-catalog.json');
+          if (c.schema !== 'dsh-ccf/catalog/v1') { console.error('名单 schema 不对'); process.exit(1) }
+          if (!Array.isArray(c.areas) || c.areas.length < 10) { console.error('名单方向数不足'); process.exit(1) }
+          const count = c.areas.reduce((n, a) => n + Object.values(a.conferences || {}).reduce((m, list) => m + list.length, 0), 0);
+          if (count < 300) { console.error('会议数不足: ' + count); process.exit(1) }
+          console.log('catalog ok', count, 'conferences');
+          "
+      - name: 新数据通道自检（源码里必须真有挖掘与回退）
+        run: |
+          test -f lib/miner.js || exit 1
+          test -f lib/catalog.js || exit 1
+          grep -q "ccfddl" lib/miner.js || exit 1
+          grep -q "感谢" lib/miner.js || exit 1
+          grep -q "autoUpdateDays" lib/core.js || exit 1
+          grep -q "ccf_update" lib/create.js || exit 1
+          grep -q "ccfddl-api" lib/core.js || exit 1
+          grep -q "allconf.json" lib/core.js || exit 1
+          grep -q "normalizeCcfddlApi" lib/sync.js || exit 1
+          echo "miner wiring ok"
