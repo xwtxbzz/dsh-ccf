@@ -300,7 +300,8 @@ await test('/ccf status 与 /ccf config', async () => {
 
     const status = await command.handler({ rawInput: 'status' })
     assert.equal(status.kind, 'success')
-    assert.match(status.text, /3 条会议/)
+    assert.match(status.text, /缓存里 3 条记录/, '缓存里是记录数，别写成「3 条会议」——会议是按会算的')
+    assert.match(status.text, /去重后 3 个会/, '记录数与会数分开写')
     assert.match(status.text, /paper-deadlines：3 条/)
     assert.match(status.text, /「📅 会议」标签/, 'status 要告诉人面板在哪')
     // 覆盖度跟面板同源：旧的 meta.pending(999) 不该出现在 status 里。

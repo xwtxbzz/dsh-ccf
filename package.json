@@ -1,6 +1,6 @@
 {
   "name": "dsh-ccf",
-  "version": "0.71.0",
+  "version": "0.72.0",
   "description": "CCF 会议截稿侦测：CCF 名单 + CCFDDL 数据 + 模型挖掘，面板可裁决「就是这个会 / 不是这个会」",
   "type": "module",
   "main": "lib/index.js",
