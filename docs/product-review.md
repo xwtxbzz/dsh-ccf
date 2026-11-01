@@ -2326,3 +2326,54 @@ for (const record of rows) {
 **没顺手做的**。`ccf_venue` 的 `data.rows` 只带 `conflict: true` 的布尔标记，
 不带另一种说法的具体日期；要带就得把 `alternatives` 整个塞进结构化输出。
 先不做：文本里已经有日期了，再往 data 里塞一遍只是重复，等真有人按 data 写自动化再说。
+
+## 第 70 轮：导出给出去的日期，把「两个源在打架」抹掉了
+
+**问题（N115）**。面板上每一行都标着「来源不一致」，详情里也列了另一种说法，
+但**导出**（ICS 导进日历、复制成表格贴进邮件）走的是另一条路径，那条路径只取首选来源的日期：
+
+```js
+push('截稿', parseMs(record.deadline))     // 只有一个日期，没有 alternatives
+```
+
+导进日历就是为了照着它安排时间：11 月 17 日提醒你交稿，而另一个源说是 11 月 27 日——
+这种"可能差十天"的信息在日历里完全不存在。导出的东西会被当成权威，这是最需要诚实的地方。
+
+**改法（ICS）**。`buildIcs` 的描述里补一句，只在真有另一种说法时出现：
+
+```js
+const alt = (Array.isArray(record.alternatives) ? record.alternatives : [])
+  .filter((item) => item && Number.isFinite(item.deadline))
+  .slice(0, 2)
+  .map((item) => `${item.source || '另一来源'} ${formatInstant(item.deadline, opts.timeZone)}`)
+  .join('；')
+…
+`DESCRIPTION:${icsEscape([meta, alt ? `另一个来源的说法：${alt}（本条目用的是首选来源的日期）` : '', record.link]…)}`
+```
+
+**顺带发现（N116）**：写"复制成表格"的注时先跑了一次真实数据格式的夹具，立刻看到
+`ACL 2027 2027`——`clipboardText` 无条件拼 `record.year`，而名单里的 `name` 本来就叫
+"ACL 2027"。ICS 那边 0.9.0 就加过 `!String(record.name).includes(String(record.year))` 的保护，
+复制清单这条路径一直没加。修法是抽一个 `nameOf(record)` 在表体与注里共用。
+
+**改法（剪贴板）**：表下面按行补注，没冲突就不多一行：
+
+```
+注：ACL 2027 的截稿有两个说法——表里写的是 2026-11-17 19:59，另有 paper-deadlines 2026-11-27 19:59
+```
+
+表头仍在第一行（贴进邮件时前面不能先出现一堆注），注放在空行之后。
+
+**验证**。
+
+- `buildIcs 把「另一个来源的说法」写进日历…`：ACL（有 alternatives）出现
+  `另一个来源的说法：paper-deadlines` 与 `本条目用的是首选来源的日期`；CVPR（干净）那一段不得出现。
+  断言前先 `text.replace(/\r\n /g, '')` 展开折行，否则长描述被 ICS 折行规则切断会误判。
+- `clipboardText 把「另一个来源的说法」注在表下面`：`lines[1]` 必须正好是
+  `ACL 2027\tCCF-A\t\t2026-11-17 19:59\t—\t`（这条顺带守住 N116 的年份重复），
+  并断言注文；无冲突时 `doesNotMatch(/注：/)`。
+- 反向验证：`git stash push -- client/client.js` → `AssertionError: 冲突的会在日历描述里要留一句`；
+  恢复后 client 42 passed。
+
+**没做的那一半**。`clipboardText` 只注"有两个说法"，不注"你当前采信的是谁"——
+表里那一列本来写的就是采信后的日期，再加一句会把表格撑得没法贴。真实优先级：日历要准，表格要薄。

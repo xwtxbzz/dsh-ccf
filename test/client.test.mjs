@@ -378,6 +378,35 @@ test('buildIcs adds a reminder and never repeats the year in the title', () => {
   assert.match(text, /END:VALARM\r\nEND:VEVENT/)
 })
 
+test('buildIcs 把「另一个来源的说法」写进日历，别让导出来的日期看着像个定论', () => {
+  const text = api.buildIcs(
+    [
+      {
+        key: 'acl|2027',
+        record: {
+          key: 'acl|2027', venue: 'ACL', name: 'ACL 2027', year: 2027, rank: 'CCF-A',
+          deadline: new Date(NOW + 10 * 86400000).toISOString(),
+          alternatives: [{ source: 'paper-deadlines', deadline: NOW + 20 * 86400000 }],
+        },
+        deadline: NOW + 10 * 86400000,
+        notification: null,
+      },
+      {
+        key: 'cvpr|2027',
+        record: { key: 'cvpr|2027', venue: 'CVPR', name: 'CVPR 2027', year: 2027, deadline: new Date(NOW + 12 * 86400000).toISOString() },
+        deadline: NOW + 12 * 86400000,
+        notification: null,
+      },
+    ],
+    { now: NOW, timeZone: 'Asia/Shanghai' },
+  )
+  const flat = text.replace(/\r\n /g, '')
+  assert.match(flat, /另一个来源的说法：paper-deadlines/, '冲突的会在日历描述里要留一句')
+  assert.match(flat, /本条目用的是首选来源的日期/, '要说明这条用的是哪个')
+  const cvprEvent = flat.slice(flat.indexOf('UID:cvpr|2027-截稿@dsh-ccf'))
+  assert.doesNotMatch(cvprEvent.slice(0, 600), /另一个来源的说法/, '没冲突的会不该多这一句')
+})
+
 test('foldLine keeps every ICS line inside the 75-byte limit', () => {
   const long = `DESCRIPTION:${'很长的会议全称'.repeat(12)}`
   const folded = api.foldLine(long)
@@ -400,6 +429,31 @@ test('clipboardText renders a tab separated list for the current view', () => {
   assert.equal(lines[0], '会议\t等级\t方向\t截稿\t审稿决定\t地点')
   assert.equal(lines[1], 'CVPR 2027\tCCF-A\t人工智能\t2026-11-17 19:59\t—\tHonolulu, USA')
   assert.match(lines[2], /^FAST\t\t\t待补\t—/)
+})
+
+test('clipboardText 把「另一个来源的说法」注在表下面', () => {
+  const text = api.clipboardText(
+    [
+      {
+        key: 'acl|2027',
+        record: {
+          key: 'acl|2027', venue: 'ACL', name: 'ACL 2027', year: 2027, rank: 'CCF-A',
+          alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2026-11-27T11:59:59Z') }],
+        },
+        deadline: Date.parse('2026-11-17T11:59:59Z'),
+        notification: null,
+      },
+    ],
+    'Asia/Shanghai',
+  )
+  const lines = text.split('\n')
+  assert.equal(lines[0], '会议\t等级\t方向\t截稿\t审稿决定\t地点', '表头仍在第一行，方便整段粘贴')
+  // name 里已经有年份时不能再拼一次（真实数据的 name 就是「ACL 2027」）
+  assert.equal(lines[1], 'ACL 2027\tCCF-A\t\t2026-11-17 19:59\t—\t', '名字里已有年份就别写两遍')
+  assert.match(text, /注：ACL 2027 的截稿有两个说法——表里写的是 2026-11-17 19:59，另有 paper-deadlines 2026-11-27 19:59/)
+  // 没有冲突时不该凭空多出一行注
+  const quiet = api.clipboardText([{ key: 'cvpr|2027', record: { key: 'cvpr|2027', venue: 'CVPR', name: 'CVPR', year: 2027 }, deadline: Date.parse('2026-11-17T11:59:59Z'), notification: null }], 'Asia/Shanghai')
+  assert.doesNotMatch(quiet, /注：/)
 })
 
 // 在假 React 元素树里找第一个文字等于 label 的按钮（children 里可能是数组）。

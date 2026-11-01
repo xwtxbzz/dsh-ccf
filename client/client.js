@@ -273,6 +273,13 @@ const ROUTE_CONFIRM = '/dsh-ccf/api/v1/confirm'
         const key = String(row.key || record.key || record.venue || 'conference')
         const title = `${record.name || record.venue || '会议'}${record.year && !String(record.name ?? '').includes(String(record.year)) ? ` ${record.year}` : ''}`
         const meta = [record.rank, record.areaGroup || record.area, record.place].filter(Boolean).join(' · ')
+        // 日期有两个说法时，日历里也得留一句：导进日历就是为了照着它安排时间，
+        // 只写首选来源的那个日期，等于把"可能不准"这件事悄悄抹掉。
+        const alt = (Array.isArray(record.alternatives) ? record.alternatives : [])
+          .filter((item) => item && Number.isFinite(item.deadline))
+          .slice(0, 2)
+          .map((item) => `${item.source || '另一来源'} ${formatInstant(item.deadline, opts.timeZone)}`)
+          .join('；')
         const push = (kind, at) => {
           if (!Number.isFinite(at) || at < now) return
           events.push(
@@ -282,7 +289,7 @@ const ROUTE_CONFIRM = '/dsh-ccf/api/v1/confirm'
             `DTSTART:${icsStamp(at)}`,
             `DTEND:${icsStamp(at + 3600000)}`,
             `SUMMARY:${icsEscape(`${title} ${kind}`)}`,
-            `DESCRIPTION:${icsEscape([meta, record.link].filter(Boolean).join('\n'))}`,
+            `DESCRIPTION:${icsEscape([meta, alt ? `另一个来源的说法：${alt}（本条目用的是首选来源的日期）` : '', record.link].filter(Boolean).join('\n'))}`,
             record.link ? `URL:${icsEscape(record.link)}` : '',
             // 导进日历本来就是为了被提醒：提前一天弹一次。
             'BEGIN:VALARM',
@@ -305,12 +312,18 @@ const ROUTE_CONFIRM = '/dsh-ccf/api/v1/confirm'
     function clipboardText(rows, timeZone) {
       const tz = timeZone || 'Asia/Shanghai'
       const head = ['会议', '等级', '方向', '截稿', '审稿决定', '地点'].join('\t')
-      const body = (Array.isArray(rows) ? rows : []).map((row) => {
+      const list = Array.isArray(rows) ? rows : []
+      // 名单里的 name 常常已经带年份（CVPR 2027），再拼一次就成「CVPR 2027 2027」。
+      const nameOf = (record) => {
+        const base = String(record.name || record.venue || '').trim()
+        return record.year && !base.includes(String(record.year)) ? `${base} ${record.year}` : base
+      }
+      const body = list.map((row) => {
         const record = row && row.record ? row.record : {}
         const deadline = row && row.deadline
         const notification = row && row.notification
         return [
-          `${record.name || record.venue || ''}${record.year ? ` ${record.year}` : ''}`.trim(),
+          nameOf(record),
           record.rank || '',
           record.areaGroup || record.area || '',
           deadline ? formatInstant(deadline, tz) : (record.pending ? '待补' : '—'),
@@ -318,7 +331,21 @@ const ROUTE_CONFIRM = '/dsh-ccf/api/v1/confirm'
           record.place || '',
         ].join('\t')
       })
-      return [head, ...body].join('\n')
+      // 表格是给人复制去汇报的：日期有两个说法时单独注一行，
+      // 不然贴出去的「截稿 11-20」看着就像唯一答案。
+      const notes = []
+      for (const row of list) {
+        const record = row && row.record ? row.record : null
+        if (!record) continue
+        const alts = (Array.isArray(record.alternatives) ? record.alternatives : [])
+          .filter((item) => item && Number.isFinite(item.deadline))
+          .slice(0, 2)
+        if (alts.length === 0) continue
+        const shown = Number.isFinite(row.deadline) ? formatInstant(row.deadline, tz) : '未知'
+        const said = alts.map((item) => `${item.source || '另一来源'} ${formatInstant(item.deadline, tz)}`).join('；')
+        notes.push(`注：${nameOf(record)} 的截稿有两个说法——表里写的是 ${shown}，另有 ${said}`)
+      }
+      return [head, ...body, ...(notes.length > 0 ? ['', ...notes] : [])].join('\n')
     }
 
 
