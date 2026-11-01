@@ -137,6 +137,22 @@ await test('ccf_deadlines：天数/等级/方向/关键词过滤', async () => {
 
     const past = await tool.execute({ days: 120, includePast: true })
     assert.equal(past.data.rows.length, 3)
+
+    // 方向有两套词表：记录里少数带英文子类（CV / Speech / Data Mining），名单里是中文大类。
+    // 只按字符串匹配记录时 `--area CV` 会"成功"地返回一小撮，名单里的会全被漏掉。
+    const english = await tool.execute({ days: 120, area: 'CV' })
+    assert.ok(english.data.rows.length >= 1)
+    assert.equal(english.data.areasResolved?.[0]?.from, 'CV', '英文方向要归一到名单大类，并说明归到了哪一类')
+    // CCF 名单里 CVPR / ICCV / ECCV 都在「人工智能」下：CV 必须归到这一类，
+    // 归到「计算机图形学与多媒体」（SIGGRAPH 那一类）会把最重要的几个会漏掉。
+    assert.equal(english.data.areasResolved[0].to, '人工智能')
+    assert.ok(english.data.rows.some((row) => row.venue === 'CVPR'), 'CV 方向要能查到 CVPR')
+
+    // 认不出来的方向不能装没事：0 条会被读成"这个方向没有会"。
+    const bogus = await tool.execute({ days: 120, area: '神经科学' })
+    assert.deepEqual(bogus.data.unmatchedAreas, ['神经科学'])
+    assert.match(bogus.report, /方向「神经科学」不在名单里/, '要当场说方向名认不出来')
+    assert.match(bogus.report, /人工智能/, '顺手列出可选的方向')
   } finally {
     await rm(dir, { recursive: true, force: true }).catch(() => {})
   }

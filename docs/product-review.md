@@ -2854,3 +2854,65 @@ export function isModelAvailable(ctx) {
 
 - 「不可用」不是一个可行动的信息。**凡是"不可用/失败/为空"，都要在同一行给出依据和下一步**，否则用户只能重启、重装、或者来问我。
 - 探测要落到**实际发生过的事实**上：`meta.modelUsed` 是 runUpdate 写的，`modelState` 是现在探测的，两者并排印出来，才解释得清「当时能用、现在读不到」这种矛盾。
+
+## 80. 第 78 轮：`--area CV` 说"成功"，却只给了 2 条
+
+### 怎么发现的
+
+拿真机缓存（402 条）挨个试方向：
+
+| 命令 | 改前 | 改后 |
+| --- | --- | --- |
+| `list 365 --area 人工智能` | 18 条 | 18 条 |
+| `list 365 --area CV` | **2 条**（ICCV…） | 18 条（含 CVPR） |
+| `list 365 --area DB` | **0 条** | 11 条（含 VLDB） |
+| `list 365 --area 神经科学` | 0 条 + 「没有匹配的会议截稿」 | 先说「方向名认不出来」+ 可选值 |
+
+### 根因：两套方向词表，工具说明却把人引向小的那套
+
+- 官方名单 362 个会用的是中文大类：「人工智能」「计算机图形学与多媒体」…
+- 记录里绝大多数也是中文大类（402 条里只有 22 条带英文子类：`CV` ×4、`Data Mining` ×3、`HCI` ×3、`AI/ML` ×3…）
+- 而 `DEADLINE_PARAMETERS.area` 的说明写的是「如 AI/ML、CV、NLP、DB、Security、SE、Systems」——**模型照着这段说明传参，正好落进那 22 条里**。
+
+于是 `--area DB` 返回 0 条、`--area CV` 返回 2 条，两者都是 `ok: true`，报告还写着「未来 365 天内没有匹配的会议截稿」，读的人只会以为"这个方向没有会"。
+
+### 改法
+
+`lib/catalog.js` 新增 `AREA_ALIASES`、`areaAliasOf(needle)`、`areaOptions(conferences)`：
+
+| 英文写法 | 归到 |
+| --- | --- |
+| ai / ml / **cv** / vision / nlp | 人工智能 |
+| graphics / multimedia | 计算机图形学与多媒体 |
+| db / dm / data mining / ir | 数据库/数据挖掘/内容检索 |
+| security / cryptography | 网络与信息安全 |
+| se / pl | 软件工程/系统软件/程序设计语言 |
+| arch / hpc / systems / storage | 计算机体系结构/并行与分布计算/存储系统 |
+| network / hci / theory | 计算机网络 / 人机交互与普适计算 / 计算机科学理论 |
+
+两个关键取舍：
+
+1. **`cv` 归「人工智能」，不是「计算机图形学与多媒体」。** 这是查过名单的：CVPR / ICCV / ECCV 在 CCF 名单里都在「人工智能」下，SIGGRAPH 才在「计算机图形学与多媒体」。第一版我按直觉把 CV 归到图形学，结果 `--area CV` 一条 CVPR 都查不到——比原来的 2 条更糟。这条已经写进代码注释与断言里。
+2. **只收粗粒度词。** `Speech` / `Robotics` 不收：它们本来就是记录里的 `area` 值，归一到大类会把"查 ICASSP"放大成"查整个大类"。所以 `--area Speech` 仍走原来的记录匹配。
+
+认不出来的方向当场说清楚（`lib/create.js` 的 `areaNote`，并且**放在报告最前面**——后面「放宽条件 / 可能不在名单里」那套建议对拼错的方向名没有意义）：
+
+```
+方向「神经科学」不在名单里，也认不出是常见英文写法。可选：计算机体系结构/… / 人工智能 / …；
+也接受 ai / cv / db / security / se / systems / network / hci / theory 这类英文写法。
+```
+
+`data` 里同时给结构化版本：`unmatchedAreas: ["神经科学"]`、`areasResolved: [{ from: "CV", to: "人工智能" }]`——模型只读 `data` 时也不会把 0 条当成"这个方向没有会"。
+
+工具说明也换成中文大类 + 英文别名，不再只教英文子类。
+
+### 验证
+
+- `test/plugin.test.mjs`「ccf_deadlines：天数/等级/方向/关键词过滤」新增：`area: 'CV'` → `areasResolved[0].to === '人工智能'` 且结果里必须有 CVPR；`area: '神经科学'` → `unmatchedAreas` 命中、报告以「方向「神经科学」不在名单里」开头、并列出可选方向。
+- 真机：`人工智能` 18 / `CV` 18 / `DB` 11 / `神经科学` 走提示分支。
+- 基线：package ok / yaml 5 / core 33 / sync 9 / catalog ok / dedupe 3 / miner ok / plugin 39 / ui 33 / client 43 / `SMOKE OK` / `PANEL RENDER OK` / `INTEGRATION OK`。
+
+### 这一轮的教训
+
+- **词表对齐要拿真数据验，不能靠直觉**：我第一版把 CV 归到图形学，测试用自己的夹具也绿（夹具里 CVPR 的 area 恰好是 'CV'），真机上却一条 CVPR 都查不到。真机缓存是最好的对照组。
+- 「0 条结果」与「参数写错」必须能区分开，否则用户/模型会把前者当成事实去汇报。
