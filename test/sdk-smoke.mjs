@@ -79,11 +79,12 @@ try {
   const { ctx, registered } = fakeContext()
   createCcf(ctx, { dataDir: dir }, defineTool)
 
-  assert.equal(registered.tools.length, 2)
+  assert.equal(registered.tools.length, 3)
   const deadlines = registered.tools.find((tool) => tool.name === 'ccf_deadlines')
   const venue = registered.tools.find((tool) => tool.name === 'ccf_venue')
-  assert.ok(deadlines && venue, '两个工具都要注册成功')
-  console.log('真实 defineTool 接受两个工具定义（参数 DSL + output schema 均已编译）')
+  const update = registered.tools.find((tool) => tool.name === 'ccf_update')
+  assert.ok(deadlines && venue && update, '三个工具都要注册成功')
+  console.log('真实 defineTool 接受三个工具定义（参数 DSL + output schema 均已编译）')
 
   if (typeof sdk.validateArgs === 'function') {
     assert.deepEqual(sdk.validateArgs(DEADLINE_PARAMETERS, { days: 30, rank: 'CCF-A' }), [])

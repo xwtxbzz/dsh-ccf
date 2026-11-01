@@ -1,0 +1,3770 @@
+{
+ "schema": "dsh-ccf/catalog/v1",
+ "title": "中国计算机学会推荐国际学术会议和期刊目录",
+ "publisher": "中国计算机学会（CCF）",
+ "sourceUrl": "https://www.ccf.org.cn/Academic_Evaluation/By_category/",
+ "fetchedAt": "2026-10-31T14:47:17.878Z",
+ "note": "从 ccf.org.cn 官方目录页抓取。会议条目用作名单，截稿时间另行挖掘。",
+ "areas": [
+  {
+   "area": "计算机体系结构/并行与分布计算/存储系统",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TOCS",
+      "fullName": "ACM Transactions on Computer Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tocs/"
+     },
+     {
+      "abbr": "TOS",
+      "fullName": "ACM Transactions on Storage",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tos/"
+     },
+     {
+      "abbr": "TCAD",
+      "fullName": "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tcad/"
+     },
+     {
+      "abbr": "TC",
+      "fullName": "IEEE Transactions on Computers",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tc/index.html"
+     },
+     {
+      "abbr": "TPDS",
+      "fullName": "IEEE Transactions on Parallel and Distributed Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tpds/"
+     },
+     {
+      "abbr": "TACO",
+      "fullName": "ACM Transactions on Architecture and Code Optimization",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/taco/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TAAS",
+      "fullName": "ACM Transactions on Autonomous and Adaptive Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/taas/"
+     },
+     {
+      "abbr": "TODAES",
+      "fullName": "ACM Transactions on Design Automation of Electronic Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/todaes/"
+     },
+     {
+      "abbr": "TECS",
+      "fullName": "ACM Transactions on Embedded Computing Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tecs/"
+     },
+     {
+      "abbr": "TRETS",
+      "fullName": "ACM Transactions on Reconfigurable Technology and Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/trets/"
+     },
+     {
+      "abbr": "TVLSI",
+      "fullName": "IEEE Transactions on Very Large Scale Integration (VLSI) Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tvlsi/"
+     },
+     {
+      "abbr": "JPDC",
+      "fullName": "Journal of Parallel and Distributed Computing",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jpdc/"
+     },
+     {
+      "abbr": "JSA",
+      "fullName": "Journal of Systems Architecture: Embedded Software Design",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jsa/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "JETC",
+      "fullName": "ACM Journal on Emerging Technologies in Computing Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jetc/"
+     },
+     {
+      "abbr": "DC",
+      "fullName": "Distributed Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dc/"
+     },
+     {
+      "abbr": "FGCS",
+      "fullName": "Future Generation Computer Systems",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/fgcs/"
+     },
+     {
+      "abbr": "TCC",
+      "fullName": "IEEE Transactions on Cloud Computing",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/journals/tcc/"
+     },
+     {
+      "abbr": "Integration",
+      "fullName": "Integration, the VLSI Journal",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/integration/"
+     },
+     {
+      "abbr": "JETTA",
+      "fullName": "Journal of Electronic Testing-Theory and Applications",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/journals/et/index.html"
+     },
+     {
+      "abbr": "JGC",
+      "fullName": "The Journal of Grid computing",
+      "publisher": "Springer",
+      "dblp": "http://link.springer.com/journal/10723"
+     },
+     {
+      "abbr": "RTS",
+      "fullName": "Real-Time Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/rts/"
+     },
+     {
+      "abbr": "TJSC",
+      "fullName": "The Journal of Supercomputing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tjs/"
+     },
+     {
+      "abbr": "TCASI",
+      "fullName": "IEEE Transactions on Circuits and Systems I: Regular Papers",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/journals/tcasI/index.html"
+     },
+     {
+      "abbr": "CCF-THPC",
+      "fullName": "CCF Transactions on High Performance Computing",
+      "publisher": "CCF",
+      "dblp": "https://dblp.org/db/journals/ccfthpc/index.html"
+     },
+     {
+      "abbr": "TSUSC",
+      "fullName": "IEEE Transactions on Sustainable Computing",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/journals/tsusc/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "PPoPP",
+      "fullName": "ACM SIGPLAN Symposium on Principles & Practice of Parallel Programming",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ppopp/"
+     },
+     {
+      "abbr": "FAST",
+      "fullName": "USENIX Conference on File and Storage Technologies",
+      "publisher": "USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fast/"
+     },
+     {
+      "abbr": "DAC",
+      "fullName": "Design Automation Conference",
+      "publisher": "ACM",
+      "dblp": "https://dblp.uni-trier.de/db/conf/dac/"
+     },
+     {
+      "abbr": "HPCA",
+      "fullName": "IEEE International Symposium on High Performance Computer Architecture",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cnhpca/"
+     },
+     {
+      "abbr": "MICRO",
+      "fullName": "IEEE/ACM International Symposium on Microarchitecture",
+      "publisher": "IEEE/ACM",
+      "dblp": "https://dblp.uni-trier.de/db/conf/micro/index.html"
+     },
+     {
+      "abbr": "SC",
+      "fullName": "International Conference for High Performance Computing, Networking, Storage, and Analysis",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sc/"
+     },
+     {
+      "abbr": "ASPLOS",
+      "fullName": "International Conference on Architectural Support for Programming Languages and Operating Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/asplos/"
+     },
+     {
+      "abbr": "ISCA",
+      "fullName": "International Symposium on Computer Architecture",
+      "publisher": "ACM /IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/isca/"
+     },
+     {
+      "abbr": "USENIX ATC",
+      "fullName": "USENIX Annual Technical Conference",
+      "publisher": "USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/usenix/index.html"
+     },
+     {
+      "abbr": "EuroSys",
+      "fullName": "European Conference on Computer Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/eurosys/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "SOCC",
+      "fullName": "ACM Symposium on Cloud Computing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cloud/"
+     },
+     {
+      "abbr": "SPAA",
+      "fullName": "ACM Symposium on Parallelism in Algorithms and Architectures",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/spaa/"
+     },
+     {
+      "abbr": "PODC",
+      "fullName": "ACM Symposium on Principles of Distributed Computing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/podc/"
+     },
+     {
+      "abbr": "FPGA",
+      "fullName": "ACM/SIGDA International Symposium on Field-Programmable Gate Arrays",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fpga/"
+     },
+     {
+      "abbr": "CGO",
+      "fullName": "The International Symposium on Code Generation and Optimization",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cgo/"
+     },
+     {
+      "abbr": "DATE",
+      "fullName": "Design, Automation & Test in Europe",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/date/"
+     },
+     {
+      "abbr": "HOT CHIPS",
+      "fullName": "Hot Chips: A Symposium on High Performance Chips",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/conf/hotchips/index.html"
+     },
+     {
+      "abbr": "CLUSTER",
+      "fullName": "IEEE International Conference on Cluster Computing",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/cluster/"
+     },
+     {
+      "abbr": "ICCD",
+      "fullName": "International Conference on Computer Design",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iccd/"
+     },
+     {
+      "abbr": "ICCAD",
+      "fullName": "International Conference on Computer-Aided Design",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iccad/"
+     },
+     {
+      "abbr": "ICDCS",
+      "fullName": "IEEE International Conference on Distributed Computing Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icdcs/"
+     },
+     {
+      "abbr": "CODES+ISSS",
+      "fullName": "International Conference on Hardware/Software Co-design and System Synthesis",
+      "publisher": "ACM/ IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/codesisss/index.html"
+     },
+     {
+      "abbr": "HiPEAC",
+      "fullName": "International Conference on High Performance and Embedded Architectures and Compilers",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hipeac/"
+     },
+     {
+      "abbr": "SIGMETRICS",
+      "fullName": "International Conference on Measurement and Modeling of Computer Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sigmetrics/"
+     },
+     {
+      "abbr": "PACT",
+      "fullName": "International Conference on Parallel Architectures and Compilation Techniques",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/IEEEpact/"
+     },
+     {
+      "abbr": "ICPP",
+      "fullName": "International Conference on Parallel Processing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icpp/"
+     },
+     {
+      "abbr": "ICS",
+      "fullName": "International Conference on Supercomputing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ics/"
+     },
+     {
+      "abbr": "VEE",
+      "fullName": "International Conference on Virtual Execution Environments",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/vee/"
+     },
+     {
+      "abbr": "IPDPS",
+      "fullName": "IEEE International Parallel & Distributed Processing Symposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ipps/"
+     },
+     {
+      "abbr": "Performance",
+      "fullName": "International Symposium on Computer Performance, Modeling, Measurements and Evaluation",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/performance/"
+     },
+     {
+      "abbr": "HPDC",
+      "fullName": "The International ACM Symposium on High-Performance Parallel and Distributed Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hpdc/"
+     },
+     {
+      "abbr": "ITC",
+      "fullName": "International Test Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/itc/"
+     },
+     {
+      "abbr": "LISA",
+      "fullName": "Large Installation system Administration Conference",
+      "publisher": "USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/lisa/"
+     },
+     {
+      "abbr": "MSST",
+      "fullName": "Mass Storage Systems and Technologies",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mss/"
+     },
+     {
+      "abbr": "RTAS",
+      "fullName": "IEEE Real-Time and Embedded Technology and ApplicationsSymposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/rtas/"
+     },
+     {
+      "abbr": "Euro-Par",
+      "fullName": "European Conference on Parallel and Distributed Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/europar/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "CF",
+      "fullName": "ACM International Conference on Computing Frontiers",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cf"
+     },
+     {
+      "abbr": "SYSTOR",
+      "fullName": "ACM International Systems and Storage Conference",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/systor/index.html"
+     },
+     {
+      "abbr": "NOCS",
+      "fullName": "ACM/IEEE International Symposium on Networks-on-Chip",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/nocs"
+     },
+     {
+      "abbr": "ASAP",
+      "fullName": "IEEE International Conference on Application-Specific Systems, Architectures, and Processors",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/asap"
+     },
+     {
+      "abbr": "ASP-DAC",
+      "fullName": "Asia and South Pacific Design Automation Conference",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/aspdac"
+     },
+     {
+      "abbr": "ETS",
+      "fullName": "IEEE European Test Symposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ets/"
+     },
+     {
+      "abbr": "FPL",
+      "fullName": "International Conference on Field-Programmable Logic and Applications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fpl/"
+     },
+     {
+      "abbr": "FCCM",
+      "fullName": "IEEE Symposium on Field-Programmable Custom Computing Machines",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fccm/"
+     },
+     {
+      "abbr": "GLSVLSI",
+      "fullName": "Great Lakes Symposium on VLSI",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/glvlsi/"
+     },
+     {
+      "abbr": "ATS",
+      "fullName": "IEEE Asian Test Symposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ats/"
+     },
+     {
+      "abbr": "HPCC",
+      "fullName": "IEEE International Conference on High Performance Computing and Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hpcc/"
+     },
+     {
+      "abbr": "HiPC",
+      "fullName": "IEEE International Conference on High Performance Computing, Data and Analytics",
+      "publisher": "IEEE/ ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hipc/index.html"
+     },
+     {
+      "abbr": "MASCOTS",
+      "fullName": "International Symposium on Modeling, Analysis, andSimulation of Computer and Telecommunication Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mascots/"
+     },
+     {
+      "abbr": "ISPA",
+      "fullName": "IEEE International Symposium on Parallel and Distributed Processing with Applications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ispa/"
+     },
+     {
+      "abbr": "CCGRID",
+      "fullName": "IEEE/ACM International Symposium on Cluster, Cloud and Grid Computing",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ccgrid/"
+     },
+     {
+      "abbr": "NPC",
+      "fullName": "IFIP International Conference on Network and Parallel Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/npc/"
+     },
+     {
+      "abbr": "ICA3PP",
+      "fullName": "International Conference on Algorithms and Architectures for Parallel Processing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ica3pp/"
+     },
+     {
+      "abbr": "CASES",
+      "fullName": "International Conference on Compilers, Architectures, and Synthesis for Embedded Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cases/index.html"
+     },
+     {
+      "abbr": "FPT",
+      "fullName": "International Conference on Field-Programmable Technology",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fpt/"
+     },
+     {
+      "abbr": "ICPADS",
+      "fullName": "International Conference on Parallel and Distributed Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icpads/"
+     },
+     {
+      "abbr": "ISCAS",
+      "fullName": "IEEE International Symposium on Circuits and Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iscas/"
+     },
+     {
+      "abbr": "ISLPED",
+      "fullName": "International Symposium on Low Power Electronics and Design",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/islped/"
+     },
+     {
+      "abbr": "ISPD",
+      "fullName": "International Symposium on Physical Design",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ispd/"
+     },
+     {
+      "abbr": "HOTI",
+      "fullName": "IEEE Symposium on High-Performance Interconnects",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hoti/"
+     },
+     {
+      "abbr": "VTS",
+      "fullName": "IEEE VLSI Test Symposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/vts/"
+     },
+     {
+      "abbr": "ITC-Asia",
+      "fullName": "International Test Conference in Asia",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/conf/itc-asia/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "计算机网络",
+   "journals": {
+    "A": [
+     {
+      "abbr": "JSAC",
+      "fullName": "IEEE Journal on Selected Areas in Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jsac/"
+     },
+     {
+      "abbr": "TMC",
+      "fullName": "IEEE Transactions on Mobile Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tmc/"
+     },
+     {
+      "abbr": "TON",
+      "fullName": "IEEE/ACM Transactions on Networking",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ton/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TOIT",
+      "fullName": "ACM Transactions on Internet Technology",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/toit/"
+     },
+     {
+      "abbr": "TOMM",
+      "fullName": "ACM Transactions on Multimedia Computing, Communications and Applications",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tomccap/"
+     },
+     {
+      "abbr": "TOSN",
+      "fullName": "ACM Transactions on Sensor Networks",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tosn/"
+     },
+     {
+      "abbr": "CN",
+      "fullName": "Computer Networks",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cn/"
+     },
+     {
+      "abbr": "TCOM",
+      "fullName": "IEEE Transactions on Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tcom/"
+     },
+     {
+      "abbr": "TWC",
+      "fullName": "IEEE Transactions on Wireless Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/twc/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "CC",
+      "fullName": "Computer Communications",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/comcom/"
+     },
+     {
+      "abbr": "TNSM",
+      "fullName": "IEEE Transactions on Network and Service Management",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tnsm/"
+     },
+     {
+      "abbr": "JNCA",
+      "fullName": "Journal of Network and Computer Applications",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jnca/"
+     },
+     {
+      "abbr": "MONET",
+      "fullName": "Mobile Networks and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/monet/"
+     },
+     {
+      "abbr": "PPNA",
+      "fullName": "Peer-to-Peer Networking and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ppna/"
+     },
+     {
+      "abbr": "WCMC",
+      "fullName": "Wireless Communications and Mobile Computing",
+      "publisher": "Wiley.",
+      "dblp": "http://dblp.uni-trier.de/db/journals/wicomm/"
+     },
+     {
+      "abbr": "IOT",
+      "fullName": "IEEE Internet of Things Journal",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/journals/iotj/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "SIGCOMM",
+      "fullName": "ACM International Conference on Applications, Technologies, Architectures, and Protocols for Computer Communication",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sigcomm/index.html"
+     },
+     {
+      "abbr": "MobiCom",
+      "fullName": "ACM International Conference on Mobile Computing and Networking",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mobicom/"
+     },
+     {
+      "abbr": "INFOCOM",
+      "fullName": "IEEE International Conference on Computer Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/infocom/"
+     },
+     {
+      "abbr": "NSDI",
+      "fullName": "Symposium on Network System Design and Implementation",
+      "publisher": "USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/nsdi/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "SenSys",
+      "fullName": "ACM Conference on Embedded Networked Sensor Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sensys/"
+     },
+     {
+      "abbr": "CoNEXT",
+      "fullName": "ACM International Conference on emerging Networking EXperiments and Technologies",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/conext/"
+     },
+     {
+      "abbr": "SECON",
+      "fullName": "IEEE International Conference on Sensing, Communication, and Networking",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/secon/"
+     },
+     {
+      "abbr": "IPSN",
+      "fullName": "International Conference on Information Processing in Sensor Networks",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ipsn/"
+     },
+     {
+      "abbr": "MobiSys",
+      "fullName": "ACM International Conference on Mobile Systems, Applications, and Services",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mobisys/"
+     },
+     {
+      "abbr": "ICNP",
+      "fullName": "IEEE International Conference on Network Protocols",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icnp/"
+     },
+     {
+      "abbr": "MobiHoc",
+      "fullName": "International Symposium on Theory, Algorithmic Foundations, and Protocol Design for Mobile Networks and Mobile Computing",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mobihoc/"
+     },
+     {
+      "abbr": "NOSSDAV",
+      "fullName": "International Workshop on Network and Operating System Support for Digital Audio and Video",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/nossdav/"
+     },
+     {
+      "abbr": "IWQoS",
+      "fullName": "IEEE/ACM International Workshop on Quality of Service",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iwqos/"
+     },
+     {
+      "abbr": "IMC",
+      "fullName": "ACM Internet Measurement Conference",
+      "publisher": "ACM/USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/imc/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "ANCS",
+      "fullName": "ACM/IEEE Symposium on Architectures for Networking and Communication Systems",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ancs/"
+     },
+     {
+      "abbr": "APNOMS",
+      "fullName": "Asia-Pacific Network Operations and Management Symposium",
+      "publisher": "IFIP/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/apnoms/"
+     },
+     {
+      "abbr": "FORTE",
+      "fullName": "International Conference on Formal Techniques for Distributed Objects, Components, and Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/forte/"
+     },
+     {
+      "abbr": "LCN",
+      "fullName": "IEEE Conference on Local Computer Networks",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/lcn/"
+     },
+     {
+      "abbr": "GLOBECOM",
+      "fullName": "IEEE Global Communications Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/globecom/"
+     },
+     {
+      "abbr": "ICC",
+      "fullName": "IEEE International Conference on Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icc/"
+     },
+     {
+      "abbr": "ICCCN",
+      "fullName": "IEEE International Conference on Computer Communications and Networks",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icccn/"
+     },
+     {
+      "abbr": "MASS",
+      "fullName": "IEEE International Conference on Mobile Ad-hoc and Sensor Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mass/index.html"
+     },
+     {
+      "abbr": "P2P",
+      "fullName": "IEEE International Conference on P2P Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/p2p/"
+     },
+     {
+      "abbr": "IPCCC",
+      "fullName": "IEEE International Performance Computing and Communications Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ipccc/"
+     },
+     {
+      "abbr": "WoWMoM",
+      "fullName": "IEEE International Symposium on a World of Wireless Mobile and Multimedia Networks",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wowmom/"
+     },
+     {
+      "abbr": "ISCC",
+      "fullName": "IEEE Symposium on Computers and Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iscc/"
+     },
+     {
+      "abbr": "WCNC",
+      "fullName": "IEEE Wireless Communications and Networking Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wcnc/"
+     },
+     {
+      "abbr": "Networking",
+      "fullName": "IFIP International Conferences on Networking",
+      "publisher": "IFIP",
+      "dblp": "http://dblp.uni-trier.de/db/conf/networking/index.html"
+     },
+     {
+      "abbr": "IM",
+      "fullName": "IFIP/IEEE International Symposium on Integrated NetworkManagement",
+      "publisher": "IFIP/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/im/index.html"
+     },
+     {
+      "abbr": "MSN",
+      "fullName": "International Conference on Mobility, Sensing and Networking",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/msn/"
+     },
+     {
+      "abbr": "MSWiM",
+      "fullName": "International Conference on Modeling, Analysis and Simulation of Wireless and Mobile Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mswim/"
+     },
+     {
+      "abbr": "WASA",
+      "fullName": "The International Conference on Wireless Artificial Intelligent Computing Systems and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wasa/"
+     },
+     {
+      "abbr": "HotNets",
+      "fullName": "ACM The Workshop on Hot Topics in Networks",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hotnets/"
+     },
+     {
+      "abbr": "APNet",
+      "fullName": "Asia-Pacific Workshop on Networking",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/conf/apnet/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "网络与信息安全",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TDSC",
+      "fullName": "IEEE Transactions on Dependable and Secure Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tdsc/"
+     },
+     {
+      "abbr": "TIFS",
+      "fullName": "IEEE Transactions on Information Forensics and Security",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tifs/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TOPS",
+      "fullName": "ACM Transactions on Privacy and Security",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/tissec/index.html"
+     },
+     {
+      "abbr": "JCS",
+      "fullName": "Journal of Computer Security",
+      "publisher": "IOS Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jcs/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "CLSR",
+      "fullName": "Computer Law & Security Review",
+      "publisher": "Elsevier",
+      "dblp": "https://dblp.org/db/journals/clsr/index.html"
+     },
+     {
+      "abbr": "IMCS",
+      "fullName": "Information and Computer Security",
+      "publisher": "Emerald",
+      "dblp": "http://dblp.uni-trier.de/db/journals/imcs/"
+     },
+     {
+      "abbr": "IJICS",
+      "fullName": "International Journal of Information and Computer Security",
+      "publisher": "Inderscience",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijics/"
+     },
+     {
+      "abbr": "IJISP",
+      "fullName": "International Journal of Information Security and Privacy",
+      "publisher": "IGI Global",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijisp/"
+     },
+     {
+      "abbr": "JISA",
+      "fullName": "Journal of Information Security and Applications",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/istr/"
+     },
+     {
+      "abbr": "SCN",
+      "fullName": "Security and Communication Networks",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/scn/"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "CCS",
+      "fullName": "ACM Conference on Computer and Communications Security",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ccs/"
+     },
+     {
+      "abbr": "EUROCRYPT",
+      "fullName": "International Conference on the Theory and Applications of Cryptographic Techniques",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/eurocrypt/"
+     },
+     {
+      "abbr": "S&P",
+      "fullName": "IEEE Symposium on Security and Privacy",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sp/"
+     },
+     {
+      "abbr": "CRYPTO",
+      "fullName": "International Cryptology Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/crypto/"
+     },
+     {
+      "abbr": "USENIX Security",
+      "fullName": "USENIX Security Symposium",
+      "publisher": "USENIX Association",
+      "dblp": "http://dblp.uni-trier.de/db/conf/uss/"
+     },
+     {
+      "abbr": "NDSS",
+      "fullName": "Network and Distributed System Security Symposium",
+      "publisher": "ISOC",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ndss/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "ACSAC",
+      "fullName": "Annual Computer Security Applications Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/acsac/"
+     },
+     {
+      "abbr": "ASIACRYPT",
+      "fullName": "Annual International Conference on the Theory and Application of Cryptology and Information Security",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/asiacrypt/"
+     },
+     {
+      "abbr": "ESORICS",
+      "fullName": "European Symposium on Research in Computer Security",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/esorics/"
+     },
+     {
+      "abbr": "FSE",
+      "fullName": "Fast Software Encryption",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fse/"
+     },
+     {
+      "abbr": "CSFW",
+      "fullName": "IEEE Computer Security Foundations Workshop",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/csfw/"
+     },
+     {
+      "abbr": "SRDS",
+      "fullName": "IEEE International Symposium on Reliable Distributed Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/srds/"
+     },
+     {
+      "abbr": "CHES",
+      "fullName": "International Conference on Cryptographic Hardware and Embedded Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ches/"
+     },
+     {
+      "abbr": "DSN",
+      "fullName": "International Conference on Dependable Systems and Networks",
+      "publisher": "IEEE/IFIP",
+      "dblp": "http://dblp.uni-trier.de/db/conf/dsn/"
+     },
+     {
+      "abbr": "RAID",
+      "fullName": "International Symposium on Recent Advances in Intrusion Detection",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/raid/"
+     },
+     {
+      "abbr": "PKC",
+      "fullName": "International Workshop on Practice and Theory in Public Key Cryptography",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pkc/"
+     },
+     {
+      "abbr": "TCC",
+      "fullName": "Theory of Cryptography Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/tcc/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "WiSec",
+      "fullName": "ACM Conference on Security and Privacy in Wireless and Mobile Networks",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wisec/"
+     },
+     {
+      "abbr": "SACMAT",
+      "fullName": "ACM Symposium on Access Control Models and Technologies",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sacmat/"
+     },
+     {
+      "abbr": "DRM",
+      "fullName": "ACM Workshop on Digital Rights Management",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/drm/"
+     },
+     {
+      "abbr": "IH&MMSec",
+      "fullName": "ACM Workshop on Information Hiding and Multimedia Security",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ih/"
+     },
+     {
+      "abbr": "ACNS",
+      "fullName": "International Conference on Applied Cryptography and Network Security",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/acns/"
+     },
+     {
+      "abbr": "AsiaCCS",
+      "fullName": "ACM Asia Conference on Computer and Communications Security",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ccs/"
+     },
+     {
+      "abbr": "ACISP",
+      "fullName": "AustralasiaConferenceonInformation SecurityandPrivacy",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/acisp/"
+     },
+     {
+      "abbr": "CT-RSA",
+      "fullName": "The Cryptographer's Track at RSA Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ctrsa/"
+     },
+     {
+      "abbr": "DIMVA",
+      "fullName": "Conference on Detection of Intrusions and Malware & VulnerabilityAssessment",
+      "publisher": "",
+      "dblp": "http://dblp.uni-trier.de/db/conf/dimva/"
+     },
+     {
+      "abbr": "DFRWS",
+      "fullName": "Digital Forensic Research Workshop",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/conf/dfrws/"
+     },
+     {
+      "abbr": "FC",
+      "fullName": "Financial Cryptography and Data Security",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fc/"
+     },
+     {
+      "abbr": "TrustCom",
+      "fullName": "IEEE International Conference on Trust,Security and Privacy in Computing and Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/trustcom/"
+     },
+     {
+      "abbr": "SEC",
+      "fullName": "IFIP International Information Security Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sec/"
+     },
+     {
+      "abbr": "IFIP WG 11.9",
+      "fullName": "IFIP Working Group 11.9 International Conference on Digital Forensics",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/ifip11-9/index.html"
+     },
+     {
+      "abbr": "ISC",
+      "fullName": "Information Security Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/isw/"
+     },
+     {
+      "abbr": "ICDF2C",
+      "fullName": "International Conference on Digital Forensics & Cyber Crime",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icdf2c/"
+     },
+     {
+      "abbr": "ICICS",
+      "fullName": "International Conference on Information and Communications Security",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icics/"
+     },
+     {
+      "abbr": "SecureComm",
+      "fullName": "International Conference on Security and Privacy in Communication Networks",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/securecomm/"
+     },
+     {
+      "abbr": "NSPW",
+      "fullName": "New Security Paradigms Workshop",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/nspw/"
+     },
+     {
+      "abbr": "PAM",
+      "fullName": "Passive and Active Measurement Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pam/"
+     },
+     {
+      "abbr": "PETS",
+      "fullName": "Privacy Enhancing Technologies Symposium",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pet/"
+     },
+     {
+      "abbr": "SAC",
+      "fullName": "Selected Areas in Cryptography",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sacrypt/"
+     },
+     {
+      "abbr": "SOUPS",
+      "fullName": "Symposium On Usable Privacy and Security",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/soups/"
+     },
+     {
+      "abbr": "HotSec",
+      "fullName": "",
+      "publisher": "USENIX",
+      "dblp": "http://www.usenix.org/events/"
+     },
+     {
+      "abbr": "EuroS&P",
+      "fullName": "IEEE European Symposium on Security and Privacy",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/conf/eurosp/index.html"
+     },
+     {
+      "abbr": "Inscrypt",
+      "fullName": "International Conference on Information Security and Cryptology",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/cisc/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "软件工程/系统软件/程序设计语言",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TOPLAS",
+      "fullName": "ACM Transactions on Programming Languages and Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/toplas/"
+     },
+     {
+      "abbr": "TOSEM",
+      "fullName": "ACM Transactions on Software Engineering and Methodology",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tosem/"
+     },
+     {
+      "abbr": "TSE",
+      "fullName": "IEEE Transactions on Software Engineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tse/"
+     },
+     {
+      "abbr": "TSC",
+      "fullName": "IEEE Transactions on Services Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tsc/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "ASE",
+      "fullName": "Automated Software Engineering",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ase/"
+     },
+     {
+      "abbr": "ESE",
+      "fullName": "Empirical Software Engineering",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ese/"
+     },
+     {
+      "abbr": "IETS",
+      "fullName": "IET Software",
+      "publisher": "IET",
+      "dblp": "http://dblp.uni-trier.de/db/journals/iee/index.html"
+     },
+     {
+      "abbr": "IST",
+      "fullName": "Information and Software Technology",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/infsof/index.html"
+     },
+     {
+      "abbr": "JFP",
+      "fullName": "Journal of Functional Programming",
+      "publisher": "Cambridge University Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jfp/"
+     },
+     {
+      "abbr": "JSS",
+      "fullName": "Journal of Systems and Software",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jss/"
+     },
+     {
+      "abbr": "RE",
+      "fullName": "Requirements Engineering",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/re/"
+     },
+     {
+      "abbr": "SCP",
+      "fullName": "Science of Computer Programming",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/scp/"
+     },
+     {
+      "abbr": "SoSyM",
+      "fullName": "Software and Systems Modeling",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/sosym/"
+     },
+     {
+      "abbr": "STVR",
+      "fullName": "Software Testing, Verification and Reliability",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/stvr/index.html"
+     },
+     {
+      "abbr": "SPE",
+      "fullName": "Software: Practice and Experience",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/spe/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "CL",
+      "fullName": "Computer Languages, Systems and Structures",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cl/index.html"
+     },
+     {
+      "abbr": "IJSEKE",
+      "fullName": "International Journal of Software Engineering and Knowledge Engineering",
+      "publisher": "World Scientific",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijseke/index.html"
+     },
+     {
+      "abbr": "STTT",
+      "fullName": "International Journal of Software Tools for Technology Transfer",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/sttt/"
+     },
+     {
+      "abbr": "JLAMP",
+      "fullName": "Journal of Logical and Algebraic Methods in Programming",
+      "publisher": "Elsevier",
+      "dblp": "https://dblp.uni-trier.de/db/journals/jlap/index.html"
+     },
+     {
+      "abbr": "JWE",
+      "fullName": "Journal of Web Engineering",
+      "publisher": "Rinton Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jwe/"
+     },
+     {
+      "abbr": "SOCA",
+      "fullName": "Service Oriented Computing and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/soca/"
+     },
+     {
+      "abbr": "SQJ",
+      "fullName": "Software Quality Journal",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/sqj/"
+     },
+     {
+      "abbr": "TPLP",
+      "fullName": "Theory and Practice of Logic Programming",
+      "publisher": "Cambridge University Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tplp/"
+     },
+     {
+      "abbr": "PACM PL",
+      "fullName": "Proceedings of the ACM on Programming Languages",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/pacmpl/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "PLDI",
+      "fullName": "ACM SIGPLAN Conference on Programming Language Design and Implementation",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pldi/"
+     },
+     {
+      "abbr": "POPL",
+      "fullName": "ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/popl/"
+     },
+     {
+      "abbr": "FSE",
+      "fullName": "ACM International Conference on the Foundations of Software Engineering",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sigsoft/"
+     },
+     {
+      "abbr": "SOSP",
+      "fullName": "ACM Symposium on Operating Systems Principles",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sosp/"
+     },
+     {
+      "abbr": "OOPSLA",
+      "fullName": "Conference on Object-Oriented Programming Systems, Languages,and Applications",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/oopsla/"
+     },
+     {
+      "abbr": "ASE",
+      "fullName": "International Conference on Automated Software Engineering",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/kbse/"
+     },
+     {
+      "abbr": "ICSE",
+      "fullName": "International Conference on Software Engineering",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icse/"
+     },
+     {
+      "abbr": "ISSTA",
+      "fullName": "International Symposium on Software Testing and Analysis",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/issta/"
+     },
+     {
+      "abbr": "OSDI",
+      "fullName": "USENIX Symposium on Operating Systems Design and Implementations",
+      "publisher": "USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/osdi/"
+     },
+     {
+      "abbr": "FM",
+      "fullName": "International Symposium on Formal Methods",
+      "publisher": "FME",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fm/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "ECOOP",
+      "fullName": "European Conference on Object-Oriented Programming",
+      "publisher": "AITO",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ecoop/"
+     },
+     {
+      "abbr": "ETAPS",
+      "fullName": "European Joint Conferences on Theory and Practice of Software",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/etaps/"
+     },
+     {
+      "abbr": "ICPC",
+      "fullName": "IEEE International Conference on Program Comprehension",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iwpc/"
+     },
+     {
+      "abbr": "RE",
+      "fullName": "IEEE International Requirements Engineering Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/re/"
+     },
+     {
+      "abbr": "CAiSE",
+      "fullName": "International Conference on Advanced Information Systems Engineering",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/caise/"
+     },
+     {
+      "abbr": "ICFP",
+      "fullName": "ACM SIGPLAN International Conference on Function Programming",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icfp/"
+     },
+     {
+      "abbr": "LCTES",
+      "fullName": "ACM SIGPLAN/SIGBED International Conference on Languages, Compilers andTools for Embedded Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/lctrts/"
+     },
+     {
+      "abbr": "MoDELS",
+      "fullName": "ACM/IEEE International Conference on Model Driven Engineering Languages and Systems",
+      "publisher": "ACM, IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/models/"
+     },
+     {
+      "abbr": "CP",
+      "fullName": "International Conference on Principles and Practice of Constraint Programming",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cp/"
+     },
+     {
+      "abbr": "ICSOC",
+      "fullName": "International Conference on Service Oriented Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icsoc/"
+     },
+     {
+      "abbr": "SANER",
+      "fullName": "IEEE International Conference on Software Analysis, Evolution,and Reengineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wcre/"
+     },
+     {
+      "abbr": "ICSME",
+      "fullName": "International Conference on Software Maintenance and Evolution",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icsm/"
+     },
+     {
+      "abbr": "VMCAI",
+      "fullName": "International Conference on Verification,Model Checking, and Abstract Interpretation",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/vmcai/"
+     },
+     {
+      "abbr": "ICWS",
+      "fullName": "IEEE International Conference on Web Services",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icws/"
+     },
+     {
+      "abbr": "Middleware",
+      "fullName": "International Middleware Conference",
+      "publisher": "ACM/IFIP/ USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/middleware/"
+     },
+     {
+      "abbr": "SAS",
+      "fullName": "International Static Analysis Symposium",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sas/"
+     },
+     {
+      "abbr": "ESEM",
+      "fullName": "International Symposium on Empirical Software Engineering and Measurement",
+      "publisher": "ACM/IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/esem/"
+     },
+     {
+      "abbr": "ISSRE",
+      "fullName": "IEEE International Symposium on Software Reliability Engineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/issre/"
+     },
+     {
+      "abbr": "HotOS",
+      "fullName": "USENIX Workshop on Hot Topics in Operating Systems",
+      "publisher": "USENIX",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hotos/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "PEPM",
+      "fullName": "ACM SIGPLAN Workshop on Partial Evaluation and Program Manipulation",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pepm/"
+     },
+     {
+      "abbr": "PASTE",
+      "fullName": "ACMSIGPLAN-SIGSOFT Workshop on Program Analysis for Software Tools and Engineering",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/paste/"
+     },
+     {
+      "abbr": "APLAS",
+      "fullName": "Asian Symposium on Programming Languages and Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/aplas/"
+     },
+     {
+      "abbr": "APSEC",
+      "fullName": "Asia-Pacific Software Engineering Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/apsec/"
+     },
+     {
+      "abbr": "EASE",
+      "fullName": "International Conference on Evaluation and Assessment in Software Engineering",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ease/"
+     },
+     {
+      "abbr": "ICECCS",
+      "fullName": "International Conference on Engineering of Complex Computer Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iceccs/"
+     },
+     {
+      "abbr": "ICST",
+      "fullName": "IEEE International Conference on Software Testing, Verification and Validation",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icst/"
+     },
+     {
+      "abbr": "ISPASS",
+      "fullName": "IEEE International Symposium on Performance Analysis of Systems and Software",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ispass/"
+     },
+     {
+      "abbr": "SCAM",
+      "fullName": "IEEE International Working Conference on Source Code Analysis and Manipulation",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/scam/"
+     },
+     {
+      "abbr": "COMPSAC",
+      "fullName": "International Computer Software and Applications Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/compsac/"
+     },
+     {
+      "abbr": "ICFEM",
+      "fullName": "International Conference on Formal Engineering Methods",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icfem/"
+     },
+     {
+      "abbr": "SSE",
+      "fullName": "IEEE International Conference on Software Services Engineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/IEEEscc/"
+     },
+     {
+      "abbr": "ICSSP",
+      "fullName": "International Conference on Software and System Process",
+      "publisher": "ISPA",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ispw/"
+     },
+     {
+      "abbr": "SEKE",
+      "fullName": "International Conference on Software Engineering and Knowledge Engineering",
+      "publisher": "KSI",
+      "dblp": "http://dblp.uni-trier.de/db/conf/seke/"
+     },
+     {
+      "abbr": "QRS",
+      "fullName": "International Conference on Software Quality, Reliability and Security",
+      "publisher": "IEEE",
+      "dblp": "http://paris.utdallas.edu/qrs/"
+     },
+     {
+      "abbr": "ICSR",
+      "fullName": "International Conference on Software Reuse",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icsr/"
+     },
+     {
+      "abbr": "ICWE",
+      "fullName": "International Conference on Web Engineering",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icwe/"
+     },
+     {
+      "abbr": "SPIN",
+      "fullName": "International Symposium on Model Checking of Software",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/spin/index.html"
+     },
+     {
+      "abbr": "ATVA",
+      "fullName": "International Symposium on Automated Technology for Verification and Analysis",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/atva/"
+     },
+     {
+      "abbr": "LOPSTR",
+      "fullName": "International Symposium on Logic-based Program Synthesis and Transformation",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/lopstr/"
+     },
+     {
+      "abbr": "TASE",
+      "fullName": "Theoretical Aspects of Software Engineering Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/tase/"
+     },
+     {
+      "abbr": "MSR",
+      "fullName": "Mining Software Repositories",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/msr/"
+     },
+     {
+      "abbr": "REFSQ",
+      "fullName": "Requirements Engineering: Foundation for Software Quality",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/refsq/"
+     },
+     {
+      "abbr": "WICSA",
+      "fullName": "Working IEEE/IFIP Conference on Software Architecture",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wicsa/"
+     },
+     {
+      "abbr": "Internetware",
+      "fullName": "Asia-Pacific Symposium on Internetware",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/conf/internetware/index.html"
+     },
+     {
+      "abbr": "RV",
+      "fullName": "International Conference on Runtime Verification",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/rv/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "数据库/数据挖掘/内容检索",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TODS",
+      "fullName": "ACM Transactions on Database Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tods/"
+     },
+     {
+      "abbr": "TOIS",
+      "fullName": "ACM Transactions on Information Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tois/"
+     },
+     {
+      "abbr": "TKDE",
+      "fullName": "IEEE Transactions on Knowledge and Data Engineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tkde/"
+     },
+     {
+      "abbr": "VLDBJ",
+      "fullName": "The VLDB Journal",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/vldb/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TKDD",
+      "fullName": "ACM Transactions on Knowledge Discovery from Data",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tkdd/"
+     },
+     {
+      "abbr": "TWEB",
+      "fullName": "ACM Transactions on the Web",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tweb/"
+     },
+     {
+      "abbr": "AEI",
+      "fullName": "Advanced Engineering Informatics",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/aei/"
+     },
+     {
+      "abbr": "DKE",
+      "fullName": "Data & Knowledge Engineering",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dke/"
+     },
+     {
+      "abbr": "DMKD",
+      "fullName": "Data Mining and Knowledge Discovery",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/datamine/"
+     },
+     {
+      "abbr": "EJIS",
+      "fullName": "European Journal of Information Systems",
+      "publisher": "The OR Society",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ejis/"
+     },
+     {
+      "abbr": "IPM",
+      "fullName": "Information Processing and Management",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ipm/"
+     },
+     {
+      "abbr": "IS",
+      "fullName": "Information Systems",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/is/"
+     },
+     {
+      "abbr": "JASIST",
+      "fullName": "Journal of the Association for Information Science and Technology",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jasis/"
+     },
+     {
+      "abbr": "JWS",
+      "fullName": "Journal of Web Semantics",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ws/"
+     },
+     {
+      "abbr": "KAIS",
+      "fullName": "Knowledge and Information Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/kais/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "DPD",
+      "fullName": "Distributed and Parallel Databases",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dpd/"
+     },
+     {
+      "abbr": "I&M",
+      "fullName": "Information & Management",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/iam/"
+     },
+     {
+      "abbr": "IPL",
+      "fullName": "Information Processing Letters",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ipl/"
+     },
+     {
+      "abbr": "IR",
+      "fullName": "Information Retrieval Journal",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ir/"
+     },
+     {
+      "abbr": "IJCIS",
+      "fullName": "International Journal of Cooperative Information Systems",
+      "publisher": "World Scientific",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijcis/"
+     },
+     {
+      "abbr": "IJGIS",
+      "fullName": "International Journal of Geographical Information Science",
+      "publisher": "Taylor & Francis",
+      "dblp": "http://dblp.uni-trier.de/db/journals/gis/"
+     },
+     {
+      "abbr": "IJIS",
+      "fullName": "International Journal of Intelligent Systems",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijis/"
+     },
+     {
+      "abbr": "IJKM",
+      "fullName": "International Journal of Knowledge Management",
+      "publisher": "IGI",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijkm/"
+     },
+     {
+      "abbr": "IJSWIS",
+      "fullName": "International Journal on Semantic Web and Information Systems",
+      "publisher": "IGI",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijswis/"
+     },
+     {
+      "abbr": "JCIS",
+      "fullName": "Journal of Computer Information Systems",
+      "publisher": "IACIS",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jcis/"
+     },
+     {
+      "abbr": "JDM",
+      "fullName": "Journal of Database Management",
+      "publisher": "IGI-Global",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jdm/"
+     },
+     {
+      "abbr": "JGITM",
+      "fullName": "Journal of Global Information Technology Management",
+      "publisher": "Ivy League Publishing",
+      "dblp": "https://dblp.org/db/journals/jgim/index.html"
+     },
+     {
+      "abbr": "JIIS",
+      "fullName": "Journal of Intelligent Information Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jiis/"
+     },
+     {
+      "abbr": "JSIS",
+      "fullName": "The Journal of Strategic Information Systems",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jsis/"
+     },
+     {
+      "abbr": "DSE",
+      "fullName": "Data Science and Engineering",
+      "publisher": "CCF",
+      "dblp": "https://dblp.org/db/journals/dase/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "SIGMOD",
+      "fullName": "ACM SIGMOD Conference",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sigmod/"
+     },
+     {
+      "abbr": "SIGKDD",
+      "fullName": "ACM SIGKDD Conference on Knowledge Discovery and Data Mining",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/kdd/"
+     },
+     {
+      "abbr": "ICDE",
+      "fullName": "IEEE International Conference on Data Engineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icde/"
+     },
+     {
+      "abbr": "SIGIR",
+      "fullName": "International ACM SIGIR Conference on Research and Development in Information Retrieval",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sigir/"
+     },
+     {
+      "abbr": "VLDB",
+      "fullName": "International Conference on Very Large Data Bases",
+      "publisher": "Morgan Kaufmann",
+      "dblp": "http://dblp.uni-trier.de/db/conf/vldb/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "CIKM",
+      "fullName": "ACM International Conference on Information and Knowledge Management",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cikm/"
+     },
+     {
+      "abbr": "WSDM",
+      "fullName": "ACM International Conference on Web Search and Data Mining",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wsdm/"
+     },
+     {
+      "abbr": "PODS",
+      "fullName": "ACM SIGMOD-SIGACT-SIGAI Symposium on Principles of Database Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pods/"
+     },
+     {
+      "abbr": "DASFAA",
+      "fullName": "International Conference on Database Systems for Advanced Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/dasfaa/"
+     },
+     {
+      "abbr": "ECML-PKDD",
+      "fullName": "European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ecml/"
+     },
+     {
+      "abbr": "ISWC",
+      "fullName": "IEEE International Semantic Web Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/semweb/"
+     },
+     {
+      "abbr": "ICDM",
+      "fullName": "IEEE International Conference on Data Mining",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icdm/"
+     },
+     {
+      "abbr": "ICDT",
+      "fullName": "International Conference on Database Theory",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icdt/"
+     },
+     {
+      "abbr": "EDBT",
+      "fullName": "International Conference on Extending DatabaseTechnology",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/edbt/"
+     },
+     {
+      "abbr": "CIDR",
+      "fullName": "Conference on Innovative DataSystems Research",
+      "publisher": "Online Proceeding",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cidr/"
+     },
+     {
+      "abbr": "SDM",
+      "fullName": "SIAM International Conference on Data Mining",
+      "publisher": "SIAM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sdm/"
+     },
+     {
+      "abbr": "RecSys",
+      "fullName": "ACM Conference on Recommender Systems",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/conf/recsys/index.html"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "APWeb",
+      "fullName": "Asia Pacific Web Conference",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/apweb/"
+     },
+     {
+      "abbr": "DEXA",
+      "fullName": "International Conference on Database and Expert System Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/dexa/"
+     },
+     {
+      "abbr": "ECIR",
+      "fullName": "European Conference on Information Retrieval",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ecir/"
+     },
+     {
+      "abbr": "ESWC",
+      "fullName": "Extended Semantic Web Conference",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/conf/esws/"
+     },
+     {
+      "abbr": "WebDB",
+      "fullName": "International Workshop on Web andDatabases",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/webdb/"
+     },
+     {
+      "abbr": "ER",
+      "fullName": "International Conference on Conceptual Modeling",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/er/"
+     },
+     {
+      "abbr": "MDM",
+      "fullName": "International Conference on Mobile Data Management",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mdm/"
+     },
+     {
+      "abbr": "SSDBM",
+      "fullName": "International Conference on Scientific andStatistical Database Management",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ssdbm/"
+     },
+     {
+      "abbr": "WAIM",
+      "fullName": "International Conference on Web Age Information Management",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/waim/"
+     },
+     {
+      "abbr": "SSTD",
+      "fullName": "International Symposium on Spatial and Temporal Databases",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ssd/"
+     },
+     {
+      "abbr": "PAKDD",
+      "fullName": "Pacific-Asia Conference on Knowledge Discovery and Data Mining",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pakdd/"
+     },
+     {
+      "abbr": "WISE",
+      "fullName": "Web Information Systems Engineering",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/wise/"
+     },
+     {
+      "abbr": "ADMA",
+      "fullName": "International Conference on Advanced Data Mining and Applications",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/adma/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "计算机科学理论",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TIT",
+      "fullName": "IEEE Transactions on Information Theory",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tit/"
+     },
+     {
+      "abbr": "IANDC",
+      "fullName": "Information and Computation",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/iandc/"
+     },
+     {
+      "abbr": "SICOMP",
+      "fullName": "SIAM Journal on Computing",
+      "publisher": "SIAM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/siamcomp/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TALG",
+      "fullName": "ACM Transactions on Algorithms",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/talg/"
+     },
+     {
+      "abbr": "TOCL",
+      "fullName": "ACM Transactions on Computational Logic",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tocl/"
+     },
+     {
+      "abbr": "TOMS",
+      "fullName": "ACM Transactions on Mathematical Software",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/toms/"
+     },
+     {
+      "abbr": "Algorithmica",
+      "fullName": "Algorithmica",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/algorithmica/"
+     },
+     {
+      "abbr": "CC",
+      "fullName": "Computational complexity",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cc/"
+     },
+     {
+      "abbr": "FAC",
+      "fullName": "Formal Aspects of Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/fac/"
+     },
+     {
+      "abbr": "FMSD",
+      "fullName": "Formal Methods in System Design",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/fmsd/"
+     },
+     {
+      "abbr": "INFORMS",
+      "fullName": "INFORMS Journal on Computing",
+      "publisher": "INFORMS",
+      "dblp": "http://dblp.uni-trier.de/db/journals/informs/"
+     },
+     {
+      "abbr": "JCSS",
+      "fullName": "Journal of Computer and System Sciences",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jcss/"
+     },
+     {
+      "abbr": "JGO",
+      "fullName": "Journal of Global Optimization",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jgo/"
+     },
+     {
+      "abbr": "JSC",
+      "fullName": "Journal of Symbolic Computation",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jsc/"
+     },
+     {
+      "abbr": "MSCS",
+      "fullName": "Mathematical Structures in Computer Science",
+      "publisher": "Cambridge University Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/mscs/"
+     },
+     {
+      "abbr": "TCS",
+      "fullName": "Theoretical Computer Science",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tcs/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "ACTA",
+      "fullName": "Acta Informatica",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/acta/"
+     },
+     {
+      "abbr": "APAL",
+      "fullName": "Annals of Pure and Applied Logic",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/apal/"
+     },
+     {
+      "abbr": "DAM",
+      "fullName": "Discrete Applied Mathematics",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dam/"
+     },
+     {
+      "abbr": "FUIN",
+      "fullName": "Fundamenta Informaticae",
+      "publisher": "IOS Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/fuin/"
+     },
+     {
+      "abbr": "IPL",
+      "fullName": "Information Processing Letters",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ipl/"
+     },
+     {
+      "abbr": "JCOMPLEXITY",
+      "fullName": "Journal of Complexity",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jc/"
+     },
+     {
+      "abbr": "LOGCOM",
+      "fullName": "Journal of Logic and Computation",
+      "publisher": "Oxford University Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/logcom/"
+     },
+     {
+      "abbr": "JSL",
+      "fullName": "The Journal of Symbolic Logic",
+      "publisher": "Association for Symbolic Logic",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jsyml/"
+     },
+     {
+      "abbr": "LMCS",
+      "fullName": "Logical Methods in Computer Science",
+      "publisher": "LMCS",
+      "dblp": "http://dblp.uni-trier.de/db/journals/lmcs/"
+     },
+     {
+      "abbr": "SIDMA",
+      "fullName": "SIAM Journal on Discrete Mathematics",
+      "publisher": "SIAM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/siamdm/"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "STOC",
+      "fullName": "ACM Symposium on Theory of Computing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/stoc/"
+     },
+     {
+      "abbr": "SODA",
+      "fullName": "ACM-SIAM Symposium on Discrete Algorithms",
+      "publisher": "SIAM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/soda/"
+     },
+     {
+      "abbr": "CAV",
+      "fullName": "International Conference on Computer Aided Verification",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cav/"
+     },
+     {
+      "abbr": "FOCS",
+      "fullName": "IEEE Annual Symposium on Foundations of Computer Science",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/focs/"
+     },
+     {
+      "abbr": "LICS",
+      "fullName": "ACM/IEEE Symposium on Logic in Computer Science",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/lics/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "SoCG",
+      "fullName": "International Symposium on Computational Geometry",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/compgeom/"
+     },
+     {
+      "abbr": "ESA",
+      "fullName": "European Symposium on Algorithms",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/esa/"
+     },
+     {
+      "abbr": "CCC",
+      "fullName": "Conference on Computational Complexity",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/coco/"
+     },
+     {
+      "abbr": "ICALP",
+      "fullName": "International Colloquium on Automata, Languages and Programming",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icalp/"
+     },
+     {
+      "abbr": "CONCUR",
+      "fullName": "International Conference on Concurrency Theory",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/concur/"
+     },
+     {
+      "abbr": "HSCC",
+      "fullName": "International Conference on Hybrid Systems: Computation and Control",
+      "publisher": "Springer and ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/hybrid/"
+     },
+     {
+      "abbr": "SAT",
+      "fullName": "International Conference on Theory and Applications of Satisfiability Testing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sat/"
+     },
+     {
+      "abbr": "COCOON",
+      "fullName": "International Computing and Combinatorics Conference",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/cocoon/index.html"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "CSL",
+      "fullName": "Computer Science Logic",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/csl/"
+     },
+     {
+      "abbr": "FMCAD",
+      "fullName": "Formal Method in Computer-Aided Design",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fmcad/"
+     },
+     {
+      "abbr": "FSTTCS",
+      "fullName": "Foundations of Software Technology and Theoretical Computer Science",
+      "publisher": "Indian Association for Research in Computing Science",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fsttcs/"
+     },
+     {
+      "abbr": "DSAA",
+      "fullName": "IEEE International Conference on Data Science and Advanced Analytics",
+      "publisher": "​IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/dsaa/"
+     },
+     {
+      "abbr": "ICTAC",
+      "fullName": "International Colloquium on Theoretical Aspects of Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ictac/"
+     },
+     {
+      "abbr": "IPCO",
+      "fullName": "International Conference on Integer Programming and Combinatorial Optimization",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ipco/"
+     },
+     {
+      "abbr": "RTA",
+      "fullName": "International Conference on Rewriting Techniques and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/rta/"
+     },
+     {
+      "abbr": "ISAAC",
+      "fullName": "International Symposium on Algorithms and Computation",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/isaac/"
+     },
+     {
+      "abbr": "MFCS",
+      "fullName": "International Conference on Mathematical Foundations of Computer Science",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mfcs/"
+     },
+     {
+      "abbr": "STACS",
+      "fullName": "Symposium on Theoretical Aspects of Computer Science",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/stacs/"
+     },
+     {
+      "abbr": "SETTA",
+      "fullName": "International Symposium on Dependable Software Engineering: Theories, Tools, and Applications",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/setta/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "计算机图形学与多媒体",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TOG",
+      "fullName": "ACM Transactions on Graphics",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tog/"
+     },
+     {
+      "abbr": "TIP",
+      "fullName": "IEEE Transactions on Image Processing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tip/"
+     },
+     {
+      "abbr": "TVCG",
+      "fullName": "IEEE Transactions on Visualization and Computer Graphics",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tvcg/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TOMM",
+      "fullName": "ACM Transactions on Multimedia Computing,Communications and Applications",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tomccap/"
+     },
+     {
+      "abbr": "CAGD",
+      "fullName": "Computer Aided Geometric Design",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cagd/"
+     },
+     {
+      "abbr": "CGF",
+      "fullName": "Computer Graphics Forum",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cgf/"
+     },
+     {
+      "abbr": "CAD",
+      "fullName": "Computer-Aided Design",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cad/"
+     },
+     {
+      "abbr": "GM",
+      "fullName": "Graphical Models",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cvgip/"
+     },
+     {
+      "abbr": "TCSVT",
+      "fullName": "IEEE Transactions on Circuits and Systems for Video Technology",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tcsv/"
+     },
+     {
+      "abbr": "TMM",
+      "fullName": "IEEE Transactions on Multimedia",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tmm/"
+     },
+     {
+      "abbr": "JASA",
+      "fullName": "The Journal of the Acoustical Society of America",
+      "publisher": "AIP",
+      "dblp": "http://scitation.aip.org/content/asa/journal/jasa"
+     },
+     {
+      "abbr": "SIIMS",
+      "fullName": "SIAM Journal on Imaging Sciences",
+      "publisher": "SIAM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/siamis/"
+     },
+     {
+      "abbr": "SPECOM",
+      "fullName": "Speech Communication",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/speech/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "CGTA",
+      "fullName": "Computational Geometry: Theory and Applications",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/comgeo/"
+     },
+     {
+      "abbr": "CAVW",
+      "fullName": "computer animation & virtual worlds",
+      "publisher": "Wiley",
+      "dblp": "https://dblp.org/db/journals/jvca/index.html"
+     },
+     {
+      "abbr": "C&G",
+      "fullName": "Computers & Graphics",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cg/"
+     },
+     {
+      "abbr": "DCG",
+      "fullName": "Discrete & Computational Geometry",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dcg/"
+     },
+     {
+      "abbr": "SPL",
+      "fullName": "IEEE Signal Processing Letters",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/spl/"
+     },
+     {
+      "abbr": "IET-IPR",
+      "fullName": "IET Image Processing",
+      "publisher": "IET",
+      "dblp": "http://dblp.uni-trier.de/db/journals/iet-ipr/"
+     },
+     {
+      "abbr": "JVCIR",
+      "fullName": "Journal of Visual Communication and Image Representation",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jvcir/"
+     },
+     {
+      "abbr": "MS",
+      "fullName": "Multimedia Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/mms/"
+     },
+     {
+      "abbr": "MTA",
+      "fullName": "Multimedia Tools and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/mta/"
+     },
+     {
+      "abbr": "SIGPRO",
+      "fullName": "Signal Processing",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/sigpro/"
+     },
+     {
+      "abbr": "IMAGE",
+      "fullName": "Signal Processing: Image Communication",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/spic/"
+     },
+     {
+      "abbr": "TVC",
+      "fullName": "The Visual Computer",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/vc/"
+     },
+     {
+      "abbr": "CVMJ",
+      "fullName": "Computational Visual Media",
+      "publisher": "Tsinghua University; Springer",
+      "dblp": "https://dblp.org/db/journals/cvm/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "ACM MM",
+      "fullName": "ACM International Conference on Multimedia",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mm/"
+     },
+     {
+      "abbr": "SIGGRAPH",
+      "fullName": "ACM Special Interest Group on Computer Graphics",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/siggraph/index.html"
+     },
+     {
+      "abbr": "VR",
+      "fullName": "IEEE Virtual Reality",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/vr/"
+     },
+     {
+      "abbr": "IEEE VIS",
+      "fullName": "IEEE Visualization Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/visualization/index.html"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "ICMR",
+      "fullName": "ACM SIGMM International Conference on Multimedia Retrieval",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mir/"
+     },
+     {
+      "abbr": "I3D",
+      "fullName": "ACM SIGGRAPH Symposium onInteractive 3D Graphics and Games",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/si3d/"
+     },
+     {
+      "abbr": "SCA",
+      "fullName": "ACM SIGGRAPH/Eurographics Symposium on Computer Animation",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sca/index.html"
+     },
+     {
+      "abbr": "DCC",
+      "fullName": "Data Compression Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/dcc/"
+     },
+     {
+      "abbr": "Eurographics",
+      "fullName": "Annual Conference of the European Association for Computer Graphics",
+      "publisher": "Wiley/ Blackwell",
+      "dblp": "http://dblp.uni-trier.de/db/conf/eurographics/"
+     },
+     {
+      "abbr": "EuroVis",
+      "fullName": "Eurographics Conference on Visualization",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/vissym/"
+     },
+     {
+      "abbr": "SGP",
+      "fullName": "Eurographics Symposium on Geometry Processing",
+      "publisher": "Wiley/Blackwell",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sgp/"
+     },
+     {
+      "abbr": "EGSR",
+      "fullName": "Eurographics Symposium on Rendering",
+      "publisher": "Wiley/Blackwell",
+      "dblp": "http://dblp.uni-trier.de/db/conf/rt/"
+     },
+     {
+      "abbr": "ICASSP",
+      "fullName": "IEEE International Conference on Acoustics,Speech and Signal Processing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icassp/"
+     },
+     {
+      "abbr": "ICME",
+      "fullName": "IEEE International Conference on Multimedia& Expo",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icmcs/"
+     },
+     {
+      "abbr": "ISMAR",
+      "fullName": "International Symposium on Mixed and Augmented Reality",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ismar/"
+     },
+     {
+      "abbr": "PG",
+      "fullName": "Pacific Conference on Computer Graphics and Applications",
+      "publisher": "Wiley/Blackwell",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pg/index.html"
+     },
+     {
+      "abbr": "SPM",
+      "fullName": "Symposium on Solid and Physical Modeling",
+      "publisher": "SMA/Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/conf/sma/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "VRST",
+      "fullName": "ACM Symposium on Virtual Reality Software and Technology",
+      "publisher": "ACM",
+      "dblp": "http://dblp2.uni-trier.de/db/conf/vrst/"
+     },
+     {
+      "abbr": "CASA",
+      "fullName": "International Conference on Computer Animation and Social Agents",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ca/"
+     },
+     {
+      "abbr": "CGI",
+      "fullName": "Computer Graphics International",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cgi/"
+     },
+     {
+      "abbr": "INTERSPEECH",
+      "fullName": "Conference of the International Speech Communication Association",
+      "publisher": "",
+      "dblp": "http://dblp.uni-trier.de/db/conf/interspeech/index.html"
+     },
+     {
+      "abbr": "GMP",
+      "fullName": "Geometric Modeling and Processing",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/conf/gmp/"
+     },
+     {
+      "abbr": "PacificVis",
+      "fullName": "IEEE Pacific Visualization Symposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/apvis/"
+     },
+     {
+      "abbr": "3DV",
+      "fullName": "International Conference on 3D Vision",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/3dim/"
+     },
+     {
+      "abbr": "CAD/Graphics",
+      "fullName": "International Conference on Computer-Aided Design and Computer Graphics",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/cadgraphics/"
+     },
+     {
+      "abbr": "ICIP",
+      "fullName": "IEEE International Conference on Image Processing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icip/"
+     },
+     {
+      "abbr": "MMM",
+      "fullName": "International Conference on Multimedia Modeling",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mmm/index.html"
+     },
+     {
+      "abbr": "MMAsia",
+      "fullName": "ACM Multimedia Asia",
+      "publisher": "ACM",
+      "dblp": "https://dblp.uni-trier.de/db/conf/mmasia/index.html"
+     },
+     {
+      "abbr": "SMI",
+      "fullName": "Shape Modeling International",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/smi/"
+     },
+     {
+      "abbr": "ICVRV",
+      "fullName": "International Conference on Virtual Reality and Visualization",
+      "publisher": "IEEE",
+      "dblp": "https://www.computer.org/csdl/proceedings/1800579"
+     },
+     {
+      "abbr": "CVM",
+      "fullName": "Computational Visual Media",
+      "publisher": "Tsinghua University",
+      "dblp": "https://dblp.org/db/conf/cvm/index.html"
+     },
+     {
+      "abbr": "PRCV",
+      "fullName": "Chinese Conference on Pattern Recognition and Computer Vision",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/prcv/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "area": "人工智能",
+   "journals": {
+    "A": [
+     {
+      "abbr": "AI",
+      "fullName": "Artificial Intelligence",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ai/"
+     },
+     {
+      "abbr": "TPAMI",
+      "fullName": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/pami/"
+     },
+     {
+      "abbr": "IJCV",
+      "fullName": "International Journal of Computer Vision",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijcv/"
+     },
+     {
+      "abbr": "JMLR",
+      "fullName": "Journal of Machine Learning Research",
+      "publisher": "MIT Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jmlr/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "TAP",
+      "fullName": "ACM Transactions on Applied Perception",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tap/"
+     },
+     {
+      "abbr": "AAMAS",
+      "fullName": "Autonomous Agents and Multi-Agent Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/aamas/"
+     },
+     {
+      "abbr": "CVIU",
+      "fullName": "Computer Vision and Image Understanding",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cviu/"
+     },
+     {
+      "abbr": "DKE",
+      "fullName": "Data & Knowledge Engineering",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dke/index.html"
+     },
+     {
+      "abbr": "TAC",
+      "fullName": "IEEE Transactions on Affective Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/taffco/"
+     },
+     {
+      "abbr": "TASLP",
+      "fullName": "IEEE/ACM Transactions on Audio, Speech and Language Processing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/taslp/"
+     },
+     {
+      "abbr": "TEC",
+      "fullName": "IEEE Transactions on Evolutionary Computation",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tec/"
+     },
+     {
+      "abbr": "TFS",
+      "fullName": "IEEE Transactions on Fuzzy Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tfs/"
+     },
+     {
+      "abbr": "TNNLS",
+      "fullName": "IEEE Transactions on Neural Networks and learning systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tnn/"
+     },
+     {
+      "abbr": "IJAR",
+      "fullName": "International Journal of Approximate Reasoning",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijar/"
+     },
+     {
+      "abbr": "JAIR",
+      "fullName": "Journal of Artificial Intelligence Research",
+      "publisher": "AAAI",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jair/index.html"
+     },
+     {
+      "abbr": "JSLHR",
+      "fullName": "Journal of Speech, Language, and Hearing Research",
+      "publisher": "American Speech-Language Hearing Association",
+      "dblp": "http://jslhr.pubs.asha.org/"
+     },
+     {
+      "abbr": "PR",
+      "fullName": "Pattern Recognition",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/conf/par/"
+     },
+     {
+      "abbr": "TACL",
+      "fullName": "Transactions of the Association for Computational Linguistics",
+      "publisher": "The Association for Computational Linguistics",
+      "dblp": "https://dblp.org/db/journals/tacl/index.html"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "TALLIP",
+      "fullName": "ACM Transactions on Asian and Low-Resource Language Information Processing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/talip/"
+     },
+     {
+      "abbr": "AIM",
+      "fullName": "Artificial Intelligence in Medicine",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/artmed/"
+     },
+     {
+      "abbr": "DSS",
+      "fullName": "Decision Support Systems",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/dss/"
+     },
+     {
+      "abbr": "EAAI",
+      "fullName": "Engineering Applications of Artificial Intelligence",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/eaai/"
+     },
+     {
+      "abbr": "ESWA",
+      "fullName": "Expert Systems with Applications",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/eswa/"
+     },
+     {
+      "abbr": "TG",
+      "fullName": "IEEE Transactions on Games",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tciaig/"
+     },
+     {
+      "abbr": "IET-CVI",
+      "fullName": "IET Computer Vision",
+      "publisher": "IET",
+      "dblp": "https://dblp.org/db/journals/iet-cvi/index.html"
+     },
+     {
+      "abbr": "IVC",
+      "fullName": "Image and Vision Computing",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ivc/"
+     },
+     {
+      "abbr": "IDA",
+      "fullName": "Intelligent Data Analysis",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ida/"
+     },
+     {
+      "abbr": "IJCIA",
+      "fullName": "International Journal of Computational Intelligence and Applications",
+      "publisher": "World Scientific",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijcia/"
+     },
+     {
+      "abbr": "IJIS",
+      "fullName": "International Journal of Intelligent Systems",
+      "publisher": "Wiley",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijis/"
+     },
+     {
+      "abbr": "IJNS",
+      "fullName": "International Journal of Neural Systems",
+      "publisher": "World Scientific",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijns/"
+     },
+     {
+      "abbr": "IJPRAI",
+      "fullName": "International Journal of Pattern Recognition and Artificial Intelligence",
+      "publisher": "World Scientific",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijprai/"
+     },
+     {
+      "abbr": "IJUFKS",
+      "fullName": "International Journal of Uncertainty,Fuzziness and Knowledge-Based Systems",
+      "publisher": "World Scientific",
+      "dblp": "https://dblp.uni-trier.de/db/journals/ijufks/"
+     },
+     {
+      "abbr": "IJDAR",
+      "fullName": "International Journal on Document Analysis and Recognition",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijdar/"
+     },
+     {
+      "abbr": "JETAI",
+      "fullName": "Journal of Experimental and Theoretical Artificial Intelligence",
+      "publisher": "Taylor & Francis",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jetai/"
+     },
+     {
+      "abbr": "KBS",
+      "fullName": "Knowledge-Based Systems",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/kbs/"
+     },
+     {
+      "abbr": "NLE",
+      "fullName": "Natural Language Engineering",
+      "publisher": "Cambridge University",
+      "dblp": "http://dblp.uni-trier.de/db/journals/nle/"
+     },
+     {
+      "abbr": "NCA",
+      "fullName": "Neural Computing and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/nca/"
+     },
+     {
+      "abbr": "NPL",
+      "fullName": "Neural Processing Letters",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/npl/"
+     },
+     {
+      "abbr": "PAA",
+      "fullName": "Pattern Analysis and Applications",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/paa/"
+     },
+     {
+      "abbr": "PRL",
+      "fullName": "Pattern Recognition Letters",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/prl/"
+     },
+     {
+      "abbr": "WI",
+      "fullName": "Web Intelligence",
+      "publisher": "IOS Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/wias/"
+     },
+     {
+      "abbr": "TIIS",
+      "fullName": "ACM Transactions on Interactive Intelligent Systems",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/tiis/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "AAAI",
+      "fullName": "AAAI Conference on Artificial Intelligence",
+      "publisher": "AAAI",
+      "dblp": "http://dblp.uni-trier.de/db/conf/aaai/"
+     },
+     {
+      "abbr": "NeurIPS",
+      "fullName": "Conference on Neural Information Processing Systems",
+      "publisher": "MIT Press",
+      "dblp": "http://dblp.uni-trier.de/db/conf/nips/"
+     },
+     {
+      "abbr": "ACL",
+      "fullName": "Annual Meeting of the Association for Computational Linguistics",
+      "publisher": "ACL",
+      "dblp": "http://dblp.uni-trier.de/db/conf/acl/"
+     },
+     {
+      "abbr": "CVPR",
+      "fullName": "IEEE/CVF Computer Vision and Pattern Recognition Conference",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cvpr/"
+     },
+     {
+      "abbr": "ICCV",
+      "fullName": "International Conference on Computer Vision",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iccv/"
+     },
+     {
+      "abbr": "ICML",
+      "fullName": "International Conference on Machine Learning",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icml/"
+     },
+     {
+      "abbr": "IJCAI",
+      "fullName": "International Joint Conference on Artificial Intelligence",
+      "publisher": "Morgan Kaufmann",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ijcai/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "COLT",
+      "fullName": "Annual Conference on Computational Learning Theory",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/colt/"
+     },
+     {
+      "abbr": "EMNLP",
+      "fullName": "Conference on Empirical Methods in Natural Language Processing",
+      "publisher": "ACL",
+      "dblp": "http://dblp.uni-trier.de/db/conf/emnlp/"
+     },
+     {
+      "abbr": "ECAI",
+      "fullName": "European Conference on Artificial Intelligence",
+      "publisher": "IOS Press",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ecai/"
+     },
+     {
+      "abbr": "ECCV",
+      "fullName": "European Conference on Computer Vision",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/eccv/"
+     },
+     {
+      "abbr": "ICRA",
+      "fullName": "IEEE International Conference on Robotics and Automation",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icra/"
+     },
+     {
+      "abbr": "ICAPS",
+      "fullName": "International Conference on Automated Planning and Scheduling",
+      "publisher": "AAAI",
+      "dblp": "http://dblp.uni-trier.de/db/conf/aips/"
+     },
+     {
+      "abbr": "ICCBR",
+      "fullName": "International Conference on Case-Based Reasoning",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iccbr/"
+     },
+     {
+      "abbr": "COLING",
+      "fullName": "International Conference on Computational Linguistics",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/coling/"
+     },
+     {
+      "abbr": "KR",
+      "fullName": "International Conference on Principles of Knowledge Representation and Reasoning",
+      "publisher": "Morgan Kaufmann",
+      "dblp": "http://dblp.uni-trier.de/db/conf/kr/"
+     },
+     {
+      "abbr": "UAI",
+      "fullName": "Conference on Uncertainty in ArtificialIntelligence",
+      "publisher": "AUAI",
+      "dblp": "http://dblp.uni-trier.de/db/conf/uai/"
+     },
+     {
+      "abbr": "AAMAS",
+      "fullName": "International Joint Conference on Autonomous Agents and Multi-agent Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/atal/index.html"
+     },
+     {
+      "abbr": "PPSN",
+      "fullName": "Parallel Problem Solving from Nature",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ppsn/"
+     },
+     {
+      "abbr": "NAACL",
+      "fullName": "North American Chapter of the Associationfor Computational Linguistics",
+      "publisher": "Association for Computational Linguistics",
+      "dblp": "http://dblp.uni-trier.de/db/conf/naacl/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "AISTATS",
+      "fullName": "International Conference on Artificial Intelligence and Statistics",
+      "publisher": "JMLR",
+      "dblp": "http://dblp.uni-trier.de/db/conf/aistats/"
+     },
+     {
+      "abbr": "ACCV",
+      "fullName": "Asian Conference on Computer Vision",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/accv/"
+     },
+     {
+      "abbr": "ACML",
+      "fullName": "Asian Conference on Machine Learning",
+      "publisher": "JMLR",
+      "dblp": "http://dblp.uni-trier.de/db/conf/acml/"
+     },
+     {
+      "abbr": "BMVC",
+      "fullName": "British Machine Vision Conference",
+      "publisher": "British Machine Vision Association",
+      "dblp": "http://dblp.uni-trier.de/db/conf/bmvc/"
+     },
+     {
+      "abbr": "NLPCC",
+      "fullName": "CCF International Conference on Natural Language Processing and Chinese Computing",
+      "publisher": "Springer",
+      "dblp": "https://dblp.uni-trier.de/db/conf/nlpcc/"
+     },
+     {
+      "abbr": "CoNLL",
+      "fullName": "Conference on Computational Natural Language Learning",
+      "publisher": "Association for Computational Linguistics",
+      "dblp": "http://dblp.uni-trier.de/db/conf/conll"
+     },
+     {
+      "abbr": "GECCO",
+      "fullName": "Genetic and Evolutionary Computation Conference",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/gecco/"
+     },
+     {
+      "abbr": "ICTAI",
+      "fullName": "IEEE International Conference on Tools with Artificial Intelligence",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ictai/"
+     },
+     {
+      "abbr": "IROS",
+      "fullName": "IEEE\\RSJ International Conference on Intelligent Robots and Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iros/"
+     },
+     {
+      "abbr": "ALT",
+      "fullName": "International Conference on Algorithmic Learning Theory",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/alt/"
+     },
+     {
+      "abbr": "ICANN",
+      "fullName": "International Conference on Artificial Neural Networks",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icann/"
+     },
+     {
+      "abbr": "FG",
+      "fullName": "IEEE International Conference on AutomaticFace and Gesture Recognition",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/fgr/"
+     },
+     {
+      "abbr": "ICDAR",
+      "fullName": "International Conference on Document Analysis and Recognition",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icdar/"
+     },
+     {
+      "abbr": "ILP",
+      "fullName": "International Conference on Inductive Logic Programming",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ilp/"
+     },
+     {
+      "abbr": "KSEM",
+      "fullName": "International conference on Knowledge Science,Engineering and Management",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ksem/"
+     },
+     {
+      "abbr": "ICONIP",
+      "fullName": "International Conference on Neural Information Processing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iconip/"
+     },
+     {
+      "abbr": "ICPR",
+      "fullName": "International Conference on Pattern Recognition",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icpr/"
+     },
+     {
+      "abbr": "IJCB",
+      "fullName": "International Joint Conference onBiometrics",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icb/"
+     },
+     {
+      "abbr": "IJCNN",
+      "fullName": "International Joint Conference on Neural Networks",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ijcnn/"
+     },
+     {
+      "abbr": "PRICAI",
+      "fullName": "Pacific Rim International Conference on Artificial Intelligence",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/pricai/"
+     }
+    ]
+   }
+  },
+  {
+   "area": "人机交互与普适计算",
+   "journals": {
+    "A": [
+     {
+      "abbr": "TOCHI",
+      "fullName": "ACM Transactions on Computer-Human Interaction",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tochi/"
+     },
+     {
+      "abbr": "IJHCS",
+      "fullName": "International Journal of Human-Computer Studies",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijmms/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "CSCW",
+      "fullName": "Computer Supported Cooperative Work",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/cscw/"
+     },
+     {
+      "abbr": "HCI",
+      "fullName": "Human-Computer Interaction",
+      "publisher": "Taylor & Francis",
+      "dblp": "http://dblp.uni-trier.de/db/journals/hhci/"
+     },
+     {
+      "abbr": "IWC",
+      "fullName": "Interacting with Computers",
+      "publisher": "Oxford University Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/iwc/"
+     },
+     {
+      "abbr": "IJHCI",
+      "fullName": "International Journal of Human-Computer Interaction",
+      "publisher": "Taylor &Francis",
+      "dblp": "http://dblp.uni-trier.de/db/journals/ijhci/"
+     },
+     {
+      "abbr": "UMUAI",
+      "fullName": "User Modeling and User-Adapted Interaction",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/umuai/"
+     },
+     {
+      "abbr": "TSMC",
+      "fullName": "IEEE Transactions on Systems, Man, and Cybernetics: Systems",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/journals/tsmc/tsmc12.html"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "BIT",
+      "fullName": "Behaviour & Information Technology",
+      "publisher": "Taylor & Francis",
+      "dblp": "http://dblp.uni-trier.de/db/journals/behaviourIT/"
+     },
+     {
+      "abbr": "PUC",
+      "fullName": "Personal and Ubiquitous Computing",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/puc/"
+     },
+     {
+      "abbr": "PMC",
+      "fullName": "Pervasive and Mobile Computing",
+      "publisher": "Elsevier",
+      "dblp": "http://dblp.uni-trier.de/db/journals/percom/"
+     },
+     {
+      "abbr": "PACMHCI",
+      "fullName": "Proceedings of the ACM on Human-Computer Interaction",
+      "publisher": "ACM",
+      "dblp": "ttps://dblp.org/db/journals/pacmhci/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "CSCW",
+      "fullName": "ACM Conference on Computer Supported Cooperative Work and Social Computing",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cscw"
+     },
+     {
+      "abbr": "CHI",
+      "fullName": "ACM Conference on Human Factors in Computing Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/chi"
+     },
+     {
+      "abbr": "UbiComp/IMWUT",
+      "fullName": "ACM international joint conference on Pervasive and Ubiquitous Computing/ Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/imwut/"
+     },
+     {
+      "abbr": "UIST",
+      "fullName": "ACM Symposium on User Interface Software and Technology",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/uist/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "GROUP",
+      "fullName": "ACM International Conference on Supporting Group Work",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/group/"
+     },
+     {
+      "abbr": "IUI",
+      "fullName": "ACM International Conference on Intelligent User Interfaces",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/iui/"
+     },
+     {
+      "abbr": "ISS",
+      "fullName": "ACM International Conference on Interactive Surfaces and Spaces",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/tabletop/"
+     },
+     {
+      "abbr": "ECSCW",
+      "fullName": "European Conference on Computer Supported Cooperative Work",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ecscw/"
+     },
+     {
+      "abbr": "PERCOM",
+      "fullName": "IEEE International Conference on Pervasive Computing and Communications",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/percom/"
+     },
+     {
+      "abbr": "MobileHCI",
+      "fullName": "ACM International Conference on Mobile Human-Computer Interaction",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mhci/"
+     },
+     {
+      "abbr": "ICWSM",
+      "fullName": "The International AAAI Conference on Web and Social Media",
+      "publisher": "AAAI",
+      "dblp": "https://dblp.org/db/conf/icwsm/index.html"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "DIS",
+      "fullName": "ACM SIGCHI Conference on Designing Interactive Systems",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/ACMdis/"
+     },
+     {
+      "abbr": "ICMI",
+      "fullName": "ACM International Conference on Multimodal Interaction",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/icmi/"
+     },
+     {
+      "abbr": "ASSETS",
+      "fullName": "International ACM SIGACCESS Conference on Computers and Accessibility",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/assets"
+     },
+     {
+      "abbr": "GI",
+      "fullName": "Graphics Interface",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/graphicsinterface/"
+     },
+     {
+      "abbr": "UIC",
+      "fullName": "IEEE International Conference on Ubiquitous Intelligence and Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/uic/"
+     },
+     {
+      "abbr": "INTERACT",
+      "fullName": "International Conference on Human- Computer Interaction of International Federation for Information Processing",
+      "publisher": "IFIP",
+      "dblp": "http://dblp.uni-trier.de/db/conf/interact/"
+     },
+     {
+      "abbr": "IDC",
+      "fullName": "ACM Interaction Design and Children",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/acmidc/"
+     },
+     {
+      "abbr": "CollaborateCom",
+      "fullName": "International Conference on Collaborative Computing:Networking, Applications and Worksharing",
+      "publisher": "Springer",
+      "dblp": "https://dblp.uni-trier.de/db/conf/colcom/"
+     },
+     {
+      "abbr": "CSCWD",
+      "fullName": "International Conference on Computer Supported Cooperative Work in Design",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cscwd/"
+     },
+     {
+      "abbr": "CoopIS",
+      "fullName": "International Conference on Cooperative Information Systems",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/coopis/"
+     },
+     {
+      "abbr": "MobiQuitous",
+      "fullName": "International Conference on Mobile and Ubiquitous Systems: Computing,Networking and Services",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/mobiquitous/"
+     },
+     {
+      "abbr": "AVI",
+      "fullName": "International Working Conference on Advanced Visual Interfaces",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/avi/"
+     }
+    ]
+   }
+  },
+  {
+   "area": "交叉/综合/新兴",
+   "journals": {
+    "A": [
+     {
+      "abbr": "JACM",
+      "fullName": "Journal of the ACM",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jacm/"
+     },
+     {
+      "abbr": "Proc. IEEE",
+      "fullName": "Proceedings of the IEEE",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/pieee/"
+     },
+     {
+      "abbr": "SCIS",
+      "fullName": "Science China Information Sciences",
+      "publisher": "Science in China Press/Springer",
+      "dblp": "http://dblp.uni-trier.de/db/journals/chinaf/"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "Cognition",
+      "fullName": "Cognition",
+      "publisher": "Elsevier",
+      "dblp": "http://www.journals.elsevier.com/cognition/"
+     },
+     {
+      "abbr": "TASAE",
+      "fullName": "IEEE Transactions on Automation Science and Engineering",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tase/"
+     },
+     {
+      "abbr": "TGARS",
+      "fullName": "IEEE Transactions on Geoscience and Remote Sensing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tgrs/"
+     },
+     {
+      "abbr": "TITS",
+      "fullName": "IEEE Transactions on Intelligent Transportation Systems",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tits/"
+     },
+     {
+      "abbr": "TMI",
+      "fullName": "IEEE Transactions on Medical Imaging",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tmi/"
+     },
+     {
+      "abbr": "TR",
+      "fullName": "IEEE Transactions on Robotics",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/trob/"
+     },
+     {
+      "abbr": "TCBB",
+      "fullName": "IEEE-ACM Transactions on Computational Biology and Bioinformatics",
+      "publisher": "IEEE/ACM",
+      "dblp": "http://dblp.uni-trier.de/db/journals/tcbb/"
+     },
+     {
+      "abbr": "JCST",
+      "fullName": "Journal of Computer Science and Technology",
+      "publisher": "SCIENCE PRESS",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jcst/"
+     },
+     {
+      "abbr": "JAMIA",
+      "fullName": "Journal of the American Medical Informatics Association",
+      "publisher": "BMJ Journals",
+      "dblp": "http://dblp.uni-trier.de/db/journals/jamia/"
+     },
+     {
+      "abbr": "WWW",
+      "fullName": "World Wide Web",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/journals/www/index.html"
+     },
+     {
+      "abbr": "FCS",
+      "fullName": "Frontiers of Computer Science",
+      "publisher": "Higher Education Press",
+      "dblp": "http://dblp.uni-trier.de/db/journals/fcsc/"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "JBHI",
+      "fullName": "IEEE Journal of Biomedical and Health Informatics",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/journals/titb/"
+     },
+     {
+      "abbr": "TBD",
+      "fullName": "IEEE Transactions on Big Data",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/journals/tbd/"
+     },
+     {
+      "abbr": "JBI",
+      "fullName": "Journal of Biomedical Informatics",
+      "publisher": "Elsevier",
+      "dblp": "https://dblp.uni-trier.de/db/journals/jbi/"
+     },
+     {
+      "abbr": "TII",
+      "fullName": "IEEE Transactions on Industrial Informatics",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/journals/tii/index.html"
+     },
+     {
+      "abbr": "TCPS",
+      "fullName": "ACM Transactions on Cyber-Physical Systems",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/tcps/index.html"
+     },
+     {
+      "abbr": "TOCE",
+      "fullName": "ACM Transactions on Computing Education",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/jeric/index.html"
+     },
+     {
+      "abbr": "FITEE",
+      "fullName": "Frontiers of Information Technology & Electronic Engineering",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/journals/jzusc/index.html"
+     },
+     {
+      "abbr": "TCSS",
+      "fullName": "IEEE Transactions on Computational Social Systems",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.org/db/journals/tcss/index.html"
+     }
+    ]
+   },
+   "conferences": {
+    "A": [
+     {
+      "abbr": "WWW",
+      "fullName": "International World Wide Web Conference",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/www/"
+     },
+     {
+      "abbr": "RTSS",
+      "fullName": "IEEE Real-Time Systems Symposium",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/rtss/"
+     },
+     {
+      "abbr": "WINE",
+      "fullName": "Conference on Web and Internet Economics",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/wine/index.html"
+     }
+    ],
+    "B": [
+     {
+      "abbr": "CogSci",
+      "fullName": "Annual Meeting of the Cognitive Science Society",
+      "publisher": "Psychology Press",
+      "dblp": "http://cognitivesciencesociety.org/conference2013/index.html"
+     },
+     {
+      "abbr": "BIBM",
+      "fullName": "IEEE International Conference on Bioinformatics and Biomedicine",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/bibm/"
+     },
+     {
+      "abbr": "EMSOFT",
+      "fullName": "International Conference on Embedded Software",
+      "publisher": "ACM/IEEE/IFIP",
+      "dblp": "http://dblp.uni-trier.de/db/conf/emsoft/"
+     },
+     {
+      "abbr": "ISMB",
+      "fullName": "International conference on Intelligent Systems for Molecular Biology",
+      "publisher": "Oxford Journals",
+      "dblp": "https://dblp.org/db/conf/ismb/index.html"
+     },
+     {
+      "abbr": "RECOMB",
+      "fullName": "Annual International Conference on Research inComputational Molecular Biology",
+      "publisher": "Springer",
+      "dblp": "http://dblp.uni-trier.de/db/conf/recomb/"
+     },
+     {
+      "abbr": "MICCAI",
+      "fullName": "International Conference on Medical Image Computing and Computer-Assisted Intervention",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/miccai/index.html"
+     }
+    ],
+    "C": [
+     {
+      "abbr": "AMIA",
+      "fullName": "American Medical Informatics Association Annual Symposium",
+      "publisher": "AMIA",
+      "dblp": "http://dblp.uni-trier.de/db/conf/amia/"
+     },
+     {
+      "abbr": "APBC",
+      "fullName": "Asia Pacific Bioinformatics Conference",
+      "publisher": "BioMed Central",
+      "dblp": "http://dblp.uni-trier.de/db/conf/apbc/"
+     },
+     {
+      "abbr": "IEEE BigData",
+      "fullName": "IEEE International Conference on Big Data",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/bigdataconf/"
+     },
+     {
+      "abbr": "IEEE CLOUD",
+      "fullName": "IEEE International Conference on Cloud Computing",
+      "publisher": "IEEE",
+      "dblp": "http://dblp.uni-trier.de/db/conf/IEEEcloud/"
+     },
+     {
+      "abbr": "SMC",
+      "fullName": "IEEE International Conference on Systems, Man, and Cybernetics",
+      "publisher": "IEEE",
+      "dblp": "https://dblp.uni-trier.de/db/conf/smc/"
+     },
+     {
+      "abbr": "COSIT",
+      "fullName": "International Conference on Spatial Information Theory",
+      "publisher": "ACM",
+      "dblp": "http://dblp.uni-trier.de/db/conf/cosit/"
+     },
+     {
+      "abbr": "ISBRA",
+      "fullName": "International Symposium on Bioinformatics Research and Applications",
+      "publisher": "Springer",
+      "dblp": "https://dblp.uni-trier.de/db/conf/isbra/"
+     },
+     {
+      "abbr": "SAGT",
+      "fullName": "International Symposium on Algorithmic Game Theory",
+      "publisher": "Springer",
+      "dblp": "https://dblp.org/db/conf/sagt/index.html"
+     },
+     {
+      "abbr": "SIGSPATIAL",
+      "fullName": "ACM Special Interest Group on Spatial Information",
+      "publisher": "ACM",
+      "dblp": "https://dblp.org/db/journals/sigspatial/index.html"
+     },
+     {
+      "abbr": "ICIC",
+      "fullName": "International Conference on Intelligent Computing",
+      "publisher": "Springer-Nature",
+      "dblp": "https://dblp.org/db/conf/icic/index.html"
+     }
+    ]
+   }
+  }
+ ]
+}

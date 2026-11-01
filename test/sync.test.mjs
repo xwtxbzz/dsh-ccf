@@ -12,7 +12,7 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { loadCache, readTar, recordsFromCcfddlDir, recordsFromCcfddlTar, recordsFromJson, saveCache, syncSources } from '../lib/sync.js'
+import { inspectCache, loadCache, readTar, recordsFromCcfddlApi, recordsFromCcfddlDir, recordsFromCcfddlTar, recordsFromJson, saveCache, syncSources } from '../lib/sync.js'
 
 let passed = 0
 const test = async (name, fn) => {
@@ -140,6 +140,44 @@ await test('recordsFromCcfddlTar：本地 HTTP + gzip 全链路', async () => {
   }
 })
 
+await test('同步不能把用户的选择冲掉（meta 要跟着数据一起留）', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'dsh-ccf-sync-meta-'))
+  const server = createServer((request, response) => {
+    if (request.url === '/data.json') {
+      response.writeHead(200, { 'content-type': 'application/json' })
+      response.end(JSON_PAYLOAD)
+      return
+    }
+    response.writeHead(500)
+    response.end('boom')
+  })
+  await new Promise((resolvePromise) => server.listen(0, '127.0.0.1', resolvePromise))
+  const { port } = server.address()
+  try {
+    // 先放一份带 meta 的缓存（用户点过"采信"、有自动更新时间）
+    await saveCache(dir, {
+      schema: 'dsh-ccf/cache/v1',
+      updatedAt: 1_700_000_000_000,
+      reports: [],
+      records: [{ key: 'cvpr|2027', venue: 'CVPR', year: 2027, deadline: 1_900_000_000_000 }],
+      meta: { preferredByVenue: { cvpr: 'paper-deadlines' }, lastAutoUpdateAt: 1_700_000_000_000 },
+    })
+    const result = await syncSources({
+      dataDir: dir,
+      sources: [{ id: 'local-json', type: 'json', url: `http://127.0.0.1:${port}/data.json` }],
+      timeoutMs: 5000,
+    })
+    assert.equal(result.ok, true)
+    const cached = await loadCache(dir)
+    assert.deepEqual(cached.meta?.preferredByVenue, { cvpr: 'paper-deadlines' }, '采信记忆不能被同步冲掉')
+    assert.equal(cached.meta?.lastAutoUpdateAt, 1_700_000_000_000, '自动更新时间也要留着')
+    assert.equal(cached.records.length, 1, '数据本身照常替换')
+  } finally {
+    await new Promise((resolvePromise) => server.close(resolvePromise))
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
 await test('syncSources：JSON 源成功、多源合并去重、失败时保留旧缓存', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'dsh-ccf-sync-'))
   const server = createServer((request, response) => {
@@ -196,4 +234,75 @@ await test('syncSources：JSON 源成功、多源合并去重、失败时保留�
   }
 })
 
+await test('recordsFromCcfddlApi：解析官方接口 JSON，空目录报错', () => {
+  const payload = JSON.stringify({
+    conferences: [
+      {
+        title: 'SIGKDD',
+        description: 'ACM SIGKDD Conference on Knowledge Discovery and Data Mining',
+        sub: 'DB',
+        rank: { ccf: 'A' },
+        confs: [{
+          year: 2027,
+          timezone: 'AoE',
+          link: 'https://kdd2027.example.org/',
+          date: 'August 1-5, 2027',
+          place: 'San Jose, California, USA',
+          timeline: [{ abstract_deadline: '2026-07-19 23:59:59', deadline: '2026-07-26 23:59:59' }],
+        }],
+      },
+    ],
+  })
+  const records = recordsFromCcfddlApi(payload, 'ccfddl-api', { now: Date.parse('2026-10-31T12:00:00Z') })
+  assert.equal(records.length, 1)
+  assert.equal(records[0].venue, 'SIGKDD')
+  assert.equal(records[0].rank, 'CCF-A')
+  assert.equal(records[0].place, 'San Jose, California, USA')
+  assert.equal(new Date(records[0].deadline).toISOString(), '2026-07-27T11:59:59.000Z')
+  assert.throws(() => recordsFromCcfddlApi('{"conferences":[]}', 'ccfddl-api'), /没有解析出任何会议/)
+})
+
+await test('inspectCache 分得清"没有文件""JSON 坏了""结构不对""正常"', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'ccf-inspect-'))
+  try {
+    const empty = await inspectCache(dir)
+    assert.equal(empty.state, 'missing')
+    assert.equal(empty.cache, null)
+
+    const file = join(dir, 'cache.json')
+    await writeFile(file, '{"schema":"dsh-ccf/cache/v1","records":[{"venue":"CVPR"', 'utf8')
+    const broken = await inspectCache(dir)
+    assert.equal(broken.state, 'corrupt')
+    assert.match(broken.error, /JSON/)
+    assert.equal(broken.file, file)
+
+    await writeFile(file, '{"hello":"world"}', 'utf8')
+    const odd = await inspectCache(dir)
+    assert.equal(odd.state, 'corrupt')
+    assert.match(odd.error, /records/)
+
+    await writeFile(file, '{"schema":"dsh-ccf/cache/v1","records":[]}', 'utf8')
+    const fine = await inspectCache(dir)
+    assert.equal(fine.state, 'ok')
+    assert.deepEqual(fine.cache.records, [])
+    // 老接口语义不变：读不出来还是 null
+    assert.equal(await loadCache(join(dir, 'nope')), null)
+  } finally {
+    await rm(dir, { recursive: true, force: true }).catch(() => {})
+  }
+})
+await test('缓存写不进去时说人话，并且不假装同步成功', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'ccf-writefail-'))
+  try {
+    const file = join(dir, 'not-a-dir')
+    await writeFile(file, 'x', 'utf8')
+    const result = await syncSources({ sources: [], dataDir: file, timeoutMs: 500 })
+    assert.equal(result.ok, false)
+    assert.match(result.saveError, /不是一个目录/)
+    assert.match(result.report, /缓存写不进去/)
+    assert.match(result.report, /旧缓存没有被改动/)
+  } finally {
+    await rm(dir, { recursive: true, force: true }).catch(() => {})
+  }
+})
 console.log(`\n${passed} passed`)

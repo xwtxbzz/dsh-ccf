@@ -5,3 +5,5 @@ dsh-ccf.json
 cache.json
 .DS_Store
 Thumbs.db
+# 临时排查脚本（不是插件的一部分）
+_*.mjs

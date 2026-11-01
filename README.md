@@ -2,9 +2,24 @@
 
 > 给定一句话，知道下一个 CCF 截稿还有几天。
 
-DSH 插件：把 CCF 会议的**截稿时间**变成 agent 真正知道的事实——工具能查、命令能筛、系统提示里常驻最近 30 天的截稿。
+DSH 插件：把 CCF 会议的**截稿时间**变成 agent 真正知道的事实——工具能查、命令能筛、系统提示里常驻最近 30 天的截稿，桌面端右侧还有一块常驻面板把每个会议的截稿 / 审稿决定 / rebuttal / 开会时间与地点一次列清。
+
+名单来自 **CCF 官方目录**（仓库内自带 362 个会议、233 个期刊的快照）；截稿时间默认直接走 **[CCFDDL 官方接口](https://ccfddl.com/conference/allconf.json)**（383 个会议系列，含 rebuttal 与决定时间），接口没覆盖的会议由**模型**去搜官网、抓主页、抽出时间点，每周自动懒更新；没有可用模型时用 [paper-deadlines](https://yzyhhhstudy.github.io/paper-deadlines/) 兜底，并在面板与系统提示里注明出处、致谢维护者。
 
 <!-- 徽章位置：发布到 GitHub 后替换为 CI / npm 徽章 -->
+
+- **两个源说法打架的会会标出来**：清单行尾带「来源冲突」，`--conflicts` 只看这些，status 里也会说「来源：N 条…」；日期不是唯一说法时别当定论转述。
+
+- **面板里也能批量采信**：「不一致」视图顶上一句「这些冲突统一采信：`<来源> N`」，点一下就按这个来源显示那批冲突。
+
+- **批量采信能撤回**：冲突视图里「已采信：撤销 `<来源> N`」一键恢复默认，只回滚那个来源，别的采信不碰。
+
+- **结构化数据与文本同步**：`ccf_deadlines` 的 `data.rows` 带 `satellite` / `conflict` 标；`ccf_venue` 的 `data.rows` 补齐 `abstractDeadline` / `notification` / `rebuttal`（没有就 `null`，不让模型以为字段不存在）。
+- **不再有 CR（camera-ready）**：上游本来就没有这个字段，面板上每行都写「上游未提供」只会占地方；数据、工具、面板、ICS、prompt 里都去掉了，`ccf_venue` 的 `data` 里也不会再出现 `cameraReady` 键。
+
+- **注入给模型的摘要也标冲突**：系统提示里的截稿行会带「来源冲突」，并在末尾说明"日期不是唯一说法"，别让模型把单源日期当定论转述。
+
+- **裁决过的冲突看得出来**：清单行写「按 `<来源>` 显示」，报告与 `/ccf status` 说「其中 M 条你已经采信了某个来源」，`data.rows` 也带 `preferredSource`。
 
 ## 它解决什么
 
@@ -12,10 +27,12 @@ DSH 插件：把 CCF 会议的**截稿时间**变成 agent 真正知道的事实
 | --- | --- |
 | 问「CVPR 什么时候截稿」，agent 凭训练记忆编一个日期 | `ccf_deadlines` 返回数据里的真实日期 + 倒计时 + 官方主页 |
 | 要自己开三个网页核对 AoE 与北京时间 | 时间在返回时已按 `Asia/Shanghai` 换算，并标注 AoE 来源 |
-| 想起某个会时才去查，容易错过 | 系统提示里常驻「未来 30 天 5 个截稿」，每轮都看得见 |
+| 想起某个会时才去查，容易错过 | 系统提示里常驻「未来 30 天 5 个截稿」，桌面端右侧面板还把时间轴摊开 |
 | 数据来源不明、过期了也没人知道 | 缓存带 `updatedAt`，超过 `staleHours` 就不再注入，明确显示"数据未同步" |
+| 小众会议上游没收录，就永远查不到 | 自带 CCF 官方名单（362 个会议），名单里有但没数据的会由模型去官网挖 |
+| 手工补几十个会议的官网太累 | 每周自动懒更新：只补"还没有时间点"和"该有下一届了"的会，一次最多 6 个 |
 
-**边界（重要）**：插件**不内置任何日期**。首次使用必须 `/ccf sync` 拉一次数据；离线时用上次缓存，从不编造。
+**边界（重要）**：插件**不内置任何日期**。日期只有三个来源——CCFDDL 官方接口（标 `source: ccfddl-api`）、模型从会议官网抽出来的（标 `source: model` + 抓取时间）、paper-deadlines 兜底（标出来源）。都没有时，面板显示 `—`，绝不填一个看起来合理的日期。
 
 ## 安装
 
@@ -35,7 +52,7 @@ dsh plugin --profile desktop add file:D:\doctor\dsh-ccf
 
 **C. 手动挂载**：把包名加入 profile 的 `dsh.profile.bundles`，然后重启 DSH。
 
-装完重启 DSH（无客户端代码，不需要 `dev:web`）。确认加载：
+装完重启 DSH（客户端产物是预先写好的，不需要跑 `dev:web`）。确认加载：
 
 ```bash
 dsh plugin --profile desktop list | grep ccf
@@ -44,24 +61,125 @@ dsh plugin --profile desktop list | grep ccf
 ## 60 秒上手
 
 ```text
-/ccf sync                 # 拉一次数据（唯一必须做的准备）
+/ccf sync                 # 拉一次 ccfddl / 公开 JSON 数据
+/ccf update               # 按 CCF 名单让模型去官网挖数据（懒更新，一次最多 6 个会）
+/ccf update --focus CVPR  # 只补名字里带 CVPR 的
+/ccf update --area 人工智能 # 只补这个方向的会（十个方向任选，也认 "CV" 这类英文片段）
+/ccf update --scope past  # 只补"缓存里只有往届日期"的会（--scope never = 从未抓到）
+/ccf update --force       # 连"上次挖过但超过 refreshDays"的也重挖
 /ccf list                 # 未来 120 天，按截稿升序
 /ccf list --rank CCF-A    # 只看 A 类
 /ccf list --area CV --limit 5
 /ccf list --search neur   # 名字模糊搜
 /ccf venue CVPR           # 单个会议的详情 + 往届截稿 + 录用率
-/ccf status               # 缓存来自哪、多久前同步、多少条
+/ccf prefer CVPR          # 两个来源给的日期不一样时，看现在按哪一路显示
+/ccf prefer CVPR paper-deadlines   # 采信另一路（--reset 恢复默认）
+/ccf status               # 版本、缓存来自哪、多久前同步、名单里还有几个会待补
 /ccf config               # 当前生效配置
+/ccf help                 # 全部子命令与用法（/ccf 不带参数也打印它）
 ```
 
 对应工具（agent 自己会调）：
 
 | 工具 | 参数 | 说明 |
 | --- | --- | --- |
-| `ccf_deadlines` | `days` `rank` `area` `search` `limit` `includePast` `refresh` | 按窗口/等级/方向列出截稿 |
+| `ccf_deadlines` | `days` `rank` `area` `search` `limit` `includePast` `pending` `refresh` | 按窗口/等级/方向列出截稿；`pending: true` 改为列出名单里还没挖到数据的会 |
 | `ccf_venue` | `venue` `refresh` | 查单个会议（精确优先，否则模糊） |
+| `ccf_update` | `limit` `force` `focus` | 按 CCF 名单跑一次模型挖掘（懒更新） |
 
 `refresh` 置真时先同步再回答——适合"我现在就要最新日期"的场景，代价是等一次网络。
+
+`ccf_deadlines` 的返回里始终带一行覆盖度说明（`名单共 362 个会议：N 个有截稿数据，M 个还没挖到`），避免把"这个窗口里只有 20 条"误读成"CCF 只有 20 个会"。命令行等价写法是 `/ccf list --pending`。
+
+## 右侧面板（桌面端）
+
+装好后桌面端右侧边缘会多出一条 **`📅 会议`** 标签：点开是一列可滚动的会议卡片，每个会议一张，直接列出
+
+| 字段 | 含义 | 数据来源 |
+| --- | --- | --- |
+| 截稿 | 论文截稿（含倒计时） | 上游 `deadline` |
+| 摘要截止 | abstract deadline | 上游 `abstractDeadline` |
+| 审稿决定 | 通知时间 | 上游 `notification` |
+| rebuttal | rebuttal 开始时间 | 上游 `rebuttal`（只有部分会议有） |
+| 开会 / 地点 | 会期与城市 | 上游 `confDate` / `place` |
+| 官方口径 | 截稿在**上游时区**下的写法（`AOE 2026-11-16 23:59`） | 记录里的 `timezone`（CCFDDL 的 `AoE` / `UTC-12` / `PT`…） |
+| 往届截稿 | 同一会议往届的截稿日期，最多 3 条 | CCFDDL 同一系列其它届的 `timeline`；上游没给就为空 |
+
+面板顶部可以按天数窗口（30/60/120/240/365 天）、CCF 等级（A/B/C）、**方向**（CCF 名单的十个方向，如「人工智能」「计算机图形学」）和会议名过滤，右上角有「刷新」（重读本机缓存）、「补数据」（让模型去官网挖，懒更新，一轮补几个，几十秒）、「同步」（从 CCFDDL 接口拉全部，几秒）。面板左边缘可以**拖动改宽度**（300–720px，记在 `localStorage`），开合状态也记在那里，重开窗口保持原状，按 `Esc` 也能收起。
+
+几个为"少解释一句"做的设计（见 `docs/product-review.md`）：
+
+- **打开就有数据**：缓存为空、或超过 6 小时没更新时，面板打开会自动跑一次接口同步，不需要先搞懂「补数据」和「同步」的区别。
+- **官方口径悬停可见**：截稿值悬停显示官网那个时区的时间（`UTC-12:00 2026-11-16 23:59`），`ccf_venue` 的每届行也写「官方口径 …」；主显示仍是本地时区，方便排日程。
+- **只用键盘也能看完**：卡片标题行可 Tab 聚焦、`Enter`/空格展开；面板打开时焦点进面板、`Esc` 收起后焦点回到标签；提示条与报错对读屏软件可见（`role="status"` / `role="alert"`）。
+
+
+- **两个窗口一起用不会互相写没**：补数据期间别处同步到的会会被并进去（不是覆盖）；另一个窗口正在补数据时，这一轮直接说"还在跑"，锁超过 10 分钟自动作废（不卡死）。
+- **数据目录指错会先报目录**：`dataDir` 指到一个普通文件时，`/ccf status` 说"数据目录不是一个目录"，不会误诊成"缓存 JSON 坏了"。
+- **写不进去会讲人话**：数据目录指错（例如指到一个同名文件）、没有权限、磁盘满，`/ccf sync` 与补数据都会说"缓存写不进去：…（旧缓存没有被改动）"，而不是抛 `EEXIST` 堆栈。
+- **默认时区跟着这台机器走**：换一台电脑（人在国外）不再默认北京时间；显式配了 `timezone` 的仍以配置为准。
+- **缓存坏了会说"坏了"**：`cache.json` 被改坏时，面板与 `/ccf status` 直接说"缓存文件读不出来"并给出文件路径，而不是显示成"还没有数据"。原文件不会被覆盖，可以先备份再同步重建。
+- **被 limit 截断会自己说出来**：`ccf_deadlines` 说"365 天内共 133 个，这里列出前 8 个"，`data.matched / data.hidden` 也一起返回——不会再有"一年只有 8 个会"的假象。
+- **名单外的会也能补**：面板上 `CoRL`、`EACL` 这类"CCFDDL 收了、CCF 名单没收"的卡片，卡片里直接写「不在 CCF 名单里」并给「补这个会」；`ccf_update({focus:'CoRL'})` 也会真的去搜它，而不是回"没有需要补的会"。
+- **名单外的会单独算**：CCFDDL 收了、CCF 名单没收的会（CoRL / EACL / CICAI…）不进「待补」也不进「有数据」，面板状态行与 `/ccf status` 会单独写一句「名单外 N 个会」——所以 `有数据 + 待补` 永远等于 362。卫星会（`CVPR Workshops`、`SIGGRAPH Asia`、`HotStorage`…）同样不进这一笔：它们有自己的「卫星会」档与开关，不计进「名单外」，两笔账互不包含。
+- **命令行的数字和面板是同一个口径**：`/ccf status` 的覆盖度（有未来截稿 / 待补 / 其中只有往届 / 从未抓到）跟面板、`ccf_deadlines` 共用 `catalogCoverage`；`/ccf config` 列出的是真正在用的第一数据源（CCFDDL 接口），不是旧的写死值。
+- **查一个会时会把"两套权威"说清楚**：`ICLR` 这类"数据里有、CCF 名单里没有"的会，详情末尾会补一行"不在 CCF 名单（362 个）里，等级来自 CCFDDL；按等级筛选与「待补」统计都不含它"。查不到时也分两种说法：名单里有、只是还没挖到（直接告诉你 `/ccf update --focus` 怎么补），和名单外也没有（告诉你会收不进来）。
+- **哪个源这次没拉到会说出来**：状态行最前面给红字 `⚠ 1/2 个源没拉到（paper-deadlines）`，悬停能看到每个源的错误原文；两个源全挂（还留着旧数据）时显示 `⚠ 上次同步失败：…`。只看"更新时间"是会被骗的——一个源悄悄失败，数据只是变旧，不会报警。
+- **出错时说人话**：路由没挂上 / 旧模块 / 端口变了 / 服务端 5xx，会翻成一句能照做的话（多数指向「重启一次桌面端」），并给一个「重试」按钮；面板收起时标签会亮 ⚠。
+- **一键重置筛选**：搜索 / 等级 / 方向 / 天数任一项偏离默认时，工具栏出现「重置筛选」，一次清空四项并把天数恢复 120。
+- **顶部紧急条**：7 天内有截稿时，标题下会出现一条 `7 天内 N 个截稿 · 最紧：XXX 还剩 …`；没有就不渲染，不占位置。
+- **卡片可展开**：点会议名展开别名、录用率、h5、核心等级与投稿入口；再点收起。摘要截止用弱化颜色，不和截稿抢注意力。展开后还会多两行：**官方口径**（`AOE 2026-11-16 23:59` 这种原始时区的写法，跟官网对照时不会再觉得差了一天）与**往届截稿**（`2026: 2025-11-13 / 2025: 2024-11-14`，判断"今年会不会提前"就看这个；上游没给就往届那一行不出现）。
+- **长任务有回执与读秒**：「补数据」进行中状态行会显示 `正在补数据… 已 N 秒`，跑完显示模型给的回执（本轮成功/失败几个、失败原因、**按方向各补成几个**），之后常驻 `上次补数据：成功 X / 失败 Y`。
+- **刚补到的会打「新」**：最近 24 小时内由模型挖到的记录，卡片右上角有红字「新」，一眼看出这一轮补到了哪几个。
+- **关注（★）**：点卡片右侧的 ☆ 把它钉住——关注的会**不受天数窗口与"截稿已过"限制**，永远排在列表最前；面板收起时，标签上直接显示 `★N 最近哪个会 + 倒计时`。关注列表存在 `localStorage`（`dsh-ccf:pins`），纯客户端、不写缓存，多个窗口共享。
+- **待补卡片可查 DBLP**：还没挖到日期的会，卡片上有 `DBLP ↗` 直达它的会议主页，方便自己先看一眼。
+- **来源不一致会说出来**：插件同时吃 CCFDDL 与 paper-deadlines 两路数据，两者对同一个会给出不同截稿时，卡片会标一枚红框「来源不一致」（展开详情能看到另一来源给的是哪天）；差一天以内的只留痕、不打标记，免得天天吵。`/ccf venue` 也会多一行 `来源不一致：…`。
+- **可以采信另一来源**：展开卡片后每条"另一种说法"旁边有「采信」按钮（也可以 `/ccf prefer CVPR paper-deadlines`），之后卡片、复制清单、`.ics`、工具查询都按你选的那条显示，再点「恢复默认」（`/ccf prefer CVPR --reset`）就回到插件自己的首选。它只记"你信哪一路"，**不改缓存里的主记录**，所以下轮同步不会把你的选择冲掉，也不会把数据改坏。
+- **采信记得住这个会**：同一个会每年都会冲突一次，所以「采信」会顺手记到**会议系列**上（`IEEE/CVF CVPR`、`CVPR 2027`、`cvpr` 都算同一个），明年新一届没再点时自动沿用，卡片上会写"沿用你给这个会设的来源"；「恢复默认」把这次的选择和系列记忆一起清掉。
+- **底部印版本**：`dsh-ccf vX.Y.Z`。宿主端服务模块与客户端 bundle 的生效时机不同，看不到期望的变化时先看这个版本号——如果显示"宿主端未返回版本号（旧模块）"，就是桌面端还没重启。
+- **复制 / 日历**：工具栏「复制」把当前视图（含筛选、关注、方向）导出成制表符清单，直接贴周报/邮件；「日历」把它导成 `.ics`，导入系统日历后每个会是一条截稿提醒（有审稿决定时间的再加一条）——**每条都带提前一天的通知**（`VALARM`），不是静默日程。**已过期与待补的会不导出**——日历里塞进死线只会让人误删提醒。
+- **默认停在「有数据」**：一打开先看真正有日期的会；三个视图 chips 上直接印着数量（`全部 362 / 有数据 112 / 待补 250`），不用点进去数。
+- **模型挖错了可以重挖**：模型挖到的记录，展开详情里有「重挖这个会」（来自 CCFDDL 权威源的记录不提供，避免把好数据覆盖成模型猜的）
+- **关注的会可以只看这些**：点卡片右上角 ☆ 关注；关注过的会不受天数/截稿时间限制，工具栏还会多出「关注 N」视图
+- **补数据时看得见在补第几个**：状态行显示 `正在补数据 3/6：CVPR · 61 秒（本轮已补到 2 个，没补到 1 个）`，挖掘期间每 2.5 秒刷新一次
+- **没有模型时「补数据」是灰的**：宿主会在 `meta.modelReady` 里告诉面板模型在不在；不在时按钮置灰、提示"先用「同步」"，不会出现"点了半天其实什么都没挖"的错觉。
+- **认不出来就算名单外**：简称撞车、全称又一个有区分度的词都对不上时（例如边缘计算的 `SEC` vs 信息安全 `SEC`），插件宁可不认领、把它算「名单外」，也不把数据塞给别的会。
+- **一个简称只算一个会**：CCF 名单里 `FSE` 既是软工 CCF-A 会也是安全 CCF-B 会，`MMAsia` 与 `ACM MM` 也容易被混。现在一条记录只归给最像的那个会（比全称），不会出现「一份数据把两个会都喂饱」，`/ccf venue FSE` 还会点明名单里有几个同简称的会。
+- **没有急事时只写一行**：7 天内没有截稿时，注入退化成一行摘要（`未来 200 天内共 78 个截稿，7 天内没有要交的；最近：PODS 2027 2026-12-11 19:59（40 天后）`），约 58 token。
+- **系统提示只花 171 token**：注入段默认只列 3 条最近的截稿（并写清「30 天内共 34 个」），从 8 条 650 字符降到 3 条 342 字符；要看全的用 `ccf_deadlines`。
+- **给模型的摘要不说假数**：系统提示里若只列了前几条，会写「共 34 个截稿，这里列出前 8 个」——不会把「列了 8 条」说成「一共 8 个」。
+- **模型挖到的日期带出处**：展开卡片会多一行「挖自 https://…」，`/ccf venue` 同样会写；不信就点进去看，不对就当场「重挖这个会」。
+- **名单文件读不出来会说**：`catalogPath` 指错、名单 JSON 被截断时，顶部红字提示「CCF 名单文件读不出来」，`/ccf status` 写清是哪个文件、坏在哪一步——不会悄悄显示成「名单 0 个」「待补 0」；如果名单和缓存同时坏，两条都会列出来，不互相盖掉。
+- **缓存里的时间是字符串也不怕**：别的工具或手改写进去的 ISO 字符串会被认出来，`数据时间`、`数据同步于` 不再显示成空白。
+- **同一时间只跑一轮补数据**：连点两下「补数据」、或者两个窗口同时点，第二下会立刻收到"上一轮还在跑（已 N 秒）"的提示，而不是排进队列、把缓存写乱。
+- **收起时也知道有新东西**：面板合上后，如果后台补到了新会、或某个会的截稿时间被改了，右侧小标签会亮一个红字「新」；展开看过一次就消失（记在 `localStorage` 的 `dsh-ccf:seen`）。
+- **待补能按类补、能补单个**：切到「待补」视图时，工具栏会多出 `补往届 N` / `补从未 M` 两个按钮（对应"只有往届日期"和"从未抓到"），点一下只补这一类；每张待补卡片上还有「补这个会」，只针对它跑一次。这样不用为了补 3 个会而把整份名单再扫一遍。
+- **关注能批量**：工具栏有「全关注」（把当前视图里真正有数据的会一次钉住，重复的不会再加）与「清关注 N」（全部清掉）；一个个点 ☆ 之外，挑十个会不用点十次。
+
+**面板列的是整份 CCF 名单，不是只有数据的那些会**：标题栏显示 `名单 362 个 · 有数据 N · 待补 M`，工具栏的「全部 / 有数据 / 待补」三个视图可以切换。名单里还没挖到日期的会以灰一档的卡片出现、标「待补」——它们不受天数窗口限制（没有日期可筛），所以不会因为"窗口只有 120 天"而从列表里消失。点「补数据」就会从待补里挑几个去挖。
+
+**这三个数字是自洽的**：`有数据 + 待补 = 名单总数`（362）。「待补」再拆成两类，鼠标悬停标题栏就能看到：**只有往届日期**（缓存里有这个会，但所有时间点都过去了，需要挖下一届）和**从未抓到**（一条记录都没有）。面板、`/ccf list` 的覆盖度行、`/ccf status`、系统提示里的"数据状态"用的是同一份判定（`lib/catalog.js` 的 `catalogCoverage` + `matchVenue`），所以不会出现"提示词说 56、面板说 250"这种互相矛盾的数。
+
+**为什么是浮层而不是原生右列**：当前发布版（0.1.0-rc.6）的布局只声明了 `sidebar` / `conversation` / `details` 三个子槽，且都被官方 UI 占着——在那里注册就是**替换**整列，不是追加。`shell.overlay` 是列表型、默认点击穿透的整框浮层，恰恰是"追加一块自己的面"的官方位置；面板只在自己的卡片上恢复指针事件，不会挡住底下的对话。等 `dsh-client-ui-sidebar-right` 进入稳定版后，同一份数据可以直接搬过去，不需要改宿主侧。
+
+数据由宿主路由提供（`GET /dsh-ccf/api/v1/records`、`POST /dsh-ccf/api/v1/sync`、`POST /dsh-ccf/api/v1/update`），只对回环地址开放。面板和 agent 读的是同一份缓存文件，所以 `/ccf sync` 或 `/ccf update` 之后刷新面板就能看见新日期。
+
+**首次使用**：面板在没有缓存、或数据超过 6 小时没更新时，打开就会自动从 CCFDDL 接口同步一次（几秒），不需要先做任何事；接口没覆盖的会再点「补数据」让模型去搜官网。
+
+## 数据是怎么来的
+
+三层，按顺序尝试，全部可追溯：
+
+1. **CCFDDL 官方接口（默认主数据源，不需要模型）**——`/ccf sync` 直接拉 [https://ccfddl.com/conference/allconf.json](https://ccfddl.com/conference/allconf.json)（CCFDDL 的机器可读目录，约 780KB，383 个会议系列），一次拿到标题、全称、方向、CCF/CORE/THCPL 等级、每届的截稿 / 摘要截止 / **rebuttal** / **决定（审稿结果）** 时间、会期、地点、官网与投稿时区（`AoE`、`UTC-12`、`PT` 等都按原样解析）。每个会议保留"最近一个还没过截稿的年份"，同一届有多轮投稿时取最近一轮。
+2. **CCF 官方名单（本地快照）**——`data/ccf-catalog.json`，`schema: dsh-ccf/catalog/v1`，抓自 [CCF 推荐国际学术会议和期刊目录](https://www.ccf.org.cn/Academic_Evaluation/By_category/)，含 **362 个会议 + 233 个期刊**。它只回答"有哪些会、什么等级"，**不含任何日期**，用来算"还有哪些会没数据"。
+3. **模型挖掘（需要 `ctx.llm`，补接口没覆盖的会）**——对接口里没有、或名单里"该有下一届了"的会：`web.search` 找官网 → `web.fetch` 抓主页 → 让模型只抽网页里写着的时间点 → 严格清洗（非 ISO、早于 400 天前、晚于 900 天后、`TBD/待定` 一律丢掉）→ 合并进缓存，记录标 `source: "model"` 与 `minedAt`。
+4. **paper-deadlines 兜底**——接口取不到（或某会议接口没有）时，用 [paper-deadlines](https://yzyhhhstudy.github.io/paper-deadlines/data.json) 的公开 JSON 补位，标 `source: "paper-deadlines"`。
+
+**懒更新**：`/ccf update` 每次只挑最该补的几个（默认 6 个 `maxVenuesPerRun`），优先级是「有记录但没时间」>「全新」>「该出下一届」>「超过 `refreshDays` 的旧挖掘」。所以对一个 362 个会的大名单，反复 `/ccf update` 是一部部把名单填满，而不是每次全量重挖。
+
+**每周自动更新**：插件每 30 分钟检查一次，距上次自动更新超过 `autoUpdateDays`（默认 7 天）且当前有可用模型时，自动跑一次 `doUpdate`（同样懒更新、不多挖）。没有任何模型时它什么都不做，不会悄悄降级去改数据。
+
+**致谢**：截稿数据来自 [CCFDDL](https://ccfddl.com)（GitHub: [ccfddl/ccf-deadlines](https://github.com/ccfddl/ccf-deadlines)），感谢其作者长期维护这份公开数据；兜底源是 [paper-deadlines](https://yzyhhhstudy.github.io/paper-deadlines/)。
 
 ## 配置
 
@@ -69,21 +187,29 @@ dsh plugin --profile desktop list | grep ccf
 
 | 键 | 默认 | 说明 |
 | --- | --- | --- |
-| `sources` | 见下 | 数据源数组，`{id, type, url/path}`，`type` = `json` / `ccfddl-dir` / `ccfddl-tar` |
+| `sources` | 见下 | 数据源数组，`{id, type, url/path}`，`type` = `ccfddl-api` / `json` / `ccfddl-dir` / `ccfddl-tar` |
 | `windowDays` | `120` | `/ccf list` 默认往后看多少天 |
 | `leadDays` | `30` | 系统提示里列多近的截稿 |
-| `maxPromptItems` | `8` | 系统提示最多列几条 |
+| `maxPromptItems` | `3` | 系统提示最多列几条（每轮都注入，默认只列 3 条，总数照实写） |
+| `promptSoonDays` | `7` | 这个天数内有截稿才逐条列；没有就只写一行摘要（省 token） |
 | `prompt` | `true` | 是否注入系统提示段 |
 | `timezone` | `Asia/Shanghai` | 展示与解析用的时区 |
 | `staleHours` | `168` | 缓存超过这么多小时就不再注入提示（列表/工具仍可用并提示过期） |
 | `timeoutMs` | `20000` | 单次抓取超时 |
 | `dataDir` | `~/.dsh/ccf` | 缓存目录 |
+| `catalogPath` | `null` | 名单文件路径；`null` = 用包内 `data/ccf-catalog.json` |
+| `mining` | `true` | 是否允许模型挖掘（关掉就只走 ccfddl 回退） |
+| `refreshDays` | `30` | 挖过的会，多少天后算"旧"（配合 `--force` / `autoUpdate`） |
+| `maxVenuesPerRun` | `6` | 单次 `/ccf update` 最多挖几个会（懒更新的闸） |
+| `autoUpdate` | `true` | 是否每周自动跑一次懒更新 |
+| `autoUpdateDays` | `7` | 自动更新的间隔天数 |
 
-默认源只有一个公开 JSON（[paper-deadlines](https://yzyhhhstudy.github.io/paper-deadlines/data.json)），它自带显式时区偏移，所以不需要手算 AoE。想要社区权威数据时，把 [ccfddl](https://github.com/ccfddl/ccf-deadlines) 加进 `sources`：
+默认源是两个：先 CCFDDL 官方接口（`ccfddl-api`，一次请求拿到全部会议目录），再用 paper-deadlines 的 JSON 兜底。两者都自带时区信息（`AoE` / `UTC-12` / `PT` / IANA），所以不需要手算。也可以换成 ccfddl 的仓库归档或本地 clone：
 
 ```json
 {
   "sources": [
+    { "id": "ccfddl-api", "type": "ccfddl-api", "url": "https://ccfddl.com/conference/allconf.json" },
     { "id": "paper-deadlines", "type": "json", "url": "https://yzyhhhstudy.github.io/paper-deadlines/data.json" },
     { "id": "ccfddl-tar", "type": "ccfddl-tar", "url": "https://github.com/ccfddl/ccf-deadlines/archive/refs/heads/main.tar.gz" },
     { "id": "ccfddl-local", "type": "ccfddl-dir", "path": "D:/repos/ccf-deadlines" }
@@ -95,18 +221,25 @@ dsh plugin --profile desktop list | grep ccf
 
 ## 数据与时间语义
 
-- 每条记录带 `deadline`（截稿）、`abstractDeadline`（摘要截止）、`notification`（通知）、`confDate`（会期）、`rank`（CCF-A/B/C/Non-CCF）、`area`、`link`、`history`（往届截稿）、`acceptRate`、`h5`。
-- 解析顺序：有显式偏移（`-08:00` / `Z`）→ 直接 `Date.parse`；无偏移 → 按 `timezone` 解释；只有日期 → 当天 `23:59:59`。
-- AoE（Anywhere on Earth）= UTC-12，源码里是常量 `-720` 分钟，与 DST 无关（AoE 没有夏令时）。
+- 每条记录带 `deadline`（截稿）、`abstractDeadline`（摘要截止）、`notification`（通知/决定）、`rebuttal`（rebuttal 截止）、`confDate`（会期）、`rank`（CCF-A/B/C/Non-CCF）、`area`、`link`、`history`（往届截稿）、`acceptRate`、`h5`，以及 `source`（`ccfddl-api` / `paper-deadlines` / `model`）与 `minedAt`（模型挖掘时间）。camera-ready（CR）时间**不做**：上游没有这个字段，与其每行显示「上游未提供」，不如干脆不出现。
+- 解析顺序：有显式偏移（`-08:00` / `Z`）→ 直接 `Date.parse`；无偏移 → 按该会议的 `timezone` 解释；只有日期 → 当天 `23:59:59`。
+- 时区写法都按原样解析：`AoE`（= UTC-12，无夏令时）、`UTC-12` / `UTC+8` 这类固定偏移、`PT`（= `America/Los_Angeles`，自动处理夏令时）、以及标准 IANA 名字。
+- 记录的 `timezone` 会**原样留着**（归一成 `AoE` / `UTC-12:00` / IANA），面板展开详情里的「官方口径」就是用它算的——所以本地时间与官网差一天时，能一眼看出是时区口径不同，不是数据错了。
+- `history` 由 CCFDDL 同一系列**其它届**的 `timeline` 收来（只收比本届更早的，新的在前，最多 3 条，写成 `2026: 2025-11-13`）；模型单独挖到的新会议没有历史届，这一行就不显示。
+- **方向（`area`）以 CCF 名单的中文大类为准**（如 `人工智能`、`网络与信息安全`）：记录展示与面板筛选都用这一套词表，`--area` / 工具参数也认 `CV`、`AI/ML` 这类上游英文子类片段。上游子类标签会被归一（例如 CCFDDL 的 `SC` 是 Security & Cryptography，显示为「网络与信息安全」，不是「高性能计算」）。
 - 展示一律换算到 `timezone`，并附倒计时（`3 天 21 小时后` / `已过 177 天 2 小时`）。
-- 缓存文件 `~/.dsh/ccf/cache.json`，schema `dsh-ccf/cache/v1`，可直接删掉重同步。
+- 模型挖出来的时间点会**覆盖**同 `venue|year` 的旧值（模型刚看过官网，比缓存新）；空字段才由回退数据补。
+- 缓存文件 `~/.dsh/ccf/cache.json`，schema `dsh-ccf/cache/v1`，`meta` 里记 `lastUpdateAt` / `lastUpdateMined` / `lastUpdateFailed` / `modelUsed` / `fallback` / `pending` / `catalogConferences`，可直接删掉重来。
 
 ## 已知限制
 
-- 数据准确性取决于上游。插件只做归一化与换算，不判断"这个会议今年是否还办"。
-- 覆盖 71 个有截稿日期的主会（含 AI/ML、CV、NLP、Systems、Security、DB、HCI、Theory 等），**没有** BIBM / ISMB / RECOMB / MICCAI 这类生物信息与医学影像会议——因为上游数据里就没有。
-- 第三方 `ccfddl-tar` 源需要能访问 GitHub，国内网络下可能失败（此时用本地 `ccfddl-dir` 或只用默认 JSON 源）。
+- 数据准确性取决于来源。模型抽的是官网页面上的字，官网没写或写得含糊时，宁可不填；插件不判断"这个会议今年是否还办"。
+- **模型挖掘需要宿主提供 `llm` 与 `web` 服务**（DSH 桌面端默认有）。没有模型时自动回退到 ccfddl，并在输出里说明"没有可用模型"，不会静默失败。
+- 名单是 2026-10 抓的 CCF 目录快照，等级变动需重新生成 `data/ccf-catalog.json`（`node scripts/…` 或直接用抓取脚本重跑）。
+- 上游 CCFDDL 覆盖 383 个会议系列（其中约 130 个还有未来截稿），AI/ML、CV、NLP、Systems、Security、DB、HCI、Theory 都在内，也有 ICLR 这类非 CCF 名单会议；但它**没有** BIBM / ISMB / RECOMB / MICCAI 这类生物信息与医学影像会议——名单里有，数据得靠模型挖。同一个会不同年份的数据质量不一样，接口里没写的字段就是空的。
+- 第三方 `ccfddl-tar` 源需要能访问 GitHub，国内网络下可能失败（此时用本地 `ccfddl-dir` 或只走 `ccfddl-api`）。
 - 系统提示段是纯文本摘要，太长会挤占上下文，所以有 `maxPromptItems` 与 `staleHours` 两道闸。
+- 每次 `/ccf update` 会花掉若干次搜索 + 抓取 + 一次模型调用，所以默认一次只挖 6 个会。
 
 ## 开发
 
@@ -115,8 +248,23 @@ cd dsh-ccf
 node test/yaml.test.mjs     # YAML 子集解析
 node test/core.test.mjs     # 时区/倒计时/归一化/查询/提示
 node test/sync.test.mjs     # JSON/目录/tar.gz/缓存（本地 HTTP，不联网）
+node test/catalog.test.mjs  # 名单文件：真实数据 362 会 / 10 方向 / 查找
+node test/miner.test.mjs    # 懒更新计划、官网候选、JSON 解析、清洗、合并、回退
 node test/plugin.test.mjs   # 工具/命令/提示挂载（假 ctx）
+node test/ui.test.mjs       # 面板路由（假 req/res）
+node test/client.test.mjs   # 客户端产物：注册接线 + 行计算 + 格式化
 node test/sdk-smoke.mjs     # 真 SDK 编译 schema（找不到 SDK 会 SKIP）
+```
+
+需要真实环境的两条（不进 `npm test`，本地按需跑）：
+
+```bash
+# 真 cordis + 真 webServer + 真上游：起端口、POST 同步、GET 读回会议
+node test/integration.test.mjs
+
+# jsdom + React 19 真渲染：点开面板、断言卡片里的六个时间字段
+npm i --no-save react@19 react-dom@19 jsdom@25
+node test/panel.render.test.mjs
 ```
 
 Windows 上先 `$env:NODE_NO_WARNINGS='1'`；`node --test <dir>` 在受限沙箱里会 EPERM，逐文件跑。
@@ -129,8 +277,23 @@ Windows 上先 `$env:NODE_NO_WARNINGS='1'`；`node --test <dir>` 在受限沙箱
 | `sync` 报 `ECONNRESET` | 网络到不了源 | 换 `ccfddl-dir` 本地源，或稍后重试 |
 | 时间差 8 小时 | 上游给的是 UTC 无偏移，而 `timezone` 配成了 UTC | 保持 `Asia/Shanghai`，或核对上游字段 |
 | 搜不到某会议 | 上游没有该会 | 这是数据边界，不是 bug |
+| 右侧没有 `📅 会议` 标签 | 客户端产物没被加载：profile 里 `bundles` 缺包名，或装完没重启 | 加进 bundles 后重启；确认包内 `client/client.js` 存在、`package.json` 的 `dsh.client` 与 `exports["./client"]` 都在 |
+| 面板一直「还没有数据」 | 没同步过 | 点面板里的「同步」，或对话里 `/ccf sync` |
+| 面板显示「读取失败：HTTP 403」 | 请求不是从本机发出的（反代/隧道） | 面板路由只允许回环地址，直连 `127.0.0.1` 使用 |
+| rebuttal 显示「上游未提供」 | 上游 JSON 只有部分会议带这个字段 | 属数据边界；点「更新」让模型去官网补，或给 `sources` 加 `ccfddl-tar` |
+| 点「更新」后多数会议仍是 `—` | 当前没有可用模型（`ctx.llm` 未装载），或官网抓不到 | `/ccf status` 看「模型：可用/不可用」；不可用时就是回退模式，属设计内降级 |
+| 名单里明明有某会，却查不到截止时间 | 该会的数据还没挖过 | `/ccf update --focus <简称>` 单独补它 |
+| 每次更新只多出几个会 | 懒更新的 `maxVenuesPerRun` 闸（默认 6） | 想一次多补就 `/ccf update --limit 20`，或调大配置 |
 | 装了但 `/ccf` 不存在 | profile 的 `bundles` 没含包名 | 加进 bundles 后重启 |
 
 ## 许可
 
 MIT
+
+- **截稿清单默认只列主会**：`CVPR Workshops`、`SIGGRAPH Asia` 这类卫星会不进 `ccf_deadlines` 的列表（免得制造假紧急），报告尾部会说略过几个；要一起看就加 `includeSatellites: true` 或 `/ccf list --satellites`，那时每行会标「卫星会」。面板同口径：默认不列，工具栏给一个「卫星会 N」开关（记在 `dsh-ccf:satellites`），状态行会说「另有 N 个卫星会未显示」。
+- **Workshop / 地区分会场单独算**：`CVPR Workshops`、`SIGGRAPH Asia` 这类记录不会把截稿算到主会头上，面板上标「卫星会」且不给「就是这个会」这种会把人引错的选项；查主会时（`ccf_venue` / `/ccf venue`）会另起一行告诉你它的卫星会什么时候截。
+- **我标过哪些**：`/ccf marks [--ignored|--confirmed]` 列出「不是这个会」「就是这个会」两类记录，每类带撤销命令；`/ccf status` 也会报计数，面板状态行显示「已裁决 N」，工具栏的「已裁决」视图只列这些会，展开卡片即可撤销。
+- **核对结论可以记下来**：面板上「建议核对」的卡片展开后有「就是这个会」「不是这个会」，点过的记录不再反复提示；命令是 `/ccf confirm <名字> [--undo]`，面板撤销也在同一处。
+- **可以标成「不是这个会」**：`/ccf ignore <会议名或 key>`，标过的记录不喂任何名单里的会、算「名单外」，`--undo` 撤销；同步不会冲掉这个选择（连同你「采信」的来源一起保留）。
+- 「同一个会两个名字」（S&P / IEEE S&P）只显示一条：按信息完整度留一条，`/ccf status` 用「去重：N 条…」把数字对上。
+- **同步条数不等于缓存条数**：`/ccf status` 会列出各源报了多少条；两个源加起来多于缓存时补一句「合并后缓存里是 N 条」——主源为准、兜底源的说法进「来源冲突」，不是丢数据。

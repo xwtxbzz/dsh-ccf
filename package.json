@@ -1,7 +1,7 @@
 {
   "name": "dsh-ccf",
-  "version": "0.1.0",
-  "description": "CCF conference deadlines inside DeepSeek Harness: sync once, then ask for what is closing, with real dates instead of recalled ones.",
+  "version": "0.63.0",
+  "description": "CCF 会议截稿侦测：CCF 名单 + CCFDDL 数据 + 模型挖掘，面板可裁决「就是这个会 / 不是这个会」",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -9,10 +9,16 @@
     "./core": "./lib/core.js",
     "./sync": "./lib/sync.js",
     "./yaml": "./lib/yaml.js",
-    "./package.json": "./package.json"
+    "./ui": "./lib/ui.js",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json",
+    "./catalog": "./lib/catalog.js",
+    "./miner": "./lib/miner.js"
   },
   "files": [
     "lib",
+    "client",
+    "data",
     "cordis.patch.yml",
     "README.md",
     "docs"
@@ -20,16 +26,27 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ],
+      "platform": "web"
     }
   },
   "scripts": {
-    "test": "node test/yaml.test.mjs && node test/core.test.mjs && node test/sync.test.mjs && node test/plugin.test.mjs && node test/sdk-smoke.mjs",
+    "test": "node test/yaml.test.mjs && node test/core.test.mjs && node test/sync.test.mjs && node test/catalog.test.mjs && node test/miner.test.mjs && node test/plugin.test.mjs && node test/ui.test.mjs && node test/client.test.mjs && node test/sdk-smoke.mjs",
     "test:yaml": "node test/yaml.test.mjs",
     "test:core": "node test/core.test.mjs",
     "test:sync": "node test/sync.test.mjs",
     "test:plugin": "node test/plugin.test.mjs",
+    "test:ui": "node test/ui.test.mjs",
+    "test:client": "node test/client.test.mjs",
     "test:sdk": "node test/sdk-smoke.mjs",
-    "check": "node --check lib/yaml.js && node --check lib/core.js && node --check lib/sync.js && node --check lib/create.js && node --check lib/index.js"
+    "check": "node --check lib/yaml.js && node --check lib/core.js && node --check lib/sync.js && node --check lib/catalog.js && node --check lib/miner.js && node --check lib/ui.js && node --check lib/create.js && node --check lib/index.js && node --check client/client.js",
+    "test:catalog": "node test/catalog.test.mjs",
+    "test:miner": "node test/miner.test.mjs"
   },
   "engines": {
     "node": ">=20"
