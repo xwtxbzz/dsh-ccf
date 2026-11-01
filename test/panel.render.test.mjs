@@ -469,6 +469,9 @@ const afterBulkText = document.body.textContent
 assert.match(afterBulkText, /已采信：/, '采信之后要把"当前采信了谁"摆出来')
 // 采信不减少"说法不一致"的条数（事实没变），但状态行要说清其中几条已经决定过了
 assert.match(afterBulkText, /1 条来源不一致（1 条已采信）/, '状态行要区分"还没决定"和"已经采信过"')
+// 采信之后，收起状态的行也要写「按 paper-deadlines」：命令行行尾有这句，
+// 面板只在展开后写的话，收起状态下看不出这个日期是你选的还是插件自己选的。
+assert.match(afterBulkText, /按 paper-deadlines/, '采信过的行要标出按哪个来源显示')
 const undoBulk = [...document.querySelectorAll('button')].find((node) => /撤销\s*paper-deadlines\s*1/.test(node.textContent || ''))
 assert.ok(undoBulk, '批量采信要有对应的撤销入口（命令侧有 --undo，界面不该没有）')
 await act(async () => {
@@ -530,6 +533,9 @@ await act(async () => {
 })
 const header = [...document.querySelectorAll('[role="button"][aria-expanded]')][0]
 assert.ok(header, '打开开关后卫星会也要有一张卡片')
+// 收起状态就要能看出这是 workshop：命令行每行都写「卫星会」，
+// 面板只在展开后写的话，打开开关后两种行长得一模一样。
+assert.match(header.textContent, /卫星会/, '收起状态的行上也要标「卫星会」')
 await act(async () => {
   header.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }))
 })

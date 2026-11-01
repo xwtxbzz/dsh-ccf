@@ -2439,3 +2439,46 @@ npm error JSON.parse Invalid package.json: JSONParseError: Bad control character
 
 **同一天第三次栽在"用 PowerShell 改含中文的文件"上**（前两次是 `lib/create.js` 与 `test/panel.render.test.mjs`）。
 规则写死：**含中文的文件只走 `edit` / `write` 工具；版本号也走 `edit`。**
+
+## 第 72 轮：面板收起状态的行，少了命令行每行都有的那两个标记
+
+**问题（N118）**。命令行那边，`formatRow` 早就把状态写进行了：
+
+```
+- CVPR Workshops 2027 · 卫星会 · Non-CCF · 人工智能 · 2027-03-05 19:59（…）
+- ACL 2027 · 来源冲突 · 按 paper-deadlines 显示 · CCF-A · …
+```
+
+面板这边，卡片**收起状态**只写了名称、等级、方向，外加一个「来源不一致」的小标签：
+
+- 卫星会跟着主会一起列出来时（工具栏那个 `卫星会 N` 开关打开），两种行长得**一模一样**——
+  而这一整条线（0.41 → 0.51）做的就是"别把 workshop 当主会制造假紧急"，结果最该区分的场景里没区分；
+- 已经采信了某个来源的行，也看不出"按哪个源显示"。下次看到这个日期，会以为是插件自己选的，
+  又去点一遍采信——而 0.60 已经给命令行加了「按 X 显示」，面板又落下了。
+
+这类"四个出口只改了三个"在本项目里出现过太多次（N12 覆盖度口径、N81 `ignoredKeys`、N84 `confirmedKeys`、
+N99 `conflict` 数据字段、N118 面板行）。根源是同一件事被写了四遍。
+
+**改法**。行头补两个只读小标签，样式沿用「来源不一致」那一套（细边框 + 10px）：
+
+```js
+!pending && record.satellite === true
+  ? h('span', { title: 'Workshop / 地区分会场：不计入主会的截稿与「待补」统计' }, '卫星会')
+  : null,
+!pending && record.preferredSource
+  ? h('span', { title: `两个来源说法不同，这一条按你选的 ${record.preferredSource} 显示` }, `按 ${record.preferredSource}`)
+  : null,
+```
+
+两个都**不是按钮**：行头已经能展开，再塞可点元素会和"点整行展开"打架。
+
+**验证**。`test/panel.render.test.mjs` 加两条：
+
+- 批量采信之后，收起状态的行文本要含 `按 paper-deadlines`；
+- 打开「卫星会」开关后，第一张卡片的 `[role="button"][aria-expanded]` 头文本要含 `卫星会`。
+
+`git stash push -- client/client.js` 复跑 → `AssertionError: 收起状态的行上也要标「卫星会」`。
+
+**顺带记一笔**：`test/panel.render.test.mjs` 里那条"卫星会要有一句说明"原本查的是整页文本，
+展开后详情里也有「卫星会」三个字，所以它**永远绿**——这也是为什么新标签必须单独对**行头**断言。
+查整页文本的断言，很容易被别处的同名文字喂饱。

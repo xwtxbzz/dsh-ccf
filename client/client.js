@@ -730,6 +730,16 @@ const chipNew = {
           !pending && record.conflict
             ? h('span', { style: { marginLeft: !pending && isNew(record) ? '4px' : 'auto', color: UI.colors.warn, fontSize: '10px', border: `1px solid ${UI.colors.warn}`, borderRadius: '6px', padding: '0 3px' }, title: conflictLine(record, timeZone) }, '来源不一致')
             : null,
+          // 卫星会跟着主会一起列出来时（开关打开），行长相必须不一样：
+          // 命令行每行都写「卫星会」，面板只在展开后写，收起状态下就分不出哪个是 workshop。
+          !pending && record.satellite === true
+            ? h('span', { style: { color: UI.colors.muted, fontSize: '10px', border: `1px solid ${UI.colors.line}`, borderRadius: '6px', padding: '0 3px' }, title: 'Workshop / 地区分会场：不计入主会的截稿与「待补」统计' }, '卫星会')
+            : null,
+          // 已经采信了某个来源的行，得看得出「按哪个源显示」——否则下次看到这个日期，
+          // 会以为是插件自己选的，又去点一遍采信。
+          !pending && typeof record.preferredSource === 'string' && record.preferredSource
+            ? h('span', { style: { color: UI.colors.muted, fontSize: '10px', border: `1px solid ${UI.colors.line}`, borderRadius: '6px', padding: '0 3px' }, title: `两个来源说法不同，这一条按你选的 ${record.preferredSource} 显示` }, `按 ${record.preferredSource}`)
+            : null,
           pending ? h('span', { style: { marginLeft: !pending && isNew(record) ? '6px' : 'auto', color: UI.colors.muted } }, '待补') : null,
           !pending && record.link ? h('a', { href: record.link, target: '_blank', rel: 'noreferrer', onClick: (event) => event.stopPropagation(), style: { marginLeft: 'auto', color: 'inherit', opacity: 0.75, textDecoration: 'none' } }, '官网 ↗') : null,
           pending || typeof onPin !== 'function'
