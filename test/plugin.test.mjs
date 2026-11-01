@@ -516,6 +516,28 @@ await test('来源冲突：清单里标出来、--conflicts 只列冲突、statu
   assert.match(status.text, /来源：1 条两个源给的截稿差一天以上/, 'status 要说出来，别让日期像定论')
 })
 
+await test('过了截止的冲突不算进「来源」，但要单独说一句', async () => {
+  // 真机 26 条冲突里有 9 条截稿早就过了；面板默认不列往届，`/ccf list --conflicts` 也不列，
+  // 于是「不一致 26」点进去只有 17 张卡片。冲突数必须与"点进去能看到的"一致。
+  const dir = await seeded({
+    records: [
+      {
+        key: 'aaai|2026', venue: 'AAAI', year: 2026, name: 'AAAI 2026',
+        fullName: 'AAAI Conference on Artificial Intelligence', rank: 'CCF-A',
+        area: '人工智能', deadline: NOW - 90 * DAY, notification: null, abstractDeadline: null,
+        confDate: '2026-02', place: 'Singapore', link: '', source: 'ccfddl-api',
+        alternatives: [{ source: 'paper-deadlines', deadline: NOW - 96 * DAY }],
+      },
+    ],
+  })
+  const { ctx } = fakeContext(dir)
+  const ccf = createCcf(ctx, { dataDir: dir, autoUpdate: false }, fakeDefineTool)
+  const status = await ccf.command.handler({ rawInput: 'status', signal: undefined })
+  assert.match(status.text, /没有还没到截止的冲突/, '没有未来的冲突时要明说，别让人去点空视图')
+  assert.match(status.text, /1 条已经过了截止/, '过期的那条不能凭空消失')
+  assert.match(status.text, /--conflicts --past/, '要给出看往届冲突的入口')
+})
+
 await test('/ccf prefer <来源> --conflicts：一次采信全部冲突，--undo 撤回', async () => {
   const dir = await seeded({
     records: [

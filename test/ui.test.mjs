@@ -315,6 +315,24 @@ test('counts.conflictsDecided 区分「还没决定」和「你已经采信过�
   assert.equal(body.counts.conflictsDecided, 1, '其中一条已经采信过了')
 })
 
+test('counts.conflicts 不数已经过了截止的冲突（面板默认不列往届）', () => {
+  // 真机 402 条里有 26 条冲突，其中 9 条截稿早就过了；面板「不一致 26」点进去只有 17 张卡片。
+  // 冲突数必须与"点进去能看到的"一致，过期的那几条单独计数并说出来。
+  const now = Date.parse('2026-10-31T10:00:00Z')
+  const cache = {
+    ...CACHE,
+    records: [
+      // 还没到截止：算进「不一致」
+      { ...CACHE.records[0], key: 'open|2027', alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2026-11-14T07:59:59Z'), notification: null }] },
+      // 已经过了截止：不算进「不一致」，但要单独报
+      { ...CACHE.records[0], key: 'old|2026', year: 2026, name: 'CVPR 2026', deadline: Date.parse('2025-11-14T07:59:59Z'), alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2025-11-20T07:59:59Z'), notification: null }] },
+    ],
+  }
+  const body = panelPayload(cache, { now })
+  assert.equal(body.counts.conflicts, 1, '只数还没到截止的那条')
+  assert.equal(body.counts.conflictsPast, 1, '过了截止的那条要单独说')
+})
+
 test('panelPayload tells the panel whether a model is available', () => {
   // 没有模型时面板要能把「补数据」禁掉，不能让人点了半天什么也没发生。
   assert.equal(panelPayload(null, {}).meta.modelReady, true)

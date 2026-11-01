@@ -2681,3 +2681,56 @@ $ /ccf review
 `git stash push -- lib/create.js` 复跑 → `AssertionError: 未知子命令 "review"。`
 
 **顺带**：这一轮没动面板——面板本来就有「建议核对」的卡片与两个按钮，缺的一直是命令侧这个入口。
+
+## 第 77 轮：真实环境终于对上了（顺带修好「不一致 26」点进去只有 17 张）
+
+### 一、真实环境回归：0.63→0.75 全部生效
+
+桌面端这次重启后进程真的换成了新模块，活体接口自证：
+
+| 检查项 | 结果 |
+|---|---|
+| `GET /dsh-ccf/api/v1/records` → `version` | `0.75.0`（此前一直是 0.62.0） |
+| `versionDisk` / `versionStale` | `0.75.0` / `false`——0.64.0 加的"磁盘比进程新"提示不再误报 |
+| 记录里还有没有 `cameraReady` | 402 条里 **0** 条（0.63.0 的「去掉 CR」在真机生效） |
+| `counts.outside` / `outsideVenues` | `64 / 63`（0.50.0 的"条记录 vs 个会"分家） |
+| `counts.satellites` / `satelliteVenues` | `9 / 8`（0.47.0 起卫星会不再混进名单外） |
+| `counts.conflictsDecided` | `0`（0.67.0 的新字段，真机读得到） |
+| `meta.marks` | `{ ignored: 0, confirmed: 0 }` |
+| `ccf_venue SIGGRAPH` | 末尾出现「卫星会：数据里另有 ACM SIGGRAPH ASIA 2026…（不计入主会统计）」 |
+| `ccf_deadlines days=10 conflictsOnly` | `VLDB 2027 · 来源冲突 · … 2026-11-02 09:00（16 小时后）` |
+
+之前那次"系统提示已经是新文案、接口却报 0.62.0"，不是缓存错乱：`systemPrompt` 段与 `webServer` 路由是在不同时刻注册的，
+进程里确实同时存在两代代码。结论写在这里：**接口自报的版本号才是真话，别用"某处文案变了"推断版本。**
+
+### 二、真机顺手抓出的一个问题（N123）：「不一致 26」点进去只有 17 张
+
+活体数据：402 条记录里 26 条是两个来源打架的，但其中 **9 条截稿早就过了**。
+而面板「不一致」视图和 `/ccf list --conflicts` 默认都不列往届——于是红点写 26、点进去 17 张卡片。
+
+同一类问题已经修过三次（N94 卫星会窗口数、N120 `--pending` 吞掉筛选条件、N119 记录数当会数），
+这次栽在"按什么时间基准数"上：`isBigConflict` 只看两个源的日期差，不看这个日期是不是已经过去。
+
+**改法**：
+
+- `lib/ui.js` 的 `counts.conflicts` 增加"还没过截止"这一条（`row.deadline >= now`，用 `options.now` 而不是 `Date.now()`，
+  否则测试写死的时间点会随真实时间漂移）；新增 `counts.conflictsPast` 单独数过期的。
+- `lib/create.js` 的 `/ccf status` 同一口径：`来源：17 条…；另有 9 条已经过了截止（/ccf list --conflicts --past 看）`；
+  全部过期时明说 `来源：没有还没到截止的冲突；9 条已经过了截止…`，而不是把这一行整段吞掉（那样读者会以为冲突清零了）。
+
+**验证**：
+
+```
+$ node _probe4/conf.mjs        # 读真机缓存，用 lib/core.js 的同一套函数
+records 402 future 133
+conflicts all 26 conflicts future 17
+conflicts past 9
+ACL 2027 | COLT 2027 | CVPR 2027 | ECAI 2027 | IJCAI 2027 | NAACL 2027 | RSS 2027 | InterSpeech 2027
+| ICDM 2027 | VLDB 2027 | WSDM 2027 | ISCA 2027 | IMC 2027 | SIGCOMM 2027 | FSE 2027 | USENIX Security 2027 | ISSTA 2027
+```
+
+改完 `counts.conflicts` 就是 17，与点进去的卡片数一致；9 条过期的在状态行里点名，`--conflicts --past` 能看。
+
+测试：`test/ui.test.mjs` 加「`counts.conflicts` 不数已经过了截止的冲突」（一条未来的 + 一条 2025 年到期的 → `conflicts 1 / conflictsPast 1`）；
+`test/plugin.test.mjs` 加「过了截止的冲突不算进来源，但要单独说一句」（只有一条过期冲突 → status 出现「没有还没到截止的冲突」与「1 条已经过了截止」）。
+各自 stash 掉 lib 印证：`AssertionError: 只数还没到截止的那条`、`AssertionError: 没有未来的冲突时要明说，别让人去点空视图`。
