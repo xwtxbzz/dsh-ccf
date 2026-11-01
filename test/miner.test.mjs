@@ -50,6 +50,32 @@ assert.ok(stalePlan.selected.some((item) => item.reason === 'stale' || item.reas
 const focused = planUpdate({ catalog, records, now: NOW, limit: 5, focus: 'CVPR' })
 assert.ok(focused.selected.every((item) => item.abbr.includes('CVPR')))
 
+// 点名的会即使刚挖过、数据还新鲜，也必须重挖：
+// 面板上的「重挖这个会」如果被 refreshDays 拦下，用户只会看到"没有需要补的会"。
+{
+  const justMined = [{ key: 'cvpr|2027', venue: 'CVPR', year: 2027, deadline: NOW + 14 * DAY, source: 'model', minedAt: NOW - 60 * 1000 }]
+  const refocus = planUpdate({ catalog, records: justMined, now: NOW, refreshDays: 30, limit: 5, focus: 'CVPR' })
+  assert.equal(refocus.selected.length, 1, '点名的会要进队列')
+  assert.equal(refocus.selected[0].reason, 'focus')
+  // 不点名、也不 force 的时候，新鲜的会照旧跳过（懒更新不能失效）
+  const lazy = planUpdate({ catalog, records: justMined, now: NOW, refreshDays: 30, limit: 5 })
+  assert.equal(lazy.selected.filter((item) => item.abbr === 'CVPR').length, 0, '懒更新时新鲜的会不该重挖')
+}
+
+// 名单外的会、且已经有未来截稿：点名重挖时也要进队列（以前这里 `ok += 1`，
+// 于是面板上「重挖这个会」对名单外的会永远是"没有需要补的会"）。
+{
+  const outsideFresh = planUpdate({
+    catalog,
+    records: [{ key: 'corl|2027', venue: 'CoRL', year: 2027, deadline: NOW + 30 * DAY, source: 'model', minedAt: NOW - DAY }],
+    now: NOW,
+    limit: 5,
+    focus: 'CoRL',
+  })
+  assert.equal(outsideFresh.selected.length, 1, '名单外的会点名也要排进计划')
+  assert.equal(outsideFresh.selected[0].reason, 'focus')
+}
+
 // area 只补这个方向的会（中文方向名 + 英文片段都认）
 const byArea = planUpdate({ catalog, records, now: NOW, limit: 8, area: '人工智能' })
 assert.ok(byArea.selected.length > 0, '人工智能方向应有会议')
@@ -88,7 +114,8 @@ const outsidePast = planUpdate({
   focus: 'CoRL',
 })
 assert.equal(outsidePast.selected[0].reason, 'next-edition', '名单外的会只有往届日期时也要补')
-// 已经有过未来截稿的名单外会，不该再排一次
+// 已经有过未来截稿的名单外会：以前这里不排（"不该再排一次"），但它就是「重挖这个会」要的效果——
+// 用户点了按钮是想刷新，不是想被告知"数据还新鲜"。所以现在点名一律进队列（reason: focus）。
 const outsideHealthy = planUpdate({
   catalog,
   records: [{ key: 'corl|2027', venue: 'CoRL', year: 2027, deadline: NOW + 30 * DAY }],
@@ -96,7 +123,8 @@ const outsideHealthy = planUpdate({
   limit: 5,
   focus: 'CoRL',
 })
-assert.equal(outsideHealthy.selected.length, 0)
+assert.equal(outsideHealthy.selected.length, 1, '点名重挖时，名单外的会也要真的去挖')
+assert.equal(outsideHealthy.selected[0].reason, 'focus')
 
 // ---- 2. 官网候选筛选 ------------------------------------------------------
 const sources = [

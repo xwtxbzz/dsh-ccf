@@ -2141,3 +2141,49 @@ export function versionState() {
 **教训（同一天第二次踩，必须记住）**：用 PowerShell `(Get-Content -Raw) -replace ... | Set-Content -Encoding utf8` 改 `lib/create.js`，把整个文件的中文按 GBK 读坏——`node --check lib/create.js` 报 `SyntaxError: Invalid or unexpected token`（第 89 行整行变成乱码）。`git status` 当时只显示 `client/client.js`、`lib/ui.js` 两处改动，第三条 `lib/create.js` 就是坏文件；`git checkout -- lib/create.js` 复原后改用 `edit` 逐处重做。**含中文的源码只走 `edit`/`write`，永不进 PowerShell 文本管道。**
 
 **还没验的**：真实环境里跑着的仍是 0.62.0，所以 0.63.x（去掉 CR、去重）与 0.64.0（版本提示）在真机上还没有证据——需要用户再重启一次桌面端，然后看 `/ccf status` 的版本行是否变成 `v0.64.0`、`cameraReady` 是否从 `/records` 里消失。
+
+## 第 66 轮：「重挖这个会」按下去，回执说“没有需要补的会”
+
+**怎么发现的**：真实环境终于能用模型了（`modelReady=true`）。我按 P0-3 的待办，直接打宿主路由跑了一次真实补数据：
+
+```
+POST /dsh-ccf/api/v1/update   {"focus":"CVPR","limit":1}
+→ updated=True model=True fallback=False  耗时 0 秒
+   模型挖掘：本轮处理 0 个会，成功 0 个，失败 0 个。
+   没有需要补的会（懒更新：名单内都已有未来截稿）。
+```
+
+这段自相矛盾：面板上那个按钮写的是「重挖这个会」，路由里 `options = { force: true }`，结果一个会都没处理，还给了一句“懒更新”。
+
+**根因**在 `lib/miner.js` 的 `planUpdate`：
+
+```js
+const stale = minedAt > 0 ? now - minedAt > refreshDays * DAY : false
+if (force && stale) queue.push({ ...conf, reason: 'stale', existing: existing.length })
+else ok += 1
+```
+
+`force` 只在“挖过且已过期”时才起作用。CVPR 是刚同步来的数据（`minedAt` 为空、但有未来截稿），既不 fresh 也不 stale，于是落到 `ok += 1`——被当成“不用管”。用户点按钮的意图是“现在就去刷新”，被解释成了“数据还新鲜”。名单外的会（CoRL 之类）更彻底：那个分支直接 `else ok += 1`，永远不重挖。
+
+**改法**：点名的会一律进队列，理由记作 `focus`。
+
+```js
+if (needle) queue.push({ ...conf, reason: 'focus', existing: existing.length })
+else if (force && stale) queue.push({ ...conf, reason: 'stale', existing: existing.length })
+else ok += 1
+```
+
+名单外分支同样改成 `reason: 'focus'`；`order` 表加 `focus: 2`。没说名字时懒更新照旧——这是两件不同的事：`/ccf update` 是“该补的补一下”，`--focus X` 是“现在重挖 X”。
+
+顺手补了回执的另一半：`focus` 完全对不上（拼错、名单和缓存里都没有）时，原来只会说“没有需要补的会”，现在说 `没对上「X」：名单和缓存里都没有这个名字。换个简称试试，或先用 /ccf list --search 看看数据里叫什么。`
+
+**测试**：`test/miner.test.mjs` 加两组——刚挖过 1 分钟的 CVPR 被点名 → `selected.length===1` / `reason==='focus'`；不点名时不重挖（懒更新不能失效）；名单外且已有未来截稿的 CoRL 被点名 → 也进队列（原来断言的是“不该再排一次”，现在改成新契约并写明理由）。`git stash` 掉 `lib/miner.js` 复跑 → `AssertionError: 点名的会要进队列`，恢复后 `miner.test: 全部通过`。
+
+**真机离线验证**（读 `C:\Users\15961\.dsh\ccf\cache.json` + 名单跑 `planUpdate`）：
+
+```
+focus CVPR -> CVPR/focus
+force 无 focus -> I3D/new,IPSN/new,LISA/new
+```
+
+**仍然悬着的**：真机上跑的还是 0.62.0，所以这次的“点名必挖”还没有在真机上点过一次；下一次重启后，点「重挖这个会」应该看到 `本轮处理 1 个会`。另外，拼错名字时仍会拿那串字去挖一次（权衡：不让合法但缓存里没有的名单外会被挡在门外），这条写进 README 的已知限制。

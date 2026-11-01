@@ -240,6 +240,7 @@ dsh plugin --profile desktop list | grep ccf
 - 第三方 `ccfddl-tar` 源需要能访问 GitHub，国内网络下可能失败（此时用本地 `ccfddl-dir` 或只走 `ccfddl-api`）。
 - 系统提示段是纯文本摘要，太长会挤占上下文，所以有 `maxPromptItems` 与 `staleHours` 两道闸。
 - 每次 `/ccf update` 会花掉若干次搜索 + 抓取 + 一次模型调用，所以默认一次只挖 6 个会。
+- **点名的会一律重挖**：`ccf_update({focus:'X'})`、面板「重挖这个会」不看 `refreshDays`——点了就是想现在刷新。代价是名字拼错时也会真的拿这串字去搜一次（宁可白花一次调用，也不让合法的名单外会被"数据还新鲜"挡住）。
 
 ## 开发
 
