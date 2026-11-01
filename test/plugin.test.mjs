@@ -804,6 +804,25 @@ await test('/ccf pending 是 list --pending 的别名', async () => {
   assert.equal(pending.text.split('\n')[0], listed.text.split('\n')[0], '两种写法第一行一致')
 })
 
+await test('/ccf pending：跟「比较日期」的旗标一起用时要说明用不上，而不是静默给空列表', async () => {
+  const dir = await seeded()
+  try {
+    const plugin = createCcf(fakeContext().ctx, { dataDir: dir, autoUpdate: false, prompt: false, sources: [] }, fakeDefineTool)
+    for (const rawInput of ['list --pending --conflicts', 'list --pending --past', 'list --pending --satellites']) {
+      const result = await plugin.command.handler({ rawInput })
+      assert.equal(result.kind, 'success', result.text)
+      assert.match(result.text, /「--pending」列的是名单里还没有截稿数据的会/, `${rawInput} 要说明这几个条件在这条路径上用不上`)
+      assert.match(result.text, /用不上。去掉这个条件再试/, `${rawInput} 要给出下一步`)
+      assert.doesNotMatch(result.text, /名单里还没有截稿数据的会（\d+ 个/, `${rawInput} 不该假装筛选生效了`)
+    }
+    // 不带这些旗标时，仍然正常列出待补的会
+    const plain = await plugin.command.handler({ rawInput: 'list --pending' })
+    assert.match(plain.text, /名单里还没有截稿数据的会/, '正常路径不受影响')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
 await test('/ccf ignore：标成「不是这个会」的记录不再算进覆盖度，能撤销', async () => {
   const dir = await seeded()
   try {

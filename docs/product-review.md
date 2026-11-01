@@ -2520,3 +2520,65 @@ assert.match(status.text, /去重后 3 个会/, '记录数与会数分开写')
 
 **顺带**：这一轮只改文案，不动数据；`counts` 里的 `outside`/`outsideVenues`、`satellites`/`satelliteVenues`
 两套字段（0.50.0 加的）就是为这件事准备的，面板与 status 现在都按"个会"说"会"、按"条"说"记录"。
+
+## 第 74 轮：`--pending --conflicts` 不报错、也不筛选，只静静少一截
+
+**问题（N120）**。`/ccf list` 支持这些旗标：`--rank` / `--area` / `--search` / `--past` / `--pending` / `--satellites` / `--conflicts`。
+但 `lib/create.js` 里 `args.pending === true` 是**独立分支**，它只读 `rank`、`area`、`search`、`limit`：
+
+```js
+if (args?.pending === true) {
+  const filtered = pendingRows.filter((item) => {
+    if (ranks && ranks.indexOf(item.rank) === -1) return false
+    if (areaNeedles && !areaNeedles.some(...)) return false
+    if (!search) return true
+    return `${item.abbr} ${item.fullName}`.toLowerCase().indexOf(search) !== -1
+  })
+```
+
+于是 `--satellites`、`--conflicts`、`--past` 在这个分支里**从头到尾没被读过**：用户敲
+`/ccf list --pending --conflicts`，得到的是一份普通的待补清单，看不出"冲突"这个条件被丢了。
+参数照收、结果照出、条件静默失效——比报错更坏，因为用户会以为自己筛过了。
+
+（`--conflicts` 尤其危险：它回答"两个来源说法打架的会"，而这些会必须有日期；`--pending` 列的恰恰是
+"还没有日期"的会，两者没有交集。真实数据里 253 个待补会、26 条冲突，交集必然是空。）
+
+**改法**。在这条分支入口先认领这几个旗标，认领到就直接说清楚，而不是给一份"看起来正常"的清单：
+
+```js
+const idleFlags = []
+if (args?.conflictsOnly === true) idleFlags.push('--conflicts')
+if (args?.includeSatellites === true) idleFlags.push('--satellites')
+if (args?.includePast === true) idleFlags.push('--past')
+if (idleFlags.length > 0) {
+  return {
+    report: `「--pending」列的是名单里还没有截稿数据的会，它们本来就没有日期：${idleFlags.join(' / ')} 在这里用不上。去掉这个条件再试。`,
+    data: { ok: true, pending: true, ignoredFlags: idleFlags, count: 0, catalogConferences: catalogConfs.length, rows: [] },
+  }
+}
+```
+
+`data.ignoredFlags` 一起给出来：模型读结构化结果时也能知道"这几个条件没有被执行"，而不是从 `count: 0` 猜。
+
+**验证**。`test/plugin.test.mjs` 新用例，三种组合各跑一遍：
+
+```js
+for (const rawInput of ['list --pending --conflicts', 'list --pending --past', 'list --pending --satellites']) {
+  assert.match(result.text, /「--pending」列的是名单里还没有截稿数据的会/)
+  assert.match(result.text, /用不上。去掉这个条件再试/)
+  assert.doesNotMatch(result.text, /名单里还没有截稿数据的会（\d+ 个/)  // 别假装筛选生效
+}
+```
+
+`git stash push -- lib/create.js` 复跑 → `AssertionError: list --pending --conflicts 要说明这几个条件在这条路径上用不上`
+（旧代码给的是一份 253 个会的待补清单）。不带这几个旗标时照常列出，用例最后一并断言。
+
+真机探针（活缓存副本）：
+
+```
+$ /ccf list 120 --pending --conflicts
+「--pending」列的是名单里还没有截稿数据的会，它们本来就没有日期：--conflicts 在这里用不上。去掉这个条件再试。
+```
+
+**这类问题的通用形态**：一个命令有多条互斥分支时，每条分支都会漏掉几条旗标。要么在分支入口统一认领并拒绝，
+要么把旗标解析和分支选择分开——本轮选前者（改动小、错误信息能说人话）。
