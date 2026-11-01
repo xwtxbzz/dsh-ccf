@@ -802,6 +802,38 @@ await test('/ccf marks 在没有任何标记时给出去哪里标的指引', asy
   assert.match(out.text, /\/ccf confirm/)
 })
 
+await test('/ccf review：待核对的不只是个数，还要能给下一步', async () => {
+  const dir = await seeded({
+    records: [
+      {
+        key: 'sec|2027', venue: 'SEC', year: 2027, name: 'SEC 2027',
+        // 全称与名单里那个 SEC 明显不是一个会：应该进「待核对」
+        fullName: 'Symposium on Something Entirely Different', rank: 'CCF-A', area: 'SC',
+        deadline: NOW + 30 * 86400e3, notification: null, abstractDeadline: null,
+        confDate: '2027-10', place: 'TBD', link: '', source: 'ccfddl-api',
+      },
+    ],
+  })
+  try {
+    const plugin = createCcf(fakeContext().ctx, { dataDir: dir, autoUpdate: false, prompt: false, sources: [] }, fakeDefineTool)
+    const open = await plugin.command.handler({ rawInput: 'review' })
+    assert.equal(open.kind, 'success', open.text)
+    assert.match(open.text, /待核对：1 条记录/, '要说清有几条在等裁决')
+    assert.match(open.text, /SEC 2027/, '要点名是哪条记录')
+    assert.match(open.text, /\/ccf confirm SEC/, '要给出"对"的下一步命令')
+    assert.match(open.text, /\/ccf ignore SEC/, '要给出"不对"的下一步命令')
+
+    // 裁决过的会不该再出现在待核对里（否则这个清单永远清不掉）
+    const agreed = await plugin.command.handler({ rawInput: 'confirm SEC' })
+    assert.equal(agreed.kind, 'success', agreed.text)
+    const after = await plugin.command.handler({ rawInput: 'review' })
+    assert.match(after.text, /没有需要核对的记录/, '确认过之后就该从待核对里消失')
+    assert.doesNotMatch(after.text, /\/ccf confirm SEC/)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+})
+
 await test('/ccf pending 是 list --pending 的别名', async () => {
   const ctx = fakeContext()
   const dir = await seeded()

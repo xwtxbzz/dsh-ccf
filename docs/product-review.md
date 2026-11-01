@@ -2634,3 +2634,50 @@ sig sat list [["ACM SIGGRAPH ASIA 2026", "2026-05-13T11:59:59.000Z"], ["SIGGRAPH
 
 **教训**：这已经是同一根线上的第六次（N12 / N81 / N84 / N99 / N118 / N121）——**文本出口和结构化出口是两套，
 改了一边就一定会漂**。下次加字段时，先问"report 里有的，data 里有没有"。
+
+## 第 76 轮：「待核对 8 条」——说了个数，没地方看是哪 8 条
+
+**问题（N122）**。`/ccf status` 里有这么一行：
+
+```
+待核对：8 条记录的全称与名单对不上（同简称可能是两个不同的会，如 SEC / FSE），面板上这些卡片会标「建议核对」。
+```
+
+命令侧**没有任何办法列出这 8 条**。`/ccf marks` 只列"已经裁决过的"，`/ccf list` 只管截稿时间。
+于是读者只知道"有 8 条在等我判断"，不知道是哪 8 条、更不知道判断完该敲什么命令——
+和 0.53.0 之前那条「26 条来源不一致，点不进去」是同一个毛病（N100 的翻版）。
+
+**改法**。新增 `/ccf review`：把 `catalogCoverage(...).weakMatches` 逐条列出来，每条带「对就 confirm、
+不对就 ignore」两条命令：
+
+```
+待核对：8 条记录的全称与名单对不上（同简称可能是两个会，如 SEC / FSE、CVPR / CVPR Workshops）
+  - SEC 2027：数据里的全称「ACM/IEEE Symposium on Edge Computing」更像名单里的 SEC
+    对就 /ccf confirm SEC；不对就 /ccf ignore SEC
+  …
+裁决过的会不再出现在这里，用 /ccf marks 看已经标过什么。
+```
+
+细节：
+
+- 用 `viewRecords(cache)`（与面板、清单同口径：去重 + 采信 + 剔掉坏的），不漏不错位；
+- `marksOf(cache)` 传给 `catalogCoverage`，所以「就是这个会」确认过的记录自动从清单消失（否则这个清单永远清不掉）；
+- 超过 20 条只列前 20，末尾说还剩几条，并指向面板；
+- 名单读不到时直接报错（"缺了就没法判断这条记录对应名单里哪个会"），而不是给一份空清单假装"没有需要核对的"；
+- `USAGE` 与 `/ccf status` 的待核对那行都指向 `/ccf review`。
+
+**验证**。
+
+```
+$ /ccf review
+待核对：8 条记录的全称与名单对不上（…）
+  - IJCB 2027：数据里的全称「International Joint Conference on Biometrics」更像名单里的 IJCB
+    对就 /ccf confirm IJCB；不对就 /ccf ignore IJCB
+  …
+```
+
+`test/plugin.test.mjs` 新用例：造一条 `venue: 'SEC'` 但全称完全不像 SEC 的记录 → 断言出现「待核对：1 条记录」、
+点出 `SEC 2027`、两条命令都在；随后 `/ccf confirm SEC`，再跑 `/ccf review` 必须是「没有需要核对的记录」。
+`git stash push -- lib/create.js` 复跑 → `AssertionError: 未知子命令 "review"。`
+
+**顺带**：这一轮没动面板——面板本来就有「建议核对」的卡片与两个按钮，缺的一直是命令侧这个入口。
