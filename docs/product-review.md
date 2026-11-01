@@ -2114,3 +2114,30 @@ config.timezone = hasOwnTimeZone ? source.timezone.trim() : systemTimeZone(DEFAU
 **教训**：断言「默认值等于环境」的测试，只有在环境真的换掉时才有效。`TZ=UTC node test/xxx.mjs` 是一行成本极低的交叉验证，比在本地反复跑同一条命令有用得多。
 
 **⚠ 另一个卡点（未解决）**：这个仓库的 `.github/workflows/ci.yml` 没法用当前 PAT 更新——GitHub 回 `refusing to allow a Personal Access Token to create or update workflow ... without workflow scope`。所以**仓库里跑的仍是旧版 ci.yml**（没有 catalog / miner / ui / client / panel.render 这些测试）。本地的 ci.yml 已更新好（还顺手去掉了被 PowerShell 写进去的 BOM），等 token 补上 `workflow` 权限后一次推上去。
+
+## 第 65 轮：跑着的 0.62.0、磁盘上的 0.63.1，界面上一个字都不说
+
+**怎么发现的**：桌面端重启后第一次打通真实接口 `GET http://127.0.0.1:57282/dsh-ccf/api/v1/records`，返回 `version=0.62.0`，而 `package.json` 已经是 `0.63.1`。也就是说那次重启加载的还是 0.62.0 的模块，此后我又改了两版代码（CR 去掉、去重生效），界面上仍然只印 `dsh-ccf v0.62.0`——没有任何地方说"磁盘上已经有更新的版本了"。
+
+**为什么这是产品问题**：过去几十轮反复出现"改完了、界面没变化"，唯一的判断依据是界面上那行版本号；而它恰好是**模块加载那一刻**的值（`lib/create.js` 的 `export const VERSION` 在 import 时读一次 `package.json` 就定死）。它只能证明"进程里跑的是什么"，永远说明不了"磁盘上是什么"。
+
+**改法**：
+
+```js
+export function diskVersion() { /* 每次调用重新读 package.json，不缓存 */ }
+export function versionState() {
+  const disk = diskVersion()
+  return { running: VERSION, disk, stale: Boolean(disk) && disk !== VERSION }
+}
+```
+
+- `/ccf status` 第一行：`版本：dsh-ccf v0.62.0（磁盘上已是 v0.64.0：重启桌面端才会生效）`
+- 面板底部版本号同样带这句（`versionLabel`）
+- `panelPayload` 增 `versionDisk` / `versionStale`；`createUiRoutes` 在 `payload()` 里每次请求重新比对（不是建路由时算一次）
+- `createCcf` 允许注入 `versionState`：测试要能造出"磁盘比进程新"，否则只能真去改 `package.json` 才验得到
+
+**测试**：plugin 35（注入 `{ running: '0.62.0', disk: '0.64.0', stale: true }` → status 出现"重启桌面端才会生效"；不注入时不出现）；ui 31（`panelPayload` 带 `versionDisk`/`versionStale`，缺省 `''`/`false`）；client 40（`versionLabel` 三态：旧模块空串、一致只印版本、不一致带提示）。全量 yaml 5 / core 31 / sync 9 / catalog 29 / dedupe 3 / plugin 35 / ui 31 / client 40 + `SMOKE OK` / `PANEL RENDER OK` / `INTEGRATION OK`。
+
+**教训（同一天第二次踩，必须记住）**：用 PowerShell `(Get-Content -Raw) -replace ... | Set-Content -Encoding utf8` 改 `lib/create.js`，把整个文件的中文按 GBK 读坏——`node --check lib/create.js` 报 `SyntaxError: Invalid or unexpected token`（第 89 行整行变成乱码）。`git status` 当时只显示 `client/client.js`、`lib/ui.js` 两处改动，第三条 `lib/create.js` 就是坏文件；`git checkout -- lib/create.js` 复原后改用 `edit` 逐处重做。**含中文的源码只走 `edit`/`write`，永不进 PowerShell 文本管道。**
+
+**还没验的**：真实环境里跑着的仍是 0.62.0，所以 0.63.x（去掉 CR、去重）与 0.64.0（版本提示）在真机上还没有证据——需要用户再重启一次桌面端，然后看 `/ccf status` 的版本行是否变成 `v0.64.0`、`cameraReady` 是否从 `/records` 里消失。

@@ -278,6 +278,15 @@ test('versionLabel is empty when the host runs an old module', () => {
   assert.equal(api.versionLabel(null), '')
 })
 
+test('versionLabel says so when the disk has a newer version than the running module', () => {
+  // 面板上不写这句，用户看到"界面没变化"只会以为改动没做进去。
+  const stale = api.versionLabel({ version: '0.62.0', versionDisk: '0.64.0', versionStale: true })
+  assert.equal(stale, 'dsh-ccf v0.62.0（磁盘上已是 v0.64.0：重启桌面端生效）')
+  // 标记为 false 或没给磁盘版本时，仍然只印版本号。
+  assert.equal(api.versionLabel({ version: '0.62.0', versionDisk: '0.64.0' }), 'dsh-ccf v0.62.0')
+  assert.equal(api.versionLabel({ version: '0.62.0', versionStale: true, versionDisk: '' }), 'dsh-ccf v0.62.0')
+})
+
 test('progressLabel only speaks when the host says a run is in flight', () => {
   assert.equal(api.progressLabel(null), '')
   assert.equal(api.progressLabel({ busy: false }), '')

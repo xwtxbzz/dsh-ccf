@@ -333,7 +333,13 @@ const ROUTE_CONFIRM = '/dsh-ccf/api/v1/confirm'
     /** 版本标签：宿主端没回版本时返回空串（说明跑的是旧模块）。 */
     function versionLabel(payload) {
       const version = payload && typeof payload.version === 'string' ? payload.version : ''
-      return version ? `dsh-ccf v${version}` : ''
+      if (!version) return ''
+      // 磁盘上已经换了新版本、进程还停在旧模块：把这件事直接印在版本号后面，
+      // 否则用户改完代码看不出「界面没变」是因为没重启。
+      if (payload && payload.versionStale === true && typeof payload.versionDisk === 'string' && payload.versionDisk) {
+        return `dsh-ccf v${version}（磁盘上已是 v${payload.versionDisk}：重启桌面端生效）`
+      }
+      return `dsh-ccf v${version}`
     }
 
     /**

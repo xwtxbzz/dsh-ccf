@@ -256,6 +256,12 @@ test('panelPayload carries the plugin version so the panel can prove it is fresh
   const body = panelPayload(null, { version: '0.4.1' })
   assert.equal(body.version, '0.4.1')
   assert.equal(body.schema, PANEL_SCHEMA)
+  // 磁盘上比进程新：面板要把这件事一起带走，否则用户看不出"改了没生效"。
+  assert.equal(panelPayload(null, {}).versionStale, false)
+  assert.equal(panelPayload(null, {}).versionDisk, '')
+  const stale = panelPayload(null, { version: '0.62.0', versionDisk: '0.64.0', versionStale: true })
+  assert.equal(stale.versionStale, true)
+  assert.equal(stale.versionDisk, '0.64.0')
 })
 
 test('panelPayload carries a competing deadline from another source', () => {

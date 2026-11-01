@@ -326,6 +326,28 @@ await test('/ccf status 与 /ccf config', async () => {
   }
 })
 
+await test('/ccf status：磁盘上的版本比进程新时要说"重启桌面端才会生效"', async () => {
+  // 真机上撞到过：进程里跑的是 0.62.0，磁盘已经 0.63.1，而界面上只印「v0.62.0」，
+  // 用户完全不知道"改了没生效"是因为没重启。这条提示就是为此存在的。
+  const dir = await seeded()
+  try {
+    const stale = fakeContext()
+    createCcf(stale.ctx, {
+      dataDir: dir,
+      versionState: () => ({ running: '0.62.0', disk: '0.64.0', stale: true }),
+    }, fakeDefineTool)
+    const text = (await stale.registered.commands[0].handler({ rawInput: 'status' })).text
+    assert.match(text, /磁盘上已是 v0\.64\.0：重启桌面端才会生效/)
+
+    const fresh = fakeContext()
+    createCcf(fresh.ctx, { dataDir: dir }, fakeDefineTool)
+    const plain = (await fresh.registered.commands[0].handler({ rawInput: 'status' })).text
+    assert.doesNotMatch(plain, /磁盘上已是/, '版本一致时不该出现这句提示')
+  } finally {
+    await rm(dir, { recursive: true, force: true }).catch(() => {})
+  }
+})
+
 await test('/ccf status 会把"名单外的会"单独说出来', async () => {
   // 真实缓存里差不多少 68 张卡是这种：CCFDDL 收了、CCF 名单没收（CoRL / EACL / CICAI…）。
   // 它们既不算"有数据"也不算"待补"，用户拿 有数据+待补 对 362 就会差几个数。
