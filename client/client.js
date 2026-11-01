@@ -1162,7 +1162,7 @@ const chipNew = {
       // 「日历」：当前视图导成 .ics，导入后每个会是一条截稿提醒（有审稿决定的再加一条）。
       const exportIcs = () => {
         try {
-          const text = buildIcs(shownRows, { now, calendarName: 'CCF 会议截稿' })
+          const text = buildIcs(shownRows, { now, timeZone, calendarName: 'CCF 会议截稿' })
           const blob = new Blob([text], { type: 'text/calendar;charset=utf-8' })
           const url = URL.createObjectURL(blob)
           const link = document.createElement('a')

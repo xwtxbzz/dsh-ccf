@@ -51,6 +51,15 @@ const { buildRows } = api
 const tests = []
 const test = (name, fn) => tests.push([name, fn])
 
+test('导出日历的调用方要把面板的时区传进去（接线测试）', async () => {
+  // buildIcs 本身尊重 timeZone（下面那条用例守着），但真正会漏的是"没人传"：
+  // 面板按 payload.timezone 显示时间，导出却用浏览器本地时区——两处对不上，
+  // 用户会以为导错了。这条读源码，守的就是那一行调用。
+  const { readFileSync } = await import('node:fs')
+  const source = readFileSync(bundle, 'utf8')
+  assert.match(source, /buildIcs\(shownRows, \{ now, timeZone,/, '导出日历时必须带上 timeZone')
+})
+
 test('bundle declares the module id and exposes apply/inject', () => {
   assert.equal(windowStub.__ModuleLoader__.spec.id, 'dsh-ccf')
   assert.equal(typeof api.apply, 'function')
@@ -405,6 +414,23 @@ test('buildIcs 把「另一个来源的说法」写进日历，别让导出来�
   assert.match(flat, /本条目用的是首选来源的日期/, '要说明这条用的是哪个')
   const cvprEvent = flat.slice(flat.indexOf('UID:cvpr|2027-截稿@dsh-ccf'))
   assert.doesNotMatch(cvprEvent.slice(0, 600), /另一个来源的说法/, '没冲突的会不该多这一句')
+  // 描述里的时间要跟面板同一个时区：面板按 payload.timezone 显示，
+  // 描述跟着浏览器本地时区走的话，两处时间对不上，用户会以为导错了。
+  // （这一段只证明 buildIcs 尊重传入的 timeZone；"调用方真的传了"由下面那条接线测试守。）
+  const utc = api.buildIcs(
+    [{ key: 'acl|2027', record: { key: 'acl|2027', venue: 'ACL', name: 'ACL 2027', year: 2027, deadline: new Date(NOW + 10 * 86400000).toISOString(), alternatives: [{ source: 'paper-deadlines', deadline: NOW + 20 * 86400000 }] }, deadline: NOW + 10 * 86400000, notification: null }],
+    { now: NOW, timeZone: 'UTC' },
+  ).replace(/\r\n /g, '')
+  assert.match(utc, /paper-deadlines \d{4}-\d{2}-\d{2} \d{2}:\d{2}/, '描述里的时间要按传入的时区渲染')
+  const beijing = api.buildIcs(
+    [{ key: 'acl|2027', record: { key: 'acl|2027', venue: 'ACL', name: 'ACL 2027', year: 2027, deadline: new Date(NOW + 10 * 86400000).toISOString(), alternatives: [{ source: 'paper-deadlines', deadline: NOW + 20 * 86400000 }] }, deadline: NOW + 10 * 86400000, notification: null }],
+    { now: NOW, timeZone: 'Asia/Shanghai' },
+  ).replace(/\r\n /g, '')
+  assert.notEqual(
+    utc.match(/另一个来源的说法：paper-deadlines ([^）]+)/)[1],
+    beijing.match(/另一个来源的说法：paper-deadlines ([^）]+)/)[1],
+    '换了时区，描述里的时间就该跟着变',
+  )
 })
 
 test('foldLine keeps every ICS line inside the 75-byte limit', () => {

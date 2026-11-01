@@ -1,6 +1,6 @@
 {
   "name": "dsh-ccf",
-  "version": "0.69.0",
+  "version": "0.70.0",
   "description": "CCF 会议截稿侦测：CCF 名单 + CCFDDL 数据 + 模型挖掘，面板可裁决「就是这个会 / 不是这个会」",
   "type": "module",
   "main": "lib/index.js",
@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "test": "node test/yaml.test.mjs && node test/core.test.mjs && node test/sync.test.mjs && node test/catalog.test.mjs && node test/miner.test.mjs && node test/plugin.test.mjs && node test/ui.test.mjs && node test/client.test.mjs && node test/sdk-smoke.mjs",
+    "test": "node test/package.test.mjs && node test/yaml.test.mjs && node test/core.test.mjs && node test/sync.test.mjs && node test/catalog.test.mjs && node test/miner.test.mjs && node test/plugin.test.mjs && node test/ui.test.mjs && node test/client.test.mjs && node test/sdk-smoke.mjs",
     "test:yaml": "node test/yaml.test.mjs",
     "test:core": "node test/core.test.mjs",
     "test:sync": "node test/sync.test.mjs",

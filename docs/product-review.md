@@ -2377,3 +2377,65 @@ const alt = (Array.isArray(record.alternatives) ? record.alternatives : [])
 
 **没做的那一半**。`clipboardText` 只注"有两个说法"，不注"你当前采信的是谁"——
 表里那一列本来写的就是采信后的日期，再加一句会把表格撑得没法贴。真实优先级：日历要准，表格要薄。
+
+## 第 71 轮：导出日历用的是浏览器时区，面板用的是配置时区
+
+**问题（N117）**。0.69.0 给 .ics 的日程描述加了「另一个来源的说法：<来源> <时间>」。
+那个时间由 `formatInstant(item.deadline, opts.timeZone)` 渲染，而调用点是：
+
+```js
+const text = buildIcs(shownRows, { now, calendarName: 'CCF 会议截稿' })   // 没有 timeZone
+```
+
+`formatInstant` 拿不到时区就退回 `Intl` 的**浏览器本地时区**。面板每一行的时间来自
+`payload.timezone`（插件配置，默认 `Asia/Shanghai`）。于是同一个日期在两处差了几个小时，
+用户会以为导出把时间搞错了——而且这种错"看起来像对的"，没人会怀疑。
+
+日历主体 `DTSTART` 是 UTC 时间戳，不受影响；错的只有上一轮新加的那句描述。
+
+**改法**。调用点把面板的时区传进去，并让它**被测试盯住**：
+
+```js
+const text = buildIcs(shownRows, { now, timeZone, calendarName: 'CCF 会议截稿' })
+```
+
+**验证这件事花了两轮**。第一版只写了"换时区 → 描述里的时间要跟着变"，`git stash` 掉
+`client/client.js` 后**测试仍然通过**——因为两条用例都自己传了 `timeZone`，
+证明的是 `buildIcs` 会尊重参数，而真正出问题的是**调用方没传**。这是"测了函数、没测接线"的典型。
+第二版加了一条接线测试，直接读源码守那一行：
+
+```js
+const source = readFileSync(bundle, 'utf8')
+assert.match(source, /buildIcs\(shownRows, \{ now, timeZone,/, '导出日历时必须带上 timeZone')
+```
+
+`git stash push -- client/client.js` 复跑 → `AssertionError: 导出日历时必须带上 timeZone`，
+恢复后 client 43 passed。读源码做断言的测试很脆，但这里没有别的观察点：
+渲染层拿到的是一段字符串，时区错误只体现为"小时数不对"，靠 DOM 断言同样得先知道时区。
+
+**教训（写给下一轮的我）**。加一条"参数被正确传入"的测试时，先问：**如果调用方漏传，这条用例会不会红？**
+如果用例自己构造了参数，它永远绿。函数的单元测试和接线的守门是两回事。
+
+**顺带**：`test/client.test.mjs` 里 `test()` 定义在 `const tests = []` 之后
+（`const test = (name, fn) => tests.push([name, fn])`），把新用例插在文件顶部会得到
+`ReferenceError: Cannot access 'test' before initialization`——新用例要写在定义之后。
+
+
+**这一轮还踩了一个更丢人的坑**。改版本号时图快，用了
+`(Get-Content package.json -Raw) -replace ... | Set-Content -Encoding ascii package.json`，
+中文描述被写成 `?????? / ??????????`，JSON 里留了坏字符。本地 `npm test` 是在改版本**之前**跑的，
+所以全绿；zip 也是照坏的 `package.json` 打的包；推上去之后 CI 第一个 job 就红：
+
+```
+npm error JSON.parse Invalid package.json: JSONParseError: Bad control character in string literal in JSON at position 139
+```
+
+三个 job 全挂在最前面那步。修法是从 `b045435` 取回 `package.json`，只用 `edit` 改那一行的版本号
+（`git diff --stat` 变成干净的 `1 insertion(+), 1 deletion(-)`），然后**加了一条护栏**
+`test/package.test.mjs`（已进 `npm test` 第一环）：
+能解析、`version` 是纯 `x.y.z`、`dsh.bundle.patch` 与 `dsh.client.platform` 在位，
+外加「`description` 里必须有中文」——问号串和替换字符都算坏。
+反向验证：把描述改成 `?????? / ??????????` → `AssertionError: description 里的中文被写坏了（多半是 Set-Content -Encoding ascii 干的）`。
+
+**同一天第三次栽在"用 PowerShell 改含中文的文件"上**（前两次是 `lib/create.js` 与 `test/panel.render.test.mjs`）。
+规则写死：**含中文的文件只走 `edit` / `write` 工具；版本号也走 `edit`。**
