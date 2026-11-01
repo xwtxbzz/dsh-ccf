@@ -315,7 +315,9 @@ await test('/ccf status 与 /ccf config', async () => {
     assert.equal(config.kind, 'success')
     assert.match(config.text, /默认窗口：120 天/)
     assert.match(config.text, /prompt 注入窗口：45 天/)
-    assert.match(config.text, /Asia\/Shanghai/)
+    // 时区跟着这台机器走（CI 是 UTC、海外服务器是别的），不能断言写死的北京时间。
+    const machineZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Shanghai'
+    assert.ok(config.text.includes(`时区：${machineZone}`), `config 的时区应该是本机的（${machineZone}）`)
     // config 必须列出真正在用的第一数据源（CCFDDL 接口），而不是写死的旧默认值。
     assert.match(config.text, /ccfddl-api/)
     assert.match(config.text, /allconf\.json/)

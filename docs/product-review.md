@@ -2077,3 +2077,40 @@ status    : 标记：1 个「不是这个会」、1 个「就是这个会」（�
 | 全量 | yaml 5 / core 31 / sync 9 / catalog 29 / plugin **34** / ui 31 / client 39 / `SMOKE OK` / `PANEL RENDER OK` / `INTEGRATION OK` |
 
 **留下的话**：删字段要删到"数据里不再产生"这一层。只改面板等于留着上游的 null 一路走到 prompt 里；这次是从归一化开始断的，所以旧缓存里残留的 `cameraReady` 也不会再被任何出口读到。
+
+## 第 64 轮（CI 反向抓到的真 bug）：默认时区写死成了北京
+
+**怎么发现的**：v0.63.0 推到 GitHub 之后，CI 的 `node 20` / `node 22` 两个 job 都挂了：
+
+```
+AssertionError [ERR_ASSERTION]: config 应该写本机时区 UTC
+    at file:///home/runner/work/dsh-ccf/dsh-ccf/test/plugin.test.mjs:864:12
+```
+
+本机跑一直是绿的——因为这台机器的时区**就是** Asia/Shanghai，所以「断言默认时区等于本机时区」这种测试在本地永远不可能失败。GitHub 的 runner 是 UTC，一下就照出来了。
+
+**真因**（不是测试写错，是产品错）：
+
+```js
+const config = { ...DEFAULTS, ...source }          // DEFAULTS.timezone = 'Asia/Shanghai'
+if (typeof config.timezone !== 'string' || !config.timezone.trim()) config.timezone = systemTimeZone(...)
+```
+
+`DEFAULTS` 里本来就填了 `Asia/Shanghai`，所以那句「为空就取本机时区」永远不会执行——`systemTimeZone()` 写了却没生效，等于**把「默认北京」写死**。README 上写的「默认跟着这台机器走」是假的。
+
+**改法**（`D:\doctor\dsh-ccf\lib\create.js` 的 `normalizeConfig`）：
+
+```js
+const hasOwnTimeZone = typeof source.timezone === 'string' && source.timezone.trim().length > 0
+const config = { ...DEFAULTS, ...source }
+...
+config.timezone = hasOwnTimeZone ? source.timezone.trim() : systemTimeZone(DEFAULTS.timezone)
+```
+
+判断依据必须是**用户有没有显式写过**，而不是「合并后的值空不空」。
+
+**测试**：`test/plugin.test.mjs` 里两处写死北京的断言改成跟着本机走——`config 的时区应该是本机的（${machineZone}）`，`const machineZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Shanghai'`。用 `TZ=UTC node test/plugin.test.mjs` 复跑：改前 `34 → AssertionError`，改后 **34 passed**；`TZ=UTC` 下 `core` 31、`ui` 31 也全绿。
+
+**教训**：断言「默认值等于环境」的测试，只有在环境真的换掉时才有效。`TZ=UTC node test/xxx.mjs` 是一行成本极低的交叉验证，比在本地反复跑同一条命令有用得多。
+
+**⚠ 另一个卡点（未解决）**：这个仓库的 `.github/workflows/ci.yml` 没法用当前 PAT 更新——GitHub 回 `refusing to allow a Personal Access Token to create or update workflow ... without workflow scope`。所以**仓库里跑的仍是旧版 ci.yml**（没有 catalog / miner / ui / client / panel.render 这些测试）。本地的 ci.yml 已更新好（还顺手去掉了被 PowerShell 写进去的 BOM），等 token 补上 `workflow` 权限后一次推上去。
