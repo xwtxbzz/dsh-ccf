@@ -2283,3 +2283,46 @@ conflictsDecided: records.filter((row) => isBigConflict(row) && !ignoredKeys.has
 
 **顺带说明**。这轮只动了显示层（ui/client），没动 `lib/create.js` 的命令侧数字：
 `/ccf status` 的「来源」行 0.60.0 已经报过"其中 M 条你已经采信了某个来源"，口径一致。
+
+## 第 69 轮：往年没冲突，不等于今年没冲突
+
+**问题（N114）**。`formatVenue` 里「来源不一致」那段只读了 `rows[0]`：
+
+```js
+const alternatives = Array.isArray(head.alternatives) ? head.alternatives : []
+if (alternatives.length > 0) { … }
+```
+
+`/ccf venue CVPR`、`ccf_venue` 返回的 `rows` 是**多年份**的（2026、2027 各一条）。
+只要第一年干净，后面那一年的冲突就整段消失——而用户查「这个会现在到底哪天截稿」时，
+关心的恰恰是最新那一年。这与 0.54.0 / 0.58.0 修过的"文本里没有、data 里有 / 文本有、data 没有"
+是同一类问题：**只处理了集合里的第一个元素，却假装处理了整个集合**。
+
+**改法**。按行（年份）分别列，没有冲突的年份不占行：
+
+```js
+for (const record of rows) {
+  const alternatives = Array.isArray(record.alternatives) ? record.alternatives : []
+  if (alternatives.length === 0) continue
+  const said = alternatives.slice(0, 3).map(…).join('；')
+  const which = rows.length > 1 && record.year ? `（${record.year}）` : ''
+  lines.push(`来源不一致${which}：${said}（上面显示的是首选来源）`)
+}
+```
+
+单年份时文案完全不变（`来源不一致：…`），老用户/老测试看到的东西没变；
+多年份才加年份标签，避免两行一模一样的「来源不一致」分不清是哪一年。
+
+**验证**。
+
+- 新用例「formatVenue：往年没冲突，不等于今年也没冲突」：CVPR 2026 干净、CVPR 2027 带
+  `paper-deadlines` 的另一种说法 → 断言出现 `来源不一致（2027）：paper-deadlines`，
+  且**不出现** `来源不一致（2026）`。
+- 反向验证：`git stash push -- lib/core.js` 后跑同一个文件 →
+  `AssertionError: 第二年的冲突要单独列出来`；`git stash pop` 后 33 passed。
+- 真机（`cache.json` 里 AAAI 的两年记录）：
+  `来源不一致：paper-deadlines 2026-07-28 19:59（上面显示的是首选来源）`——单年份，文案与以前一致。
+
+**没顺手做的**。`ccf_venue` 的 `data.rows` 只带 `conflict: true` 的布尔标记，
+不带另一种说法的具体日期；要带就得把 `alternatives` 整个塞进结构化输出。
+先不做：文本里已经有日期了，再往 data 里塞一遍只是重复，等真有人按 data 写自动化再说。

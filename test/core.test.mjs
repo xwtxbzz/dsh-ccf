@@ -166,6 +166,21 @@ test('去重：两个源给了不同截稿时留下另一种说法，而不是�
   assert.match(text, /来源不一致：ccfddl-api \d{4}-\d{2}-\d{2}/)
 })
 
+test('formatVenue：往年没冲突，不等于今年也没冲突', () => {
+  // 只读 rows[0] 的 alternatives，会把第二年的冲突悄悄丢掉——
+  // 用户查「这个会现在到底哪天截稿」时正好看的是那一年。
+  const rows = [
+    { ...jsonRecord({ name: 'CVPR 2026', year: 2026, deadline: '2026-11-20T23:59:59-12:00' }) },
+    {
+      ...jsonRecord({ name: 'CVPR 2027', year: 2027, deadline: '2026-11-14T23:59:59-12:00' }),
+      alternatives: [{ source: 'paper-deadlines', deadline: Date.parse('2026-11-28T23:59:59-12:00') }],
+    },
+  ]
+  const text = formatVenue(rows, { now: NOW })
+  assert.match(text, /来源不一致（2027）：paper-deadlines/, '第二年的冲突要单独列出来')
+  assert.doesNotMatch(text, /来源不一致（2026）/, '没有冲突的年份不该多一行')
+})
+
 test('查询：窗口、等级、方向、关键词、过去', () => {
   const records = [
     jsonRecord(),
