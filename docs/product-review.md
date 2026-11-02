@@ -2957,3 +2957,30 @@ if (areaNeedles && !areaNeedles.some((needle) => String(item.area || '').include
 
 - **修完一处，要把同一个参数的所有分支都过一遍。** 上一轮只修了 `list` 那条路，`--pending` 是同一个过滤条件的第二个实现，一晚上就又长回来了。参数有几条路径，就有几个地方会漂。
 - 「筛不到」和「筛错了」必须分开：前者是事实（这个方向目前没有会），后者是输入问题（这个词根本不成立）。把两者混在一句「都已有截稿数据」里，比报错更坏 —— 用户会据此认为没有活要干。
+
+## 82. 商店卡片缺「适用 DSH 版本」「代码版本」——不是商店的问题（0.80.1）
+
+用户装了插件，在 DSH 商店里看到的是这样一张卡：名字、作者、0 星、描述、两个标签「宿主要求未知」「工具与能力」、✓已安装——**没有代码版本，也没有适用版本**。
+
+### 查到根因（不是猜的）
+
+- `awesome-dsh-plugin.com/plugins.json` 里 `dsh-ccf` 这一条：`npm: null`、`version: null`。商店的版本号与下载量都来自 npm registry 的自动映射，而这条目是 **8 小时前** 提的，当时 npm 上还没有这个包。
+- 「适用 DSH 版本」读的是 manifest 里的 `engines.dsh`（或 `dsh.engines.dsh`），见 `dshmarket/lib/discovery-compatibility.js` 的 `manifestFacts()`：`enginesDsh: range(engines?.dsh) ?? range(dshEngines?.dsh)`；卡片上的「宿主要求未知」就是 `deriveHostCompatibility()` 拿不到任何声明时的 `status: 'unknown'`。
+- 我们的 `package.json` 里只有 `engines.node`，**没有 `engines.dsh`** —— 所以这不是商店漏读，是我们没声明。
+
+### 改法
+
+1. `package.json` 加 `"engines": { "node": ">=20", "dsh": ">=0.2.0-rc.6" }`。当前宿主是 `@deepseek-ai/dsh-desktop 0.2.1-rc.5`（从 `E:\dsh\resources\app.asar` 的 `package.json` 读到），用商店自己的 `deriveHostCompatibility(facts, hostVersion, hostPackages)` 验过：`status: compatible | basis: manifest`。
+2. **顺带修一个会让用户 `npm install` 撞 `ERESOLVE` 的坑**：`peerDependencies['@deepseek-ai/dsh-tools']` 原来是 `>=0.1.0-rc.6`。node-semver 只有在范围里存在「同 major.minor.patch 元组、且自身带预发布标签」的比较符时，才放行预发布版本；`>=0.1.0-rc.6` 的元组是 0.1.0，因此 **0.2.1-rc.5 这种宿主不匹配**。改成 `>=0.1.0-rc.6 || >=0.2.0-0`，第二个分支把 0.2.x 的预发布全体放进来。上游 `contributing.md` 专门警告过这一条。
+3. README 的安装一节补 `dsh plugin --profile desktop add npm:dsh-ccf`，并写明 `engines.dsh` 的作用。
+
+### 验证
+
+- `test/package.test.mjs` 新增三条断言：`engines.dsh` 必须存在且形如 `>=0.x.y`；`engines.node` 必须在；`peerDependencies['@deepseek-ai/dsh-tools']` **必须含 `||`**（否则预发布宿主会 ERESOLVE）。
+- 反向验证：`git stash push -- package.json` 后跑 → `AssertionError: 缺少 engines.dsh，商店只能显示「宿主要求未知」`；恢复后 `package: ok`。
+- 基线：package ok / yaml 5 / core 33 / sync 9 / catalog ok / dedupe 3 / miner ok / plugin 41 / ui 33 / client 43 / `SMOKE OK` / `PANEL RENDER OK` / `INTEGRATION OK`。
+
+### 这一轮的教训
+
+- **「商店显示不出来」先别怪商店**：卡片上缺的每个字段都能追到一个具体的 manifest 字段。`npm: null` 是时间差（条目早于 npm 发布，下次目录重建会自动补），`engines.dsh` 是我们真的没写。
+- **预发布版本的范围不能凭直觉写**：`>=0.1.0-rc.6` 看起来"足够宽"，实际上把 0.2.x 的 rc 全挡在门外；要么用 `||` 给新元组留一个带预发布标签的分支，要么在 CI 里用真实宿主版本跑一遍 `satisfies`。

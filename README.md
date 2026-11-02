@@ -39,21 +39,27 @@ DSH 插件：把 CCF 会议的**截稿时间**变成 agent 真正知道的事实
 
 ## 安装
 
-本包依赖 DSH 4 及 `@deepseek-ai/dsh-tools@>=0.1.0-rc.6`。
+本包依赖 DSH 4 及 `@deepseek-ai/dsh-tools@>=0.1.0-rc.6`；`package.json` 里声明了 `engines.dsh >= 0.2.0-rc.6`，所以商店卡片上能看到「适用 DSH 版本」，不用猜。
 
-**A. 从 Git 仓库装**
+**A. 从 npm 装**（最快，国内走镜像也快）
+
+```bash
+dsh plugin --profile desktop add npm:dsh-ccf
+```
+
+**B. 从 Git 仓库装**
 
 ```bash
 dsh plugin --profile desktop add git+https://github.com/xwtxbzz/dsh-ccf.git
 ```
 
-**B. 从本地目录装**（改代码时方便）
+**C. 从本地目录装**（改代码时方便）
 
 ```bash
 dsh plugin --profile desktop add file:D:\doctor\dsh-ccf
 ```
 
-**C. 手动挂载**：把包名加入 profile 的 `dsh.profile.bundles`，然后重启 DSH。
+**D. 手动挂载**：把包名加入 profile 的 `dsh.profile.bundles`，然后重启 DSH。
 
 装完重启 DSH（客户端产物是预先写好的，不需要跑 `dev:web`）。确认加载：
 
